@@ -1,0 +1,12 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <icon name="{{entry.type == 'bill' ? 'credit-card' : 'money'}}"></icon>
+      {{entry.creationDate | date:'medium'}}</h3>
+  </div>
+  <div class="panel-body">
+    {{entry.description}} <br />
+    {{entry.splitters.join(', ')}}
+  </div>
+  <div class="panel-footer">{{entry.amount | currency}}</div>
+</div>

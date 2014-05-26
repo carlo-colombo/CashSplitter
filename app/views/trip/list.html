@@ -1,0 +1,7 @@
+<ul>
+  <li ng-repeat="trip in trips">
+    <a ui-sref="trip.show({trip_id:trip.name})">
+       {{trip.name}}
+    </a>
+  </li>
+</ul>

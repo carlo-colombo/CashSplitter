@@ -1,0 +1,24 @@
+{
+  "name": "CashSplitter",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "grunt-angular-templates": "^0.5.4",
+    "grunt-appcache": "~0.1.2",
+    "grunt-bower": "~0.12.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-devtools": "~0.2.1",
+    "grunt-ngmin": "0.0.3",
+    "grunt-processhtml": "~0.2.5",
+    "grunt-text-replace": "~0.3.9",
+    "grunt-uncss": "~0.1.5"
+  }
+}

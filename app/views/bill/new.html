@@ -1,0 +1,32 @@
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <form role="form" ng-submit="submit()">
+      <div class="form-group">
+        <label for="bill_amount">Amount *</label>
+        <input ng-model="bill.amount" type="number" step="any" class="form-control" id="bill_amount" placeholder="Amount" ng-required="true">
+      </div>
+      <div class="form-group">
+        <label for="bill_payer">Payer</label>
+        <select id="bill_payer" ng-options="splitter as splitter for splitter in trip.splitters" ng-model="bill.payer" class="form-control"></select>
+      </div>
+      <div class="checkbox" ng-repeat="splitter in trip.splitters track by $index">
+        <label>
+          <input checklist-model="bill.splitters" type="checkbox" checklist-value="splitter">{{splitter}}
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="bill_description">Description</label>
+        <input ng-model="bill.description" type="text" class="form-control" id="bill_description" placeholder="Description">
+      </div>
+      <div class="form-group">
+        <label for="bill_creationDate">Date</label>
+        <input ng-model="bill.creationDate" type="datetime-local" class="form-control" id="bill_creationDate" placeholder="Date" ng-required="true">
+      </div>
+      <button class="btn btn-success" type="submit">
+        <icon name="money"></icon>
+      </button>
+    </form>
+  </div>
+</div>
+<hr />
