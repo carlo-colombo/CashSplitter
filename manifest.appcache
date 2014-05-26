@@ -1,0 +1,16 @@
+CACHE MANIFEST
+# rev 1 - 2014-05-26T21:17:34.295Z
+
+CACHE:
+src/app.min.js
+lib/css/bootstrap.css
+lib/css/font-awesome.css
+index.html
+lib/fonts/FontAwesome.otf
+lib/fonts/fontawesome-webfont.eot?v=4.0.3
+lib/fonts/fontawesome-webfont.svg?v=4.0.3
+lib/fonts/fontawesome-webfont.ttf?v=4.0.3
+lib/fonts/fontawesome-webfont.woff?v=4.0.3
+
+NETWORK:
+*

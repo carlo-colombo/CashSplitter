@@ -1,0 +1,11 @@
+<form role="form" ng-submit="submit()">
+  <div class="form-group">
+    <label for="trip_name">Name</label>
+    <input ng-model="trip.name" type="text" class="form-control" id="trip_name" placeholder="Trip name" ng-required>
+  </div>
+  <div class="form-group">
+    <label for="trip_splitters">Splitters</label>
+    <textarea id="trip_splitters" ng-model="trip.splitters" ng-list class="form-control" placeholder="Splitters name splitted by comma(,)"></textarea>
+  </div>
+  <button type="submit" class="btn btn-default">Add</button>
+</form>
