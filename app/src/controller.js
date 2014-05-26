@@ -89,6 +89,4 @@ angular.module('CashSplitter.controller', [])
   .controller('EntryController', function($scope, entry) {
     $scope.entry = entry
   })
-  .controller('EntryShowController', function($scope) {
-    console.log($scope.entry)
-  })
+  .controller('EntryShowController', angular.noop)
