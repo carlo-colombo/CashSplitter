@@ -37,11 +37,6 @@ module.exports = function(grunt) {
                 'fonts/*'
               ]
             },
-            'big.js': {
-              files: [
-                'big.js'
-              ]
-            },
             'jquery': {
               files: []
             }
