@@ -104,9 +104,4 @@ angular.module('CashSplitter.controller', []).controller('TripController', [
   function ($scope, entry) {
     $scope.entry = entry;
   }
-]).controller('EntryShowController', [
-  '$scope',
-  function ($scope) {
-    console.log($scope.entry);
-  }
-]);
+]).controller('EntryShowController', angular.noop);
