@@ -11,6 +11,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-angular-templates');
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   var DEST = process.env.HOME + '/Dropbox/Public/CashSplitter/'
 
@@ -74,7 +75,7 @@ module.exports = function(grunt) {
       },
       all: {
         dest: 'dist/manifest.appcache',
-        cache: ['dist/src/app.min.js','dist/**/*.css', 'dist/index.html', 'dist/lib/fonts/*'],
+        cache: ['dist/src/app.min.js', 'dist/**/*.css', 'dist/index.html', 'dist/lib/fonts/*'],
         network: '*'
       }
     },
@@ -124,8 +125,8 @@ module.exports = function(grunt) {
       },
     },
     uglify: {
-      options:{
-        sourceMap:true,
+      options: {
+        sourceMap: true,
       },
       dist: {
         files: {
@@ -146,14 +147,22 @@ module.exports = function(grunt) {
     },
     ngtemplates: {
       CashSplitter: {
-        cwd:'dist/',
+        cwd: 'dist/',
         src: 'views/**/*.html',
         dest: 'dist/src/templates.js',
       }
+    },
+    'gh-pages': {
+      options: {
+        base: 'dist',
+        add:true,
+        dotfiles:true
+      },
+      src: ['**']
     }
   });
 
   grunt.registerTask('bower-cleaned', ['clean:all', 'bower']);
-  grunt.registerTask('dist', ['clean:dist', 'bower-cleaned', 'copy:dist', 'ngmin','ngtemplates','uglify','processhtml' ,'appcache:all', 'replace']);
+  grunt.registerTask('dist', ['clean:dist', 'bower-cleaned', 'copy:dist', 'ngmin', 'ngtemplates', 'uglify', 'processhtml', 'appcache:all', 'replace']);
   grunt.registerTask('ship-it', ["dist", "copy:dropbox"]);
 };
