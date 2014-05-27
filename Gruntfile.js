@@ -13,8 +13,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-angular-templates');
   grunt.loadNpmTasks('grunt-gh-pages');
 
-  var DEST = process.env.HOME + '/Dropbox/Public/CashSplitter/'
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     bower: {
@@ -58,14 +56,6 @@ module.exports = function(grunt) {
           dest: 'dist/',
           src: ['**'],
           cwd: 'app/'
-        }]
-      },
-      dropbox: {
-        files: [{
-          expand: true,
-          dest: DEST,
-          cwd: 'dist/',
-          src: ['**']
         }]
       }
     },
@@ -164,5 +154,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('bower-cleaned', ['clean:all', 'bower']);
   grunt.registerTask('dist', ['clean:dist', 'bower-cleaned', 'copy:dist', 'ngmin', 'ngtemplates', 'uglify', 'processhtml', 'appcache:all', 'replace']);
-  grunt.registerTask('ship-it', ["dist", "copy:dropbox"]);
+  grunt.registerTask('ship-it', ["dist", "gh-pages"]);
 };
