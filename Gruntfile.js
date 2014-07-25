@@ -122,6 +122,7 @@ module.exports = function(grunt) {
             'dist/lib/lodash.js',
             'dist/lib/pouchdb.js',
             'dist/src/views.js',
+            'dist/src/directive.js',
             'dist/src/service.js',
             'dist/src/controller.js',
             'dist/src/main.js',
