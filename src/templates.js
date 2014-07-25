@@ -1,6 +1,46 @@
 angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('views/bill/fair-bill-new.html',
+    "<hr />\n" +
+    "<div class=\"row\">\n" +
+    "  <div class=\"col-xs-4\">Amount</div>\n" +
+    "  <div class=\"col-xs-8\">{{sum(bill)|currency}}</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
+    "  <div class=\"col-xs-12\">\n" +
+    "    <form class=\"form-horizontal\" ng-submit=\"submit(bill, bill_payer)\">\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <div class=\"col-xs-12\">\n" +
+    "          <select id=\"bill_payer\" ng-options=\"splitter as splitter for splitter in trip.splitters\" ng-model=\"bill_payer\" class=\"form-control\" placeholder=\"Payer\" ng-required=\"true\"></select>\n" +
+    "        </div>\n" +
+    "      </div>\n" +
+    "      <div class=\"form-group\" ng-repeat=\"splitter in trip.splitters\">\n" +
+    "        <label class=\"col-xs-2 control-label\">\n" +
+    "          {{splitter}}\n" +
+    "        </label>\n" +
+    "        <div class=\"col-xs-10\">\n" +
+    "          <input type=\"text\" ng-model=\"bill[splitter]\" class=\"form-control\" />\n" +
+    "        </div>\n" +
+    "      </div>\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <div class=\"col-xs-12\">\n" +
+    "          <input ng-model=\"description\" type=\"text\" class=\"form-control\" id=\"bill_description\" placeholder=\"Description\">\n" +
+    "        </div>\n" +
+    "      </div>\n" +
+    "      <div class=\"form-group\">\n" +
+    "        <div class=\"col-xs-12\">\n" +
+    "          <input ng-model=\"creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"bill_creationDate\" placeholder=\"Date\" ng-required=\"true\">\n" +
+    "        </div>\n" +
+    "      </div>\n" +
+    "      <submit />\n" +
+    "    </form>\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<hr />\n"
+  );
+
+
   $templateCache.put('views/bill/new.html',
     "<hr />\n" +
     "<div class=\"row\">\n" +
@@ -8,7 +48,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "    <form role=\"form\" ng-submit=\"submit()\">\n" +
     "      <div class=\"form-group\">\n" +
     "        <label for=\"bill_amount\">Amount *</label>\n" +
-    "        <input ng-model=\"bill.amount\" type=\"number\" step=\"any\" class=\"form-control\" id=\"bill_amount\" placeholder=\"Amount\" ng-required=\"true\">\n" +
+    "        <input ng-model=\"bill.amount\" step=\"any\" class=\"form-control\" id=\"bill_amount\" placeholder=\"Amount\" ng-required=\"true\">\n" +
     "      </div>\n" +
     "      <div class=\"form-group\">\n" +
     "        <label for=\"bill_payer\">Payer</label>\n" +
@@ -27,13 +67,18 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "        <label for=\"bill_creationDate\">Date</label>\n" +
     "        <input ng-model=\"bill.creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"bill_creationDate\" placeholder=\"Date\" ng-required=\"true\">\n" +
     "      </div>\n" +
-    "      <button class=\"btn btn-success\" type=\"submit\">\n" +
-    "        <icon name=\"money\"></icon>\n" +
-    "      </button>\n" +
+    "      <submit />\n" +
     "    </form>\n" +
     "  </div>\n" +
     "</div>\n" +
     "<hr />\n"
+  );
+
+
+  $templateCache.put('views/directives/addBill.html',
+    "<button class=\"btn btn-success btn-block\" type=\"submit\">\n" +
+    "  <icon name=\"money\"></icon>\n" +
+    "</button>\n"
   );
 
 
@@ -60,7 +105,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "    <form role=\"form\" ng-submit=\"submit()\">\n" +
     "      <div class=\"form-group\">\n" +
     "        <label for=\"payment_amount\">Amount *</label>\n" +
-    "        <input ng-model=\"payment.amount\" type=\"number\" step=\"any\" class=\"form-control\" id=\"payment_amount\" placeholder=\"Amount\" ng-required=\"true\">\n" +
+    "        <input ng-model=\"payment.amount\" step=\"any\" class=\"form-control\" id=\"payment_amount\" placeholder=\"Amount\" ng-required=\"true\">\n" +
     "      </div>\n" +
     "      <div class=\"form-group\">\n" +
     "        <label for=\"payment_source\">Source</label>\n" +
@@ -78,9 +123,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "        <label for=\"payment_creationDate\">Date</label>\n" +
     "        <input ng-model=\"payment.creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"payment_creationDate\" placeholder=\"Date\" ng-required=\"true\">\n" +
     "      </div>\n" +
-    "      <button class=\"btn btn-success\" type=\"submit\">\n" +
-    "        <icon name=\"money\"></icon>\n" +
-    "      </button>\n" +
+    "      <submit/>\n" +
     "    </form>\n" +
     "  </div>\n" +
     "</div>\n" +
@@ -145,11 +188,15 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('views/trip/show.html',
     "<div class=\"row\">\n" +
-    "  <div class=\"col-xs-6\">\n" +
+    "  <div class=\"col-xs-8\">\n" +
     "    <div class=\"button-group\">\n" +
     "      <a class=\"btn btn-warning\" ui-sref=\"trip.show.bill_new({trip_id:trip.name})\">\n" +
     "        <icon name=\"plus\"></icon>\n" +
     "        <icon name=\"credit-card\"></icon>\n" +
+    "      </a>\n" +
+    "      <a class=\"btn btn-success\" ui-sref=\"trip.show.fair_bill_new({trip_id:trip.name})\">\n" +
+    "        <icon name=\"plus\"></icon>\n" +
+    "        <icon name=\"cubes\"></icon>\n" +
     "      </a>\n" +
     "      <a class=\"btn btn-primary\" ui-sref=\"trip.show.payment_new({trip_id:trip.name})\">\n" +
     "        <icon name=\"minus\"></icon>\n" +
@@ -157,7 +204,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "      </a>\n" +
     "    </div>\n" +
     "  </div>\n" +
-    "  <div class=\"col-xs-6\">\n" +
+    "  <div class=\"col-xs-4\">\n" +
     "    <div class=\"button-group pull-right\">\n" +
     "      <button class=\"btn btn-danger\" ng-click=\"remove(trip)\">\n" +
     "        <icon name=\"trash-o\"></icon>\n" +

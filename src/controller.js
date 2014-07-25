@@ -70,6 +70,38 @@ angular.module('CashSplitter.controller', []).controller('TripController', [
       });
     };
   }
+]).controller('FairBillNewController', [
+  '$scope',
+  'TripService',
+  '$state',
+  function ($scope, TripService, $state) {
+    $scope.bill = {};
+    $scope.creationDate = new Date();
+    $scope.sum = function (bill) {
+      return _.reduce(bill, function (tot, val) {
+        return parseFloat(tot) + parseFloat(val);
+      });
+    };
+    $scope.submit = function (bill, payer) {
+      _.each(_.map(_.filter(bill, function (amount) {
+        return !!amount;
+      }), function (amount, splitter) {
+        return {
+          creationDate: $scope.creationDate,
+          _id: PouchDB.utils.uuid(),
+          splitters: [splitter],
+          amount: amount,
+          payer: payer,
+          description: $scope.description
+        };
+      }), function (bill) {
+        $scope.trip.bills.push(bill);
+      });
+      TripService.add($scope.trip).then(function () {
+        $state.go('trip.show', null, { reload: true });
+      });
+    };
+  }
 ]).controller('PaymentNewController', [
   '$scope',
   'TripService',

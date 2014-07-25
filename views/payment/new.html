@@ -4,7 +4,7 @@
     <form role="form" ng-submit="submit()">
       <div class="form-group">
         <label for="payment_amount">Amount *</label>
-        <input ng-model="payment.amount" type="text" step="any" class="form-control" id="payment_amount" placeholder="Amount" ng-required="true">
+        <input ng-model="payment.amount" step="any" class="form-control" id="payment_amount" placeholder="Amount" ng-required="true">
       </div>
       <div class="form-group">
         <label for="payment_source">Source</label>
@@ -22,9 +22,7 @@
         <label for="payment_creationDate">Date</label>
         <input ng-model="payment.creationDate" type="datetime-local" class="form-control" id="payment_creationDate" placeholder="Date" ng-required="true">
       </div>
-      <button class="btn btn-success" type="submit">
-        <icon name="money"></icon>
-      </button>
+      <submit/>
     </form>
   </div>
 </div>

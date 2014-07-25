@@ -1,9 +1,13 @@
 <div class="row">
-  <div class="col-xs-6">
+  <div class="col-xs-8">
     <div class="button-group">
       <a class="btn btn-warning" ui-sref="trip.show.bill_new({trip_id:trip.name})">
         <icon name="plus"></icon>
         <icon name="credit-card"></icon>
+      </a>
+      <a class="btn btn-success" ui-sref="trip.show.fair_bill_new({trip_id:trip.name})">
+        <icon name="plus"></icon>
+        <icon name="cubes"></icon>
       </a>
       <a class="btn btn-primary" ui-sref="trip.show.payment_new({trip_id:trip.name})">
         <icon name="minus"></icon>
@@ -11,7 +15,7 @@
       </a>
     </div>
   </div>
-  <div class="col-xs-6">
+  <div class="col-xs-4">
     <div class="button-group pull-right">
       <button class="btn btn-danger" ng-click="remove(trip)">
         <icon name="trash-o"></icon>

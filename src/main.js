@@ -2,7 +2,8 @@ angular.module('CashSplitter', [
   'ui.router',
   'checklist-model',
   'CashSplitter.controller',
-  'CashSplitter.service'
+  'CashSplitter.service',
+  'CashSplitter.directive'
 ]).run([
   '$locale',
   '$rootScope',
@@ -104,6 +105,10 @@ angular.module('CashSplitter', [
       url: '/bill/new',
       templateUrl: 'views/bill/new.html',
       controller: 'BillNewController'
+    }).state('trip.show.fair_bill_new', {
+      url: '/bill/fair-new',
+      templateUrl: 'views/bill/fair-bill-new.html',
+      controller: 'FairBillNewController'
     }).state('trip.show.payment_new', {
       url: '/payment/new',
       templateUrl: 'views/payment/new.html',
@@ -146,27 +151,7 @@ angular.module('CashSplitter', [
       templateUrl: 'views/entry/show.html'
     });
   }
-]).directive('collapse', function () {
-  return {
-    restrict: 'A',
-    scope: { collapse: '=' },
-    link: function ($scope, $element, $attr) {
-      $scope.$watch('collapse', function (val) {
-        !!val ? $element.removeClass('collapse') : $element.addClass('collapse');
-      });
-      $element.find('a').bind('click', function () {
-        $scope.collapse = false;
-      });
-    }
-  };
-}).directive('icon', function () {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: { name: '@' },
-    template: '<i class="fa fa-{{name}}"></i>'
-  };
-}).filter('$', [
+]).filter('$', [
   'currencyFilter',
   function (currencyFilter) {
     return function (val) {
