@@ -2,7 +2,8 @@ angular.module('CashSplitter', [
   'ui.router',
   'checklist-model',
   'CashSplitter.controller',
-  'CashSplitter.service'
+  'CashSplitter.service',
+  'CashSplitter.directive'
 ])
   .run(function($locale, $rootScope, TripService, $state) {
     $locale.NUMBER_FORMATS.CURRENCY_SYM = '€'
@@ -164,35 +165,6 @@ angular.module('CashSplitter', [
         templateUrl: 'views/entry/show.html'
       })
   })
-
-
-.directive('collapse', function() {
-  return {
-    restrict: 'A',
-    scope: {
-      collapse: '='
-    },
-    link: function($scope, $element, $attr) {
-      $scope.$watch('collapse', function(val) { !! val ? $element.removeClass('collapse') : $element.addClass('collapse')
-      })
-      $element.find('a').bind('click', function() {
-        $scope.collapse = false
-      })
-    }
-  }
-})
-
-.directive('icon', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: {
-      name: '@'
-    },
-    template: '<i class="fa fa-{{name}}"></i>'
-  }
-})
-
 
 .filter('$', function(currencyFilter) {
   return function(val) {
