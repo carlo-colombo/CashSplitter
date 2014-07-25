@@ -113,6 +113,11 @@ angular.module('CashSplitter', [
         templateUrl: 'views/bill/new.html',
         controller: 'BillNewController'
       })
+      .state('trip.show.fair_bill_new', {
+        url: '/bill/fair-new',
+        templateUrl: 'views/bill/fair-bill-new.html',
+        controller: 'FairBillNewController'
+      })
       .state('trip.show.payment_new', {
         url: '/payment/new',
         templateUrl: 'views/payment/new.html',
