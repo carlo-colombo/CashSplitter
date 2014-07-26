@@ -1,16 +1,22 @@
 <hr />
 <div class="row">
   <div class="col-xs-4">Amount</div>
-  <div class="col-xs-8">{{sum(bill)|currency}}</div>
+  <div class="col-xs-8">
+    <span class="pull-right">{{(sum(bill)||0)|currency }}</span>
+  </div>
 </div>
 <div class="row">
   <div class="col-xs-12">
     <form class="form-horizontal" ng-submit="submit(bill, bill_payer)">
       <div class="form-group">
-        <div class="col-xs-12">
+        <label class="col-xs-2 control-label">
+          Payer
+        </label>
+        <div class="col-xs-10">
           <select id="bill_payer" ng-options="splitter as splitter for splitter in trip.splitters" ng-model="bill_payer" class="form-control" placeholder="Payer" ng-required="true"></select>
         </div>
       </div>
+      <hr />
       <div class="form-group" ng-repeat="splitter in trip.splitters">
         <label class="col-xs-2 control-label">
           {{splitter}}

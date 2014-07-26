@@ -5,16 +5,22 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "<hr />\n" +
     "<div class=\"row\">\n" +
     "  <div class=\"col-xs-4\">Amount</div>\n" +
-    "  <div class=\"col-xs-8\">{{sum(bill)|currency}}</div>\n" +
+    "  <div class=\"col-xs-8\">\n" +
+    "    <span class=\"pull-right\">{{(sum(bill)||0)|currency }}</span>\n" +
+    "  </div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
     "  <div class=\"col-xs-12\">\n" +
     "    <form class=\"form-horizontal\" ng-submit=\"submit(bill, bill_payer)\">\n" +
     "      <div class=\"form-group\">\n" +
-    "        <div class=\"col-xs-12\">\n" +
+    "        <label class=\"col-xs-2 control-label\">\n" +
+    "          Payer\n" +
+    "        </label>\n" +
+    "        <div class=\"col-xs-10\">\n" +
     "          <select id=\"bill_payer\" ng-options=\"splitter as splitter for splitter in trip.splitters\" ng-model=\"bill_payer\" class=\"form-control\" placeholder=\"Payer\" ng-required=\"true\"></select>\n" +
     "        </div>\n" +
     "      </div>\n" +
+    "      <hr />\n" +
     "      <div class=\"form-group\" ng-repeat=\"splitter in trip.splitters\">\n" +
     "        <label class=\"col-xs-2 control-label\">\n" +
     "          {{splitter}}\n" +
