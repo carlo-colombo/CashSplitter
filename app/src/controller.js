@@ -75,7 +75,7 @@ angular.module('CashSplitter.controller', [])
     $scope.submit = function(bill, payer) {
       _.each(
         _.map(
-          _.filter(bill,function(amount){return !!amount}), function(amount, splitter) {
+          _.pick(bill,function(amount){return !!amount}), function(amount, splitter) {
         return {
           creationDate: $scope.creationDate,
           _id:PouchDB.utils.uuid(),
