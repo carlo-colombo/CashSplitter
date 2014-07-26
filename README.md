@@ -1,6 +1,6 @@
-CashSplitter
+[CashSplitter](http://carlo-colombo.github.io/CashSplitter)
 ============
-Offline mobile webapp built on top of angular, pouchdb, bootstrap and grunt
+Offline mobile webapp built on top of angular, pouchdb, bootstrap and grunt 
 
 
 - Add a trip
