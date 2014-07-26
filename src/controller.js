@@ -83,7 +83,7 @@ angular.module('CashSplitter.controller', []).controller('TripController', [
       });
     };
     $scope.submit = function (bill, payer) {
-      _.each(_.map(_.filter(bill, function (amount) {
+      _.each(_.map(_.pick(bill, function (amount) {
         return !!amount;
       }), function (amount, splitter) {
         return {
