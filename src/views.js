@@ -3,6 +3,8 @@ angular.module('CashSplitter.views', []).constant('views', {
     map: function (trip) {
       trip.bills.forEach(function (bill) {
         var s = bill.splitters.length;
+        if (bill.__deleted)
+          return;
         bill.splitters.forEach(function (splitter) {
           emit([
             trip._id,
@@ -15,11 +17,11 @@ angular.module('CashSplitter.views', []).constant('views', {
         ], -parseFloat(bill.amount));
       });
       trip.payments.forEach(function (payment) {
-        emit([
+        !payment.__deleted && emit([
           trip._id,
           payment.source
         ], -parseFloat(payment.amount));
-        emit([
+        !payment.__deleted && emit([
           trip._id,
           payment.target
         ], parseFloat(payment.amount));
@@ -31,7 +33,7 @@ angular.module('CashSplitter.views', []).constant('views', {
     map: function (trip) {
       trip.bills.forEach(function (bill) {
         bill.type = 'bill';
-        emit([
+        !bill.__deleted && emit([
           trip._id,
           bill.creationDate.toJSON(),
           bill.payer
@@ -40,7 +42,7 @@ angular.module('CashSplitter.views', []).constant('views', {
       trip.payments.forEach(function (payment) {
         payment.type = 'payment';
         payment.description = '-> ' + payment.target;
-        emit([
+        !payment.__deleted && emit([
           trip._id,
           payment.creationDate.toJSON(),
           payment.source
@@ -52,12 +54,12 @@ angular.module('CashSplitter.views', []).constant('views', {
     map: function (trip) {
       trip.bills.forEach(function (bill) {
         bill.type = 'bill';
-        emit(bill._id, bill);
+        !bill.__deleted && emit(bill._id, bill);
       });
       trip.payments.forEach(function (payment) {
         payment.type = 'payment';
         payment.description = '-> ' + payment.target;
-        emit(payment._id, payment);
+        !payment.__deleted && emit(payment._id, payment);
       });
     }.toString()
   }

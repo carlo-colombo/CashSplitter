@@ -99,7 +99,16 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "    {{entry.description}} <br />\n" +
     "    {{entry.splitters.join(', ')}}\n" +
     "  </div>\n" +
-    "  <div class=\"panel-footer\">{{entry.amount | currency}}</div>\n" +
+    "  <div class=\"panel-footer\">\n" +
+    "      <span>\n" +
+    "          {{entry.amount | currency}}\n" +
+    "      </span>\n" +
+    "      <span class=\"pull-right\">\n" +
+    "          <a ng-click=\"delete(entry._id)\" href>\n" +
+    "              <icon name=\"scissors\"></icon>\n" +
+    "          </a>\n" +
+    "      </span>\n" +
+    "  </div>\n" +
     "</div>\n"
   );
 

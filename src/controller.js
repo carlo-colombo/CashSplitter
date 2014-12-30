@@ -51,6 +51,15 @@ angular.module('CashSplitter.controller', []).controller('TripController', [
         });
       }
     };
+    $scope.delete = function (id) {
+      if (confirm('Do you want to delete this transaction?')) {
+        (_.findWhere($scope.trip.bills, { _id: id }) || {}).__deleted = true;
+        (_.findWhere($scope.trip.payments, { _id: id }) || {}).__deleted = true;
+        TripService.add($scope.trip).then(function () {
+          $state.go('trip.show', null, { reload: true });
+        });
+      }
+    };
   }
 ]).controller('BillNewController', [
   '$scope',
