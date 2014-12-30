@@ -8,5 +8,14 @@
     {{entry.description}} <br />
     {{entry.splitters.join(', ')}}
   </div>
-  <div class="panel-footer">{{entry.amount | currency}}</div>
+  <div class="panel-footer">
+      <span>
+          {{entry.amount | currency}}
+      </span>
+      <span class="pull-right">
+          <a ng-click="delete(entry._id)" href>
+              <icon name="scissors"></icon>
+          </a>
+      </span>
+  </div>
 </div>
