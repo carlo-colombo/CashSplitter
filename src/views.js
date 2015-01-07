@@ -35,7 +35,7 @@ angular.module('CashSplitter.views', []).constant('views', {
         bill.type = 'bill';
         !bill.__deleted && emit([
           trip._id,
-          bill.creationDate.toJSON(),
+          new Date(bill.creationDate).toJSON(),
           bill.payer
         ], bill);
       });
@@ -44,7 +44,7 @@ angular.module('CashSplitter.views', []).constant('views', {
         payment.description = '-> ' + payment.target;
         !payment.__deleted && emit([
           trip._id,
-          payment.creationDate.toJSON(),
+          new Date(payment.creationDate).toJSON(),
           payment.source
         ], payment);
       });
