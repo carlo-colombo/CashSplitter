@@ -35,6 +35,8 @@ angular.module('CashSplitter', [
         })
       }
     }
+
+      $rootScope.$state = $state
   })
   .config(function($stateProvider, $urlRouterProvider) {
 
