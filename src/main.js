@@ -35,6 +35,7 @@ angular.module('CashSplitter', [
         });
       }
     };
+    $rootScope.$state = $state;
   }
 ]).config([
   '$stateProvider',

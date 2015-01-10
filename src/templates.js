@@ -36,7 +36,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "      </div>\n" +
     "      <div class=\"form-group\">\n" +
     "        <div class=\"col-xs-12\">\n" +
-    "          <input ng-model=\"creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"bill_creationDate\" placeholder=\"Date\" ng-required=\"true\">\n" +
+    "          <input ng-model=\"creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"bill_creationDate\" placeholder=\"Date\" ng-required=\"true\" step=\"0.001\">\n" +
     "        </div>\n" +
     "      </div>\n" +
     "      <submit />\n" +
@@ -71,7 +71,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "      </div>\n" +
     "      <div class=\"form-group\">\n" +
     "        <label for=\"bill_creationDate\">Date</label>\n" +
-    "        <input ng-model=\"bill.creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"bill_creationDate\" placeholder=\"Date\" ng-required=\"true\">\n" +
+    "        <input ng-model=\"bill.creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"bill_creationDate\" placeholder=\"Date\" ng-required=\"true\" step=\"0.001\">\n" +
     "      </div>\n" +
     "      <submit />\n" +
     "    </form>\n" +
@@ -136,7 +136,7 @@ angular.module('CashSplitter').run(['$templateCache', function($templateCache) {
     "      </div>\n" +
     "      <div class=\"form-group\">\n" +
     "        <label for=\"payment_creationDate\">Date</label>\n" +
-    "        <input ng-model=\"payment.creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"payment_creationDate\" placeholder=\"Date\" ng-required=\"true\">\n" +
+    "        <input ng-model=\"payment.creationDate\" type=\"datetime-local\" class=\"form-control\" id=\"payment_creationDate\" placeholder=\"Date\" ng-required=\"true\" step=\"0.001\">\n" +
     "      </div>\n" +
     "      <submit/>\n" +
     "    </form>\n" +
