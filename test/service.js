@@ -1,5 +1,5 @@
 function l(topic) {
-    return function() {
+    return function(msg) {
         console.log.apply(console, [msg].concat(Array.prototype.slice.call(arguments, 0)))
     }
 }
@@ -117,7 +117,8 @@ describe("CashSplitter", function() {
                     .addBill({
                         trip: 'testTrip',
                         amount: 1,
-                        splitters: ['a', 'b']
+                        splitters: ['a', 'b'],
+                        payer: 'a'
                     }).then(function(id) {
                         return entriesDB.get(id);
                     })
@@ -127,6 +128,20 @@ describe("CashSplitter", function() {
             it('should reject if trip is not defined', function(done) {
                 return tripService
                     .addBill({
+                        amount: 1,
+                        splitters: ['a', 'b'],
+                        payer: 'a'
+                    }).then(fail('not be called', done))
+                    .catch(function(err) {
+                        Should.exist(err)
+                        done()
+                    })
+            })
+
+            it('should reject if payer is not defined', function(done) {
+                return tripService
+                    .addBill({
+                        trip: 'a',
                         amount: 1,
                         splitters: ['a', 'b']
                     }).then(fail('not be called', done))
@@ -138,20 +153,22 @@ describe("CashSplitter", function() {
         })
 
         describe('#totals', function() {
-            it('should', function() {
-                tripService.add({
-                    trip: 'a',
-                    amount: '10',
+            it('should', function(done) {
+                tripService.addBill({
+                    trip: 'trip',
+                    amount: 10,
                     splitters: ['a', 'b'],
                     payer: 'a'
-                }).then(function(){
+                }).then(function() {
                     return tripService
-                        .totals('a')
-                        .then(function(data){
+                        .totals('trip')
+                        .then(function(data) {
                             Should.exist(data)
-                            data.should.have.a.lengthOf(2)
-                            data.should.containDeep({})
+                            data.b.should.be.eql(5)
+                            data.a.should.be.eql(-5)
+                            done()
                         })
+                        .catch(done)
                 })
             })
         });

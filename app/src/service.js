@@ -20,8 +20,6 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
     })
     .provider('tripService', function(views) {
 
-        var db = PouchDB('CashSplitter');
-
         //PouchDB.debug.enable('pouchdb:api');
 
         function splitterAndValue(row) {
@@ -85,11 +83,12 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
                         return angular.identity(db.remove(trip))
                     },
                     totals: function(trip_id) {
-                        return angular.identity(db.query(views.double_entry, {
+                        return entriesDB.query(views.double_entry, {
                             group: true,
+                            group_level: 2,
                             startkey: [trip_id],
                             endkey: [trip_id, {}]
-                        })).then(function(data) {
+                        }).then(function(data) {
                             return _.zipObject(_.map(data.rows, function splitterAndValue(row) {
                                 return [
                                     row.key[1],
