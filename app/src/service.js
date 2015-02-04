@@ -58,8 +58,17 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
                             }
                         })
                     },
-                    add: function(bill) {
-                        return angular.identity(entriesDB.post(bill))
+                    addBill: function(bill) {
+                        if(!bill.trip){
+                            return Promise.reject('trip is not defined')
+                        }
+                        if(!bill.payer){
+                            return Promise.reject('payer is not defined')
+                        }
+
+                        return entriesDB
+                            .post(bill)
+                            .then(_.property('id'))
                     },
                     get: function(id) {
                         return angular.identity(tripsDB.get(id))

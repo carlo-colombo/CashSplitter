@@ -90,7 +90,7 @@ describe("CashSplitter", function() {
 
             it('should filter out empty splitters', function() {
                 return tripService
-                    .create('testTrip', ['','a',' '])
+                    .create('testTrip', ['', 'a', ' '])
                     .then(function() {
                         return tripsDB.get('testTrip')
                     })
@@ -104,22 +104,56 @@ describe("CashSplitter", function() {
 
         })
 
-        describe("#add", function(){
+        describe("#addBill", function() {
             var trip;
-            beforeEach(function(){
+            beforeEach(function() {
                 return tripService
-                    .create('testTrip',['a','b'])
+                    .create('testTrip', ['a', 'b'])
             })
 
 
-            it('should accept a tripName and bill and save in the entriesDB', function(){
+            it('should accept a bill and save in the entriesDB and return the id', function() {
                 return tripService
-                    .add({
-                        trip:'testTrip',
+                    .addBill({
+                        trip: 'testTrip',
                         amount: 1,
-                        splitters: ['a','b']
+                        splitters: ['a', 'b']
+                    }).then(function(id) {
+                        return entriesDB.get(id);
+                    })
+
+            })
+
+            it('should reject if trip is not defined', function(done) {
+                return tripService
+                    .addBill({
+                        amount: 1,
+                        splitters: ['a', 'b']
+                    }).then(fail('not be called', done))
+                    .catch(function(err) {
+                        Should.exist(err)
+                        done()
                     })
             })
         })
+
+        describe('#totals', function() {
+            it('should', function() {
+                tripService.add({
+                    trip: 'a',
+                    amount: '10',
+                    splitters: ['a', 'b'],
+                    payer: 'a'
+                }).then(function(){
+                    return tripService
+                        .totals('a')
+                        .then(function(data){
+                            Should.exist(data)
+                            data.should.have.a.lengthOf(2)
+                            data.should.containDeep({})
+                        })
+                })
+            })
+        });
     })
 })
