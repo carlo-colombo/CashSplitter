@@ -5,28 +5,28 @@ angular.module('CashSplitter.controller', [])
     .controller('TripListController', function($scope, trips) {
         $scope.trips = trips;
     })
-    .controller('TripNewController', function($scope, TripService, $state) {
+    .controller('TripNewController', function($scope, tripService, $state) {
         $scope.trip = {
             bills: [],
             payments: []
         };
         $scope.submit = function() {
-            TripService.add($scope.trip).then(function() {
+            tripService.create($scope.trip.name, $scope.trip.splitters).then(function() {
                 $state.go('trip.show', {
                     trip_id: $scope.trip.name
                 });
             });
         };
     })
-    .controller('TripShowController', function($scope, TripService, $state, entries) {
-        TripService.totals($scope.trip._id).then(function(data) {
+    .controller('TripShowController', function($scope, tripService, $state, entries) {
+        tripService.totals($scope.trip._id).then(function(data) {
             $scope.splitted = data
         })
 
         $scope.entries = entries
         $scope.remove = function(trip) {
             if (confirm("Do you want to delete this trip?")) {
-                TripService.remove(trip).then(function() {
+                tripService.remove(trip).then(function() {
                     $state.go('trip_list')
                 })
             }
@@ -37,7 +37,7 @@ angular.module('CashSplitter.controller', [])
                 trip.bills = []
                 trip.payments = []
 
-                TripService.add(trip).then(function() {
+                tripService.add(trip).then(function() {
                     $state.go('trip.show', null, {
                         reload: true
                     })
@@ -53,7 +53,7 @@ angular.module('CashSplitter.controller', [])
                 (_.findWhere($scope.trip.payments, {
                     _id: id
                 }) || {}).__deleted = true;
-                TripService.add($scope.trip).then(function() {
+                tripService.add($scope.trip).then(function() {
                     $state.go('trip.show', null, {
                         reload: true
                     })
@@ -61,18 +61,16 @@ angular.module('CashSplitter.controller', [])
             }
         }
     })
-    .controller('BillNewController', function($scope, TripService, $state) {
+    .controller('BillNewController', function($scope, tripService, $state) {
         $scope.bill = {
+            trip: $scope.trip.name,
             creationDate: new Date(),
             _id: PouchDB.utils.uuid(),
             splitters: $scope.trip.splitters.slice(0)
         }
 
-        $scope.submit = function() {
-            $scope.bill.amount = $scope.bill.amount
-            $scope.trip.bills.push($scope.bill)
-
-            TripService.add($scope.trip).then(function() {
+        $scope.submit = function(bill) {
+            tripService.add(bill).then(function() {
                 $state.go('trip.show', null, {
                     reload: true
                 })
@@ -80,7 +78,7 @@ angular.module('CashSplitter.controller', [])
         }
 
     })
-    .controller('FairBillNewController', function($scope, TripService, $state) {
+    .controller('FairBillNewController', function($scope, tripService, $state) {
         $scope.bill = {}
         $scope.creationDate = new Date()
         $scope.sum = function(bill) {
@@ -108,14 +106,14 @@ angular.module('CashSplitter.controller', [])
                     $scope.trip.bills.push(bill)
                 })
 
-            TripService.add($scope.trip).then(function() {
+            tripService.add($scope.trip).then(function() {
                 $state.go('trip.show', null, {
                     reload: true
                 })
             })
         }
     })
-    .controller('PaymentNewController', function($scope, TripService, $state) {
+    .controller('PaymentNewController', function($scope, tripService, $state) {
         $scope.payment = {
             creationDate: new Date(),
             _id: PouchDB.utils.uuid()
@@ -123,7 +121,7 @@ angular.module('CashSplitter.controller', [])
 
         $scope.submit = function() {
             $scope.trip.payments.push($scope.payment)
-            TripService.add($scope.trip).then(function() {
+            tripService.add($scope.trip).then(function() {
                 $state.go('trip.show', null, {
                     reload: true
                 })

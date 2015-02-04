@@ -5,7 +5,7 @@ angular.module('CashSplitter', [
   'CashSplitter.service',
   'CashSplitter.directive'
 ])
-  .run(function($locale, $rootScope, TripService, $state) {
+  .run(function($locale, $rootScope, tripService, $state) {
     $locale.NUMBER_FORMATS.CURRENCY_SYM = '€'
     $locale.DATETIME_FORMATS.medium = 'dd-MM-yyyy HH:mm'
     $locale.DATETIME_FORMATS.short = 'dd-MM HH:mm'
@@ -26,7 +26,7 @@ angular.module('CashSplitter', [
 
     $rootScope.removeDb = function() {
       if (confirm("Do you want to delete all data?")) {
-        TripService.destroy().then(function() {
+        tripService.destroy().then(function() {
           $state.go('trip_list', null, {
             reload: true
           })
@@ -43,9 +43,9 @@ angular.module('CashSplitter', [
     $urlRouterProvider.otherwise("/trip");
 
     var tripResolve = {
-      trip: ['$stateParams', 'TripService',
-        function($stateParams, TripService) {
-          return TripService.get($stateParams.trip_id);
+      trip: ['$stateParams', 'tripService',
+        function($stateParams, tripService) {
+          return tripService.get($stateParams.trip_id);
         }
       ]
     }
@@ -78,9 +78,9 @@ angular.module('CashSplitter', [
         resolve: {
           trips: [
             '$stateParams',
-            'TripService',
-            function($stateParams, TripService) {
-              return TripService.list().then(function(data) {
+            'tripService',
+            function($stateParams, tripService) {
+              return tripService.list().then(function(data) {
                 return data.rows.map(function(i) {
                   return i.doc
                 })
@@ -103,10 +103,10 @@ angular.module('CashSplitter', [
         controller: 'TripShowController',
         resolve: {
           entries: [
-            'TripService',
+            'tripService',
             '$stateParams',
-            function(TripService, $stateParams) {
-              return TripService.trip_entries($stateParams.trip_id)
+            function(tripService, $stateParams) {
+              return tripService.trip_entries($stateParams.trip_id)
             }
           ]
         }
@@ -138,10 +138,10 @@ angular.module('CashSplitter', [
         controller: 'SplitterShowController',
         resolve: {
           entries: [
-            'TripService',
+            'tripService',
             '$stateParams',
-            function(TripService, $stateParams) {
-              return TripService.splitter_entries($stateParams.trip_id, $stateParams.splitter)
+            function(tripService, $stateParams) {
+              return tripService.splitter_entries($stateParams.trip_id, $stateParams.splitter)
             }
           ]
         }
@@ -153,10 +153,10 @@ angular.module('CashSplitter', [
         controller: 'EntryController',
         resolve: {
           entry: [
-            'TripService',
+            'tripService',
             '$stateParams',
-            function(TripService, $stateParams) {
-              return TripService.getEntry($stateParams.entry_id)
+            function(tripService, $stateParams) {
+              return tripService.getEntry($stateParams.entry_id)
             }
           ]
         }
