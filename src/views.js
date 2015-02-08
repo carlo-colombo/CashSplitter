@@ -1,19 +1,21 @@
 angular.module('CashSplitter.views', []).constant('views', {
   double_entry: {
     map: function (trip) {
-      trip.bills.forEach(function (bill) {
+      trip.bills.forEach(function (bill, j) {
         var s = bill.splitters.length;
         if (bill.__deleted)
           return;
-        bill.splitters.forEach(function (splitter) {
+        bill.splitters.forEach(function (splitter, i) {
           emit([
             trip._id,
-            splitter
+            splitter,
+            i + j
           ], parseFloat(bill.amount / s));
         });
         emit([
           trip._id,
-          bill.payer
+          bill.payer,
+          -j - 1
         ], -parseFloat(bill.amount));
       });
       trip.payments.forEach(function (payment) {
