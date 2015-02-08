@@ -18,14 +18,16 @@ angular.module('CashSplitter.views', []).constant('views', {
           -j - 1
         ], -parseFloat(bill.amount));
       });
-      trip.payments.forEach(function (payment) {
+      trip.payments.forEach(function (payment, i) {
         !payment.__deleted && emit([
           trip._id,
-          payment.source
+          payment.source,
+          i + 10000
         ], -parseFloat(payment.amount));
         !payment.__deleted && emit([
           trip._id,
-          payment.target
+          payment.target,
+          i - 10000
         ], parseFloat(payment.amount));
       });
     }.toString(),
