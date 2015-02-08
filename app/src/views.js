@@ -10,9 +10,9 @@ angular.module('CashSplitter.views', [])
                     });
                     emit([trip._id, bill.payer,-j-1], -parseFloat(bill.amount));
                 });
-                trip.payments.forEach(function(payment) {
-                    !payment.__deleted && emit([trip._id, payment.source], -parseFloat(payment.amount));
-                    !payment.__deleted && emit([trip._id, payment.target], parseFloat(payment.amount));
+                trip.payments.forEach(function(payment,i) {
+                    !payment.__deleted && emit([trip._id, payment.source,i+10000], -parseFloat(payment.amount));
+                    !payment.__deleted && emit([trip._id, payment.target,i-10000], parseFloat(payment.amount));
                 });
             }).toString(),
             reduce: '_sum'
