@@ -58,6 +58,7 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
             return wrap(db.query(views.double_entry, {
               group: true,
               startkey: [trip_id],
+              group_level: 2,
               endkey: [trip_id, {}]
             })).then(function(data) {
               return _.zipObject(_.map(data.rows, function splitterAndValue(row) {
