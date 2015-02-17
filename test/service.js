@@ -105,13 +105,6 @@ describe("CashSplitter", function() {
         })
 
         describe("#addBill", function() {
-            var trip;
-            beforeEach(function() {
-                return tripService
-                    .create('testTrip', ['a', 'b'])
-            })
-
-
             it('should accept a bill and save in the entriesDB and return the id', function() {
                 return tripService
                     .addBill({
@@ -152,8 +145,35 @@ describe("CashSplitter", function() {
             })
         })
 
+        describe("#addPayment", function() {
+            it("should accept a payment and save in entriesDB and return the id", function() {
+                return tripService.addPayment({
+                    amount: 10,
+                    source: 'a',
+                    target: 'b',
+                    trip: 'trip'
+                }).then(function(id) {
+                    return entriesDB.get(id)
+                })
+            })
+
+            it('should validate payment and return the errors', function(done) {
+                return tripService.addPayment({})
+                    .then(fail('not be called', done))
+                    .catch(function(err) {
+                        Should.exist(err)
+                        err.should.have.a.lengthOf(4)
+                        Should.exist(_.findWhere(err, {params:['trip']}))
+                        Should.exist(_.findWhere(err, {params:['source']}))
+                        Should.exist(_.findWhere(err, {params:['target']}))
+                        Should.exist(_.findWhere(err, {params:['amount']}))
+                        done()
+                    })
+            })
+        })
+
         describe('#totals', function() {
-            it('should', function(done) {
+            it('should split a single entry equally between 2 splitters', function(done) {
                 tripService.addBill({
                     trip: 'trip',
                     amount: 10,
@@ -170,6 +190,72 @@ describe("CashSplitter", function() {
                         })
                         .catch(done)
                 })
+            })
+
+            it('should return 0 for a two simmetric entries', function(done) {
+                var entry = {
+                    trip: 'trip',
+                    amount: 10,
+                    splitters: ['a', 'b'],
+                    payer: 'a'
+                };
+                tripService.addBill(entry)
+                    .then(function() {
+                        entry.payer = 'b'
+                        return tripService.addBill(entry)
+                    })
+                    .then(function() {
+                        return tripService
+                            .totals('trip')
+                            .then(function(data) {
+                                Should.exist(data)
+                                data.b.should.be.eql(0)
+                                data.a.should.be.eql(0)
+                                done()
+                            })
+                            .catch(done)
+                    })
+            })
+            it('should get the right calculation for if a thrid payer pays for other 2 splitters', function(done) {
+                tripService.addBill({
+                    trip: 'trip',
+                    amount: 10,
+                    splitters: ['a', 'b'],
+                    payer: 'c'
+                }).then(function() {
+                    return tripService
+                        .totals('trip')
+                        .then(function(data) {
+                            Should.exist(data)
+                            data.a.should.be.eql(5)
+                            data.b.should.be.eql(5)
+                            data.c.should.be.eql(-10)
+                            done()
+                        })
+                        .catch(done)
+                })
+            })
+            it('should take account of payments', function(done) {
+                tripService.addBill({
+                    trip: 'trip',
+                    amount: 10,
+                    splitters: ['a', 'b'],
+                    payer: 'a'
+                }).then(function() {
+                    return tripService.addPayment({
+                        source: 'b',
+                        target: 'a',
+                        amount: 5,
+                        trip: 'trip'
+                    })
+                }).then(function() {
+                    return tripService.totals('trip')
+                }).then(function(data) {
+                    Should.exist(data)
+                    data.a.should.be.eql(0)
+                    data.b.should.be.eql(0)
+                    done()
+                }).catch(done)
             })
         });
     })

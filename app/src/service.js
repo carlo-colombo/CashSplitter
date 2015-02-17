@@ -1,6 +1,37 @@
 angular.module('CashSplitter.service', ['CashSplitter.views'])
     .constant('tripsDB', PouchDB('Cashsplitter.trips'))
     .constant('entriesDB', PouchDB('Cashsplitter.entries'))
+    .constant('validation', {
+        payment: {
+            //"$schema": "http://json-schema.org/draft-04/schema#",
+            "id": "http://carlo-colombo.github.io/CashSplitter/payment",
+            "type": "object",
+            "properties": {
+                "source": {
+                    "id": "http://carlo-colombo.github.io/CashSplitter/payment/source",
+                    "type": "string"
+                },
+                "target": {
+                    "id": "http://carlo-colombo.github.io/CashSplitter/payment/target",
+                    "type": "string"
+                },
+                "amount": {
+                    "id": "http://carlo-colombo.github.io/CashSplitter/payment/amount",
+                    "type": "number"
+                },
+                "trip": {
+                    "id": "http://carlo-colombo.github.io/CashSplitter/payment/trip",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "source",
+                "target",
+                "amount",
+                "trip"
+            ]
+        }
+    })
     .provider('ngTripService', function() {
         function wrap(pouchPromise) {
             var deferred = $q.defer()
@@ -30,7 +61,7 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
         }
 
         return {
-            $get: function($q, tripsDB, entriesDB) {
+            $get: function($q, tripsDB, entriesDB, validation) {
                 return {
                     create: function(name, splitters) {
                         return new Promise(function(resolve, reject) {
@@ -43,12 +74,12 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
                                         name: name,
                                         splitters: _.unique(
                                             _.filter(
-                                                _.map(splitters, function(s){
+                                                _.map(splitters, function(s) {
                                                     return s.trim()
-                                                } )))
-                                    }).then(function(){
+                                                })))
+                                    }).then(function() {
                                         return {
-                                            name:name,
+                                            name: name,
                                             splitters: []
                                         }
                                     })
@@ -57,15 +88,29 @@ angular.module('CashSplitter.service', ['CashSplitter.views'])
                         })
                     },
                     addBill: function(bill) {
-                        if(!bill.trip){
+                        if (!bill.trip) {
                             return Promise.reject('trip is not defined')
                         }
-                        if(!bill.payer){
+                        if (!bill.payer) {
                             return Promise.reject('payer is not defined')
                         }
 
                         return entriesDB
-                            .post(bill)
+                            .post(_.extend({}, bill, {
+                                type: 'bill'
+                            }))
+                            .then(_.property('id'))
+                    },
+                    addPayment: function(payment) {
+                        var validator = new ZSchema()
+
+                        if (!validator.validate(payment, validation.payment)) {
+                            return Promise.reject(validator.getLastErrors())
+                        }
+                        return entriesDB
+                            .post(_.extend({}, payment, {
+                                type: 'payment'
+                            }))
                             .then(_.property('id'))
                     },
                     get: function(id) {
