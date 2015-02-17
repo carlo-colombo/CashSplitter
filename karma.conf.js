@@ -19,7 +19,7 @@ module.exports = function(config) {
             'app/lib/angular.js',
             'app/lib/lodash.js',
             'app/lib/pouchdb.js',
-            '../pouchdb-truncate/dist/pouchdb.truncate.js',
+            'app/lib/z-schema.js ',
             'bower_components/angular-mocks/angular-mocks.js',
             'app/src/**/*.js',
             'test/**/*.js'
