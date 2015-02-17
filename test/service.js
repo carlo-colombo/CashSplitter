@@ -156,20 +156,6 @@ describe("CashSplitter", function() {
                     return entriesDB.get(id)
                 })
             })
-
-            it('should validate payment and return the errors', function(done) {
-                return tripService.addPayment({})
-                    .then(fail('not be called', done))
-                    .catch(function(err) {
-                        Should.exist(err)
-                        err.should.have.a.lengthOf(4)
-                        Should.exist(_.findWhere(err, {params:['trip']}))
-                        Should.exist(_.findWhere(err, {params:['source']}))
-                        Should.exist(_.findWhere(err, {params:['target']}))
-                        Should.exist(_.findWhere(err, {params:['amount']}))
-                        done()
-                    })
-            })
         })
 
         describe('#totals', function() {
@@ -258,5 +244,55 @@ describe("CashSplitter", function() {
                 }).catch(done)
             })
         });
+    })
+
+    describe('validation', function() {
+        var validator, validation
+        beforeEach(inject(function(_validation_) {
+            validator = new ZSchema()
+            validation = _validation_
+        }))
+
+        describe('payment', function() {
+            it('should accept valid payment', function() {
+                var res = validator.validate({
+                    source: 'a',
+                    target: 'b',
+                    amount: 10,
+                    trip: 'tripName'
+                }, validation.payment)
+
+                res.should.be.ok
+            })
+
+            it('should validate payment', function() {
+                var res = validator.validate({}, validation.payment)
+                var err = validator.getLastErrors()
+                res.should.be.false
+                _.each(['trip','source','target','amount'], function(prop){
+                    Should.exist(_.findWhere(err, {
+                        params:[prop],
+                        code:'OBJECT_MISSING_REQUIRED_PROPERTY'
+                    }))
+                })
+            })
+
+            it('should reject non numeric amount', function() {
+                var res = validator.validate({
+                    source: 'a',
+                    target: 'b',
+                    amount: 'asd',
+                    trip: 'tripname'
+                }, validation.payment)
+
+                res.should.be.false
+                var err = validator.getLastErrors()
+                err.should.have.a.lengthOf(1)
+                Should.exist(_.findWhere(err, {
+                    code: 'INVALID_TYPE',
+                    path: '#/amount'
+                }))
+            })
+        })
     })
 })
