@@ -202,7 +202,7 @@ describe("CashSplitter", function() {
                             .catch(done)
                     })
             })
-            it('should get the right calculation for if a thrid payer pays for other 2 splitters', function(done) {
+            it('should get the right calculation for if a third payer pays for other 2 splitters', function(done) {
                 tripService.addBill({
                     trip: 'trip',
                     amount: 10,
