@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { merge } from "./merge.ts";
-import { createBaseGroup, testTransactions } from "../../test_fixtures.ts";
+import { createBaseGroup, testTransactions, Transaction } from "../../test_fixtures.ts";
 
 Deno.test("merge two group objects with same agents, one with transactions", () => {
   // Create two groups with the same description and timestamp but different transactions
@@ -61,4 +61,49 @@ Deno.test("merge rejects groups with different descriptions or timestamps", () =
     Error,
     "Cannot merge groups with different creation timestamps"
   );
+});
+
+Deno.test("merge groups with overlapping transactions", () => {
+  // Create identical lunch transactions (but different objects)
+  const lunch1 = ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction;
+  const lunch2 = ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction;
+  
+  // Create first group with dinner and lunch transactions
+  const group1 = createBaseGroup({
+    transactions: [
+      testTransactions.dinner,
+      lunch1
+    ]
+  });
+  
+  // Create second group with lunch and coffee transactions (lunch is overlapping)
+  const group2 = createBaseGroup({
+    transactions: [
+      lunch2,
+      testTransactions.coffee
+    ]
+  });
+  
+  // Get the merge result
+  const result = merge(group1, group2);
+  
+  // Test the merge function - lunch appears twice in the result
+  // This is the current behavior: duplicate transactions are not detected
+  // ISSUE: In the future, we might want to improve the merge function to detect and deduplicate transactions
+  assertEquals(result, [
+    "cs",
+    1,
+    2,
+    "Trip expenses", // GroupDescription
+    1672400000000, // Timestamp
+    [
+      [1, "Bob"],
+      [2, "Charlie"],
+    ],
+    [
+      ["Dinner", 1672444800000, [[1, 30], [2, -30]]],
+      ["Lunch", 1672531200000, [[1, 50], [2, -50]]],
+      ["Coffee", 1672617600000, [[1, 10], [2, -10]]],
+    ]
+  ]);
 });
