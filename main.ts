@@ -1,5 +1,5 @@
 import { encode } from "./src/model/GroupSerialization.ts";
-import { Group } from "./src/model/Group.ts";
+import { Group, agents as getAgents, transactions as getTransactions } from "./src/model/Group.ts";
 import { createBaseGroup, testTransactions } from "./test_fixtures.ts";
 
 /**
@@ -16,7 +16,7 @@ function runCashsplitterDemo() {
   console.log(JSON.stringify(group, null, 2));
   
   // Add some transactions
-  const transactions = group[6];
+  const transactions = getTransactions(group);
   transactions.push(testTransactions.lunch);
   transactions.push(testTransactions.coffee);
   transactions.push(["Hotel", Date.now(), [[1, 150], [2, -150]]]);
@@ -42,8 +42,8 @@ function runCashsplitterDemo() {
  * Calculate a summary of balances for each person in the group
  */
 function calculateSummary(group: Group): [number, string, number][] {
-  const agents = group[5];
-  const transactions = group[6];
+  const agents = getAgents(group);
+  const transactions = getTransactions(group);
   
   // Initialize balances for each agent
   const balances = new Map<number, number>();

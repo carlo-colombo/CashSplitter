@@ -8,19 +8,8 @@ import bencode from "bencode";
  * @returns String containing the bencoded data
  */
 export function encode(group: Group): string {
-  // Convert group to a structure suitable for bencode serialization
-  const serializableGroup = {
-    header: group[0],
-    version: group[1],
-    revision: group[2],
-    description: group[3],
-    timestamp: group[4],
-    agents: group[5],
-    transactions: group[6]
-  };
-  
   // Use bencode library to encode the group
-  const encoded = bencode.encode(serializableGroup);
+  const encoded = bencode.encode(group);
   
   // Convert to string
   return String.fromCharCode(...encoded);
@@ -43,54 +32,72 @@ export function decode(str: string): Group {
     // Process the decoded data
     const processedData = convertBuffersToStrings(decoded);
     
-    if (typeof processedData !== "object" || processedData === null) {
-      throw new Error("Invalid group data format");
+    // Verify it's an array with the right structure
+    if (!Array.isArray(processedData) || processedData.length < 7) {
+      throw new Error("Invalid group data format: not a valid array");
     }
     
-    const decodedObj = processedData as Record<string, unknown>;
+    // Convert the decoded array to a Group
+    const group = processedData as unknown[];
     
-    // Validate the decoded data structure
+    // Validate expected types and format
     if (
-      !("header" in decodedObj) ||
-      !("version" in decodedObj) ||
-      !("revision" in decodedObj) ||
-      !("description" in decodedObj) ||
-      !("timestamp" in decodedObj) ||
-      !("agents" in decodedObj) ||
-      !("transactions" in decodedObj)
+      typeof group[0] !== "string" || group[0] !== "cs" ||
+      typeof group[1] !== "number" || group[1] !== 1 ||
+      typeof group[2] !== "number" ||
+      typeof group[3] !== "string" ||
+      typeof group[4] !== "number" ||
+      !Array.isArray(group[5]) ||
+      !Array.isArray(group[6])
     ) {
-      throw new Error("Invalid group data format");
+      throw new Error("Invalid group data format: wrong structure");
     }
     
-    // Convert back to Group tuple structure
+    // Convert agents and transactions if needed
+    const agents = (group[5] as unknown[]).map(agent => {
+      if (Array.isArray(agent) && agent.length === 2 && 
+          typeof agent[0] === "number" && 
+          (typeof agent[1] === "string" || 
+           (agent[1] && typeof agent[1] === "object"))) {
+        return [
+          agent[0],
+          typeof agent[1] === "string" ? agent[1] : convertToString(agent[1])
+        ] as [number, string];
+      }
+      throw new Error("Invalid agent format");
+    });
+    
+    const transactions = (group[6] as unknown[]).map(transaction => {
+      if (Array.isArray(transaction) && transaction.length === 3) {
+        const desc = typeof transaction[0] === "string" ? transaction[0] : convertToString(transaction[0]);
+        const timestamp = transaction[1] as number;
+        
+        if (!Array.isArray(transaction[2])) {
+          throw new Error("Invalid transaction entries");
+        }
+        
+        const entries = (transaction[2] as unknown[]).map(entry => {
+          if (Array.isArray(entry) && entry.length === 2) {
+            return [entry[0] as number, entry[1] as number];
+          }
+          throw new Error("Invalid transaction entry format");
+        });
+        
+        return [desc, timestamp, entries] as [string, number, [number, number][]];
+      }
+      throw new Error("Invalid transaction format");
+    });
+    
+    // Create the final Group structure
     return [
-      convertToString(decodedObj.header) as "cs",
-      decodedObj.version as 1,
-      decodedObj.revision as number,
-      convertToString(decodedObj.description),
-      decodedObj.timestamp as number,
-      (decodedObj.agents as unknown[]).map(agent => {
-        if (Array.isArray(agent) && agent.length === 2) {
-          return [agent[0] as number, convertToString(agent[1])];
-        }
-        throw new Error("Invalid agent format");
-      }) as [number, string][],
-      (decodedObj.transactions as unknown[]).map(transaction => {
-        if (Array.isArray(transaction) && transaction.length === 3) {
-          return [
-            convertToString(transaction[0]), 
-            transaction[1] as number, 
-            (transaction[2] as unknown[]).map(entry => {
-              if (Array.isArray(entry) && entry.length === 2) {
-                return [entry[0] as number, entry[1] as number];
-              }
-              throw new Error("Invalid transaction entry format");
-            }) as [number, number][]
-          ];
-        }
-        throw new Error("Invalid transaction format");
-      }) as [string, number, [number, number][]][],
-    ];
+      "cs", 
+      1,
+      group[2] as number,
+      group[3] as string,
+      group[4] as number,
+      agents,
+      transactions
+    ] as Group;
   } catch (error) {
     if (error instanceof Error && error.message === "Invalid group data format") {
       throw error;
