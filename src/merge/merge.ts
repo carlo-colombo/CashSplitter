@@ -6,10 +6,99 @@ import {
   groupId
 } from "../model/Group.ts";
 
+// Define a conflict error class with conflicts array
+class MergeConflictError extends Error {
+  conflicts: Array<{
+    type: string;
+    [key: string]: unknown;
+  }>;
+  
+  constructor(conflicts: Array<{type: string; [key: string]: unknown}>) {
+    super("Conflicts detected");
+    this.conflicts = conflicts;
+    this.name = "MergeConflictError";
+  }
+}
+
+/**
+ * Type definition for conflict objects
+ */
+type Conflict = {
+  type: string;
+  [key: string]: unknown;
+};
+
+/**
+ * Find conflicts between two groups
+ * Returns an array of conflicts (empty if no conflicts)
+ */
+function findConflicts(group1: Group, group2: Group): Array<Conflict> {
+  const conflicts: Conflict[] = [];
+  
+  // Check for agent conflicts
+  const agents1 = agents(group1);
+  const agents2 = agents(group2);
+  
+  // Create map of agents by ID for faster lookup
+  const agentMap1 = new Map(agents1.map(agent => [agent[0], agent[1]]));
+  const agentMap2 = new Map(agents2.map(agent => [agent[0], agent[1]]));
+  
+  // Find agents with same ID but different name
+  for (const [id, name1] of agentMap1) {
+    if (agentMap2.has(id)) {
+      const name2 = agentMap2.get(id);
+      if (name1 !== name2) {
+        conflicts.push({
+          type: "agent",
+          id,
+          value1: name1,
+          value2: name2
+        });
+      }
+    }
+  }
+  
+  // Check for transaction conflicts
+  const transactions1 = transactions(group1);
+  const transactions2 = transactions(group2);
+  
+  // Create map for transactions by description and timestamp
+  const transactionMap = new Map();
+  
+  // Add all transactions from group1
+  for (const transaction of transactions1) {
+    const key = `${transaction[0]}|${transaction[1]}`; // desc|timestamp
+    transactionMap.set(key, { transaction });
+  }
+  
+  // Check for conflicts with transactions from group2
+  for (const transaction2 of transactions2) {
+    const key = `${transaction2[0]}|${transaction2[1]}`;
+    
+    if (transactionMap.has(key)) {
+      const { transaction: transaction1 } = transactionMap.get(key);
+      
+      // Check if the transactions have different values
+      if (JSON.stringify(transaction1[2]) !== JSON.stringify(transaction2[2])) {
+        conflicts.push({
+          type: "transaction",
+          description: transaction2[0],
+          timestamp: transaction2[1],
+          value1: transaction1[2],
+          value2: transaction2[2]
+        });
+      }
+    }
+  }
+  
+  return conflicts;
+}
+
 /**
  * Merges two group objects, combining their transactions and incrementing the revision
  * 
  * @throws Error if group descriptions or creation timestamps don't match
+ * @throws MergeConflictError with a conflicts array if there are agent or transaction conflicts
  */
 export function merge(group1: Group, group2: Group): Group {
   // Check that group identifiers match
@@ -22,6 +111,12 @@ export function merge(group1: Group, group2: Group): Group {
 
   if (timestamp1 !== timestamp2) {
     throw new Error("Cannot merge groups with different creation timestamps");
+  }
+
+  // Check for conflicts
+  const conflicts = findConflicts(group1, group2);
+  if (conflicts.length > 0) {
+    throw new MergeConflictError(conflicts);
   }
   
   // Increment the revision number

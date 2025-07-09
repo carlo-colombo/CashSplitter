@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { merge } from "./merge.ts";
-import { createBaseGroup, testTransactions, Transaction } from "../../test_fixtures.ts";
+import { createBaseGroup, cloneGroup, testTransactions, Transaction } from "../../test_fixtures.ts";
 
 Deno.test("merge two group objects with same agents, one with transactions", () => {
   // Create two groups with the same description and timestamp but different transactions
@@ -106,4 +106,99 @@ Deno.test("merge groups with overlapping transactions", () => {
       ["Coffee", 1672617600000, [[1, 10], [2, -10]]],
     ]
   ]);
+});
+
+interface MergeConflictError extends Error {
+  conflicts: Array<{
+    type: string;
+    [key: string]: unknown;
+  }>;
+}
+
+Deno.test("merge detects agent conflicts and returns detailed error", () => {
+  // Create base group with standard agents
+  const group1 = createBaseGroup();
+  
+  // Create a group with a conflicting agent (same ID but different name)
+  const group2 = createBaseGroup();
+  group2[5][0][1] = "Robert"; // Change Bob to Robert but keep ID 1
+
+  // Test that merging throws with detailed conflict information
+  try {
+    merge(group1, group2);
+    throw new Error("Merge should have thrown an error");
+  } catch (error) {
+    if (!(error instanceof Error)) throw error;
+    const mergeError = error as MergeConflictError;
+    assertEquals(mergeError.conflicts, [
+      { type: "agent", id: 1, value1: "Bob", value2: "Robert" }
+    ]);
+  }
+});
+
+Deno.test("merge detects transaction conflicts and returns detailed error", () => {
+  // Create two groups with conflicting transactions (same desc and timestamp but different amounts)
+  const conflictingLunch1 = ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction;
+  const conflictingLunch2 = ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction;
+  
+  const group1 = createBaseGroup({
+    transactions: [testTransactions.dinner, conflictingLunch1]
+  });
+  
+  const group2 = createBaseGroup({
+    transactions: [testTransactions.coffee, conflictingLunch2]
+  });
+  
+  // Test that merging throws with detailed conflict information
+  try {
+    merge(group1, group2);
+    throw new Error("Merge should have thrown an error");
+  } catch (error) {
+    if (!(error instanceof Error)) throw error;
+    const mergeError = error as MergeConflictError;
+    assertEquals(mergeError.conflicts, [
+      { 
+        type: "transaction", 
+        description: "Lunch", 
+        timestamp: 1672531200000,
+        value1: [[1, 40], [2, -40]],
+        value2: [[1, 50], [2, -50]] 
+      }
+    ]);
+  }
+});
+
+Deno.test("merge detects multiple conflicts and returns all details", () => {
+  // Create groups with both agent and transaction conflicts
+  const group1 = createBaseGroup({
+    transactions: [
+      testTransactions.dinner, 
+      ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction
+    ]
+  });
+  
+  const group2 = cloneGroup(group1);
+  // Add agent conflict
+  group2[5][0][1] = "Robert";
+  // Add transaction conflict  
+  group2[6][1] = ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction;
+  
+  // Test that merging throws with multiple detailed conflict information
+  try {
+    merge(group1, group2);
+    throw new Error("Merge should have thrown an error");
+  } catch (error) {
+    if (!(error instanceof Error)) throw error;
+    const mergeError = error as MergeConflictError;
+    assertEquals(mergeError.conflicts, [
+      { type: "agent", id: 1, value1: "Bob", value2: "Robert" },
+      { 
+        type: "transaction", 
+        description: "Lunch", 
+        timestamp: 1672531200000,
+        value1: [[1, 40], [2, -40]],
+        value2: [[1, 50], [2, -50]] 
+      }
+    ]);
+  }
 });
