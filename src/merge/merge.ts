@@ -1,10 +1,9 @@
 import { 
-  Group, 
-  GROUP_DESCRIPTION, 
-  GROUP_CREATION_TIMESTAMP, 
-  GROUP_REVISION, 
-  GROUP_TRANSACTIONS,
-  GROUP_AGENTS
+  Group,
+  revision, 
+  transactions,
+  agents,
+  groupId
 } from "../model/Group.ts";
 
 /**
@@ -13,32 +12,34 @@ import {
  * @throws Error if group descriptions or creation timestamps don't match
  */
 export function merge(group1: Group, group2: Group): Group {
-  // Check that group descriptions match
-  if (group1[GROUP_DESCRIPTION] !== group2[GROUP_DESCRIPTION]) {
+  // Check that group identifiers match
+  const [desc1, timestamp1] = groupId(group1);
+  const [desc2, timestamp2] = groupId(group2);
+  
+  if (desc1 !== desc2) {
     throw new Error("Cannot merge groups with different descriptions");
   }
 
-  // Check that creation timestamps match
-  if (group1[GROUP_CREATION_TIMESTAMP] !== group2[GROUP_CREATION_TIMESTAMP]) {
+  if (timestamp1 !== timestamp2) {
     throw new Error("Cannot merge groups with different creation timestamps");
   }
   
   // Increment the revision number
-  const newRevision = Math.max(group1[GROUP_REVISION], group2[GROUP_REVISION]) + 1;
+  const newRevision = Math.max(revision(group1), revision(group2)) + 1;
   
   // Combine transactions from both groups
   const mergedTransactions = [
-    ...group1[GROUP_TRANSACTIONS],
-    ...group2[GROUP_TRANSACTIONS]
+    ...transactions(group1),
+    ...transactions(group2)
   ];
   
   return [
     "cs",
     1,
     newRevision,
-    group1[GROUP_DESCRIPTION],
-    group1[GROUP_CREATION_TIMESTAMP],
-    group1[GROUP_AGENTS],
+    desc1,
+    timestamp1,
+    agents(group1),
     mergedTransactions
   ];
 }

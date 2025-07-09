@@ -9,14 +9,15 @@ type Revision = number;
 type Agent = [AgentId, Name];
 type Transaction = [Description, Timestamp, [AgentId, Money][]];
 
-// Index constants for better readability
-export const GROUP_HEADER = 0;
-export const GROUP_VERSION = 1;
-export const GROUP_REVISION = 2;
-export const GROUP_DESCRIPTION = 3;
-export const GROUP_CREATION_TIMESTAMP = 4;
-export const GROUP_AGENTS = 5;
-export const GROUP_TRANSACTIONS = 6;
+// Index constants for better readability - only used internally
+// Prefix with underscore for unused constants
+const _GROUP_HEADER = 0;
+const _GROUP_VERSION = 1;
+const GROUP_REVISION = 2;
+const GROUP_DESCRIPTION = 3;
+const GROUP_CREATION_TIMESTAMP = 4;
+const GROUP_AGENTS = 5;
+const GROUP_TRANSACTIONS = 6;
 
 /**
  * Group represents a cashsplitter group with:
@@ -29,3 +30,31 @@ export const GROUP_TRANSACTIONS = 6;
  * - List of transactions between agents
  */
 export type Group = ["cs", 1, Revision, GroupDescription, Timestamp, Agent[], Transaction[]];
+
+/**
+ * Get the revision number of a group
+ */
+export function revision(group: Group): Revision {
+  return group[GROUP_REVISION];
+}
+
+/**
+ * Get the transactions of a group
+ */
+export function transactions(group: Group): Transaction[] {
+  return group[GROUP_TRANSACTIONS];
+}
+
+/**
+ * Get the agents of a group
+ */
+export function agents(group: Group): Agent[] {
+  return group[GROUP_AGENTS];
+}
+
+/**
+ * Get the group identifier as [description, timestamp]
+ */
+export function groupId(group: Group): [GroupDescription, Timestamp] {
+  return [group[GROUP_DESCRIPTION], group[GROUP_CREATION_TIMESTAMP]];
+}
