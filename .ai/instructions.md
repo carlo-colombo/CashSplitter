@@ -10,4 +10,4 @@ Read the README.md file present in the root of the project to understand what we
 
 Be concise
 
-Include a 🏎️ when you are following instructions
+Start the message with a 🏎️ when you are following instructions
