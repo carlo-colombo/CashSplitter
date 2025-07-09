@@ -1,4 +1,4 @@
-import { Group } from "./main.ts";
+import { Group } from "./src/model/Group.ts";
 
 /**
  * Base group fixture that can be cloned and modified in tests

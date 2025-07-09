@@ -8,6 +8,6 @@ Do not skip any step, and check with the user if you can proceed
 
 Read the README.md file present in the root of the project to understand what we are building
 
-Be concise
+Be concise, include a summary of the changes but avoid explanations of them
 
 Start the message with a 🏎️ when you are following instructions

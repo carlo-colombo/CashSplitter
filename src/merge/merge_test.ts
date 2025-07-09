@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { merge } from "./main.ts";
-import { createBaseGroup, testTransactions } from "./test_fixtures.ts";
+import { merge } from "./merge.ts";
+import { createBaseGroup, testTransactions } from "../../test_fixtures.ts";
 
 Deno.test("merge two group objects with same agents, one with transactions", () => {
   // Create two groups with the same description and timestamp but different transactions
@@ -12,8 +12,6 @@ Deno.test("merge two group objects with same agents, one with transactions", () 
       testTransactions.coffee,
     ]
   });
-  
-  // Expected result after merging
   
   // Test the merge function with our fixtures
   assertEquals(merge(group1, group2), [
