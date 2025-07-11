@@ -56,12 +56,27 @@ function createGroupFromForm(name: string, people: string[]): Group {
  */
 export function App() {
   const [groups, setGroups] = useState<Group[]>([]);
+  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
   const storage = new GroupStorage();
   
   // Load groups on initial render
   useEffect(() => {
     const storedGroups = storage.getAllGroups();
     setGroups(storedGroups);
+  }, []);
+  
+  // Set up online/offline listeners
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    
+    globalThis.addEventListener('online', handleOnline);
+    globalThis.addEventListener('offline', handleOffline);
+    
+    return () => {
+      globalThis.removeEventListener('online', handleOnline);
+      globalThis.removeEventListener('offline', handleOffline);
+    };
   }, []);
   
   /**
@@ -94,6 +109,11 @@ export function App() {
       <header>
         <h1>Cashsplitter</h1>
         <p>Manage expenses when in groups of people</p>
+        {!isOnline && (
+          <div class="offline-indicator">
+            You're currently offline. Your changes will be saved locally.
+          </div>
+        )}
       </header>
       
       <main>
@@ -108,8 +128,9 @@ export function App() {
                   <h3>{group[3]}</h3>
                   <p>{group[5].length} people</p>
                   <div class="actions">
-                    <button>View Details</button>
+                    <button type="button">View Details</button>
                     <button 
+                      type="button"
                       onClick={() => handleDeleteGroup(group[3], group[4])}
                       class="delete"
                     >

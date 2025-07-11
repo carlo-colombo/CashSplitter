@@ -3,9 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage expenses when in groups of people">
+  <meta name="theme-color" content="#4caf50">
   <title>Cashsplitter - Manage Group Expenses</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
   <script src="index.js"></script>
+  <script>
+    // Register service worker for offline capability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
+  </script>
 </head>
 <body>
   <div id="app">
@@ -14,5 +32,11 @@
       <p>Please wait while the application loads.</p>
     </div>
   </div>
+  <noscript>
+    <div style="padding: 2rem; text-align: center;">
+      <h2>JavaScript Required</h2>
+      <p>This application requires JavaScript to be enabled in your browser.</p>
+    </div>
+  </noscript>
 </body>
 </html>
