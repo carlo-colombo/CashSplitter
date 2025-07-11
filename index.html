@@ -1,71 +1,42 @@
-<!doctype html>
-<html lang="it" ng-app="CashSplitter" manifest="manifest.appcache">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-  <link rel="stylesheet" href="lib/css/bootstrap.css" />
-  <link rel="stylesheet" href="lib/css/font-awesome.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage expenses when in groups of people">
+  <meta name="theme-color" content="#4caf50">
+  <title>Cashsplitter - Manage Group Expenses</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <script src="index.js"></script>
   <script>
-  window.addEventListener('load', function(e) {
-  window.applicationCache.addEventListener('updateready', function(e) {
-  if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-  if (confirm('A new version of this site is available. Load it?')) {
-  window.location.reload();
-  }
-  }
-  }, false);
-  }, false);
+    // Register service worker for offline capability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      });
+    }
   </script>
-  <script src="src/app.min.js"></script>
-  <style type="text/css">
-  body {
-    min-height: 2000px;
-    padding-top: 70px;
-  }
-  </style>
-  <title></title>
 </head>
-
 <body>
-  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" ng-click="showMenu = !showMenu">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <span ui-view="title">
-          <a class="navbar-brand" href="#">CashSplitter</a>
-        </span>
-      </div>
-      <div class="navbar-collapse" collapse="showMenu">
-        <ul class="nav navbar-nav">
-          <li>
-            <a ui-sref="trip_new">
-              <icon name="plus"></icon>
-              Add trip</a>
-          </li>
-          <li>
-            <a ui-sref="trip_list">
-              <icon name="globe"></icon>
-              All trip</a>
-          </li>
-          <li>
-            <a ng-click="removeDb()" href="#">
-              <icon name="trash-o"></icon>
-              Delete db</a>
-          </li>
-        </ul>
-      </div>
+  <div id="app">
+    <div style="padding: 2rem; text-align: center;">
+      <h2>Loading Cashsplitter...</h2>
+      <p>Please wait while the application loads.</p>
     </div>
   </div>
-  <div class="container-fluid">
-    <div ui-view></div>
-  </div>
+  <noscript>
+    <div style="padding: 2rem; text-align: center;">
+      <h2>JavaScript Required</h2>
+      <p>This application requires JavaScript to be enabled in your browser.</p>
+    </div>
+  </noscript>
 </body>
-
 </html>

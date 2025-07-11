@@ -1,0 +1,246 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+  max-width: 100%;
+}
+
+/* App container */
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  margin-bottom: 40px;
+  text-align: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+header p {
+  color: #7f8c8d;
+  font-size: 1.2rem;
+}
+
+/* Main content */
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+@media (min-width: 768px) {
+  main {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Group list */
+.group-list {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.group-list h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+.group-list ul {
+  list-style-type: none;
+}
+
+.group-list li {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+
+.group-list li:last-child {
+  border-bottom: none;
+}
+
+.group-list h3 {
+  font-size: 1.3rem;
+  color: #34495e;
+  margin-bottom: 5px;
+}
+
+.group-list .actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.group-list button {
+  padding: 8px 15px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.group-list button.delete {
+  background-color: #e74c3c;
+}
+
+.group-list button:hover {
+  background-color: #2980b9;
+}
+
+.group-list button.delete:hover {
+  background-color: #c0392b;
+}
+
+/* Create group form */
+.group-form {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.group-form h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.person-input {
+  display: flex;
+  gap: 10px;
+}
+
+.person-input input {
+  flex: 1;
+}
+
+.person-input button,
+.form-actions button {
+  padding: 10px 15px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-actions button {
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  background-color: #2ecc71;
+}
+
+.person-input button:hover,
+.form-actions button:hover {
+  background-color: #2980b9;
+}
+
+.form-actions button:hover {
+  background-color: #27ae60;
+}
+
+.person-input button:disabled,
+.form-actions button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.people-list {
+  margin-bottom: 20px;
+}
+
+.people-list h3 {
+  font-size: 1.2rem;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.people-list ul {
+  list-style-type: none;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.people-list li {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.people-list li:last-child {
+  border-bottom: none;
+}
+
+.people-list button {
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.people-list button:hover {
+  background-color: #c0392b;
+}
+
+.form-actions {
+  margin-top: 30px;
+}
+
+/* Offline indicator */
+.offline-indicator {
+  background-color: #ffe082;
+  color: #8d6e63;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+}
