@@ -7,7 +7,7 @@ import {
 } from "../model/Group.ts";
 
 // Define a conflict error class with conflicts array
-class MergeConflictError extends Error {
+export class MergeConflictError extends Error {
   conflicts: Array<{
     type: string;
     [key: string]: unknown;
@@ -105,12 +105,30 @@ export function merge(group1: Group, group2: Group): Group {
   const [desc1, timestamp1] = groupId(group1);
   const [desc2, timestamp2] = groupId(group2);
   
+  // Collect group ID conflicts
+  const groupIdConflicts: Conflict[] = [];
+  
   if (desc1 !== desc2) {
-    throw new Error("Cannot merge groups with different descriptions");
+    groupIdConflicts.push({
+      type: "groupId",
+      field: "description",
+      value1: desc1,
+      value2: desc2
+    });
   }
 
   if (timestamp1 !== timestamp2) {
-    throw new Error("Cannot merge groups with different creation timestamps");
+    groupIdConflicts.push({
+      type: "groupId",
+      field: "timestamp",
+      value1: timestamp1,
+      value2: timestamp2
+    });
+  }
+
+  // If we have group ID conflicts, throw a MergeConflictError
+  if (groupIdConflicts.length > 0) {
+    throw new MergeConflictError(groupIdConflicts);
   }
 
   // Check for conflicts

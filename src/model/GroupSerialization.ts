@@ -99,7 +99,11 @@ export function decode(str: string): Group {
       transactions
     ] as Group;
   } catch (error) {
-    if (error instanceof Error && error.message === "Invalid group data format") {
+    if (error instanceof Error && 
+        (error.message.startsWith("Invalid group data format") || 
+         error.message.startsWith("Invalid agent format") || 
+         error.message.startsWith("Invalid transaction") || 
+         error.message.startsWith("Cannot convert value"))) {
       throw error;
     }
     throw new Error("Failed to decode group data");
@@ -113,7 +117,7 @@ function convertBuffersToStrings(obj: unknown): unknown {
   // If it's a Buffer/Uint8Array, convert to string
   if (obj && typeof obj === "object" && 
       (Object.prototype.toString.call(obj) === "[object Uint8Array]" ||
-       obj.constructor.name === "Buffer")) {
+       obj.constructor?.name === "Buffer")) {
     return new TextDecoder().decode(obj as Uint8Array);
   }
   
