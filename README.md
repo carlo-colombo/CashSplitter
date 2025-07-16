@@ -8,7 +8,6 @@ Cashsplitter is a tool to help manages expenses when in group of people.
 
 ## Features
 
-* Works offline as PWA
 * Allows merging of the state of the group after diverging
 * Stats about the group expenses
 
@@ -17,3 +16,11 @@ Cashsplitter is a tool to help manages expenses when in group of people.
 
 * Manage actual payments, it only bookkeep transactions between the people in the group
 * Being universal, transaction amount due or owed are scoped to a group
+
+## Code structure
+
+* .ai/ --> ai instructions
+* build/ --> output file from build scripts
+* scripts/ --> support scripts for development and CI
+* src/ --> source code
+* static/ --> static files as css html and similar

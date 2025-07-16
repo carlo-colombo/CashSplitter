@@ -1,4 +1,4 @@
-We are following TDD practise to 
+When developing new production code we are following TDD practise to 
 * write a test
 * see it failing
 * update the code to fix the test
@@ -6,7 +6,9 @@ We are following TDD practise to
 
 Do not skip any step, and check with the user if you can proceed
 
-Read the README.md file present in the root of the project to understand what we are building
+When creating support scripts for development, TDD is not necessary
+
+Read the README.md file present in the root of the project to understand what we are building, when adding a new feature or a development step update it.
 
 Be concise, include a summary of the changes but avoid explanations of them
 
