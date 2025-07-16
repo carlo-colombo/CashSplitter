@@ -4,7 +4,8 @@ Cashsplitter is a tool to help manages expenses when in group of people.
 
 ## TODO
 
-* [ ] Create a group and add partecipants
+* [x] Create a group
+* [ ] Add partecipants
 * [ ] State is persisted in local storage
 * [ ] Add a transaction that coinvolge 1 or more partecipants
 * [ ] Share a link with the current state of the group
