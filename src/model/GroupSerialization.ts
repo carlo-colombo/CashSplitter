@@ -1,6 +1,6 @@
 import { Group } from "./Group.ts";
-// Import bencode from deno.json imports
-import bencode from "bencode";
+// Import our browser-compatible bencode wrapper
+import bencode from "../utils/bencode-browser.ts";
 
 /**
  * Serializes a Group object to a bencode string

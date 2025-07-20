@@ -10,8 +10,19 @@
 * [x] Create a group API
 * [x] Implement group serialization and deserialization
 * [x] Implement merge functionality for group changes
-* [ ] UI to create a group
-* [ ] State is persisted in local storage
+* [x] UI to create a group
+  * [x] Create CreateGroup route component
+  * [x] Design form for group creation (description field)
+  * [x] Implement form submission and group creation
+  * [x] Add navigation from Home to CreateGroup and back
+  * [x] Add success feedback after group creation
+* [x] State is persisted in local storage
+  * [x] Create a storage service for groups
+  * [x] Implement save/load functionality for groups
+  * [x] Update UI components to use storage service
+  * [x] Add group listing page
+  * [x] Add group detail view
+  * [x] Fix browser compatibility issues (Buffer polyfill)
 * [ ] Add participants API
 * [ ] UI to add participants
 * [ ] Add a transaction that involves 1 or more participants

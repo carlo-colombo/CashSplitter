@@ -1,11 +1,20 @@
 # Cashsplitter 
 
-Cashsplitter is a tool to help manages expenses when in group of people. 
+Cashsplitter is a tool to help manage expenses when in a group of people. The app allows users to create groups for tracking shared expenses and easily split costs among participants.
 
+## Features
+
+- Create expense groups with descriptions (e.g., "Trip to Paris", "Dinner with friends")
+- Save groups to local storage for persistence between sessions
+- View a list of your groups and access their details
+- Add participants to your groups
+- Record transactions and automatically calculate balances
+- Work offline and share groups via links
+- Merge changes when multiple people update the same group
 
 ## Tech
 
-Cashsplitter is a SPA, built with Preact in typescript, using deno for testing and support scripts.
+Cashsplitter is a SPA, built with Preact in TypeScript, using Deno for testing and support scripts.
 
 ## Antifeature
 
