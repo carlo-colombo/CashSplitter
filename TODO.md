@@ -1,6 +1,12 @@
 ## TODO
 
 * [ ] SPA setup
+  * [x] Create basic project structure with Preact and TypeScript
+  * [x] Set up build pipeline with Deno
+  * [ ] Add basic routing system
+  * [ ] Create layout component structure
+  * [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
+  * [ ] Create initial app shell
 * [x] Create a group API
 * [ ] UI to create a group
 * [ ] State is persisted in local storage
