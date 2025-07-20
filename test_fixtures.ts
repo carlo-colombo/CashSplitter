@@ -20,8 +20,8 @@ export const createBaseGroup = (overrides: Partial<{
       [2, "Charlie"],
     ],
     overrides.transactions ?? [
-      ["Dinner", 1672444800000, [[1, 30], [2, -30]]]
-    ]
+      ["Dinner", 1672444800000, [[1, 30], [2, -30]]],
+    ],
   ];
 };
 
@@ -44,5 +44,5 @@ export type Transaction = [string, number, [number, number][]];
 export const testTransactions = {
   dinner: ["Dinner", 1672444800000, [[1, 30], [2, -30]]] as Transaction,
   lunch: ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction,
-  coffee: ["Coffee", 1672617600000, [[1, 10], [2, -10]]] as Transaction
+  coffee: ["Coffee", 1672617600000, [[1, 10], [2, -10]]] as Transaction,
 };

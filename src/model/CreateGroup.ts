@@ -7,14 +7,14 @@ import { Group } from "./Group.ts";
  */
 export function createGroup(description: string): Group {
   const timestamp = Date.now(); // Current timestamp
-  
+
   return [
     "cs", // Header identifier
-    1,    // Version number
-    1,    // Initial revision
+    1, // Version number
+    1, // Initial revision
     description,
     timestamp,
     [], // Empty agents array
-    []  // Empty transactions array
+    [], // Empty transactions array
   ];
 }

@@ -1,31 +1,31 @@
 ## TODO
 
-* [x] SPA setup
-  * [x] Create basic project structure with Preact and TypeScript
-  * [x] Set up build pipeline with Deno
-  * [x] Add basic routing system
-  * [x] Create layout component structure
-  * [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
-  * [x] Create initial app shell
-* [x] Set up CI/CD with GitHub Actions
-* [x] Create a group API
-* [x] Implement group serialization and deserialization
-* [x] Implement merge functionality for group changes
-* [x] UI to create a group
-  * [x] Create CreateGroup route component
-  * [x] Design form for group creation (description field)
-  * [x] Implement form submission and group creation
-  * [x] Add navigation from Home to CreateGroup and back
-  * [x] Add success feedback after group creation
-* [x] State is persisted in local storage
-  * [x] Create a storage service for groups
-  * [x] Implement save/load functionality for groups
-  * [x] Update UI components to use storage service
-  * [x] Add group listing page
-  * [x] Add group detail view
-  * [x] Fix browser compatibility issues (Feross Buffer polyfill)
-* [ ] Add participants API
-* [ ] UI to add participants
-* [ ] Add a transaction that involves 1 or more participants
-* [ ] Share a link with the current state of the group
-* [ ] Application works offline
+- [x] SPA setup
+  - [x] Create basic project structure with Preact and TypeScript
+  - [x] Set up build pipeline with Deno
+  - [x] Add basic routing system
+  - [x] Create layout component structure
+  - [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
+  - [x] Create initial app shell
+- [x] Set up CI/CD with GitHub Actions
+- [x] Create a group API
+- [x] Implement group serialization and deserialization
+- [x] Implement merge functionality for group changes
+- [x] UI to create a group
+  - [x] Create CreateGroup route component
+  - [x] Design form for group creation (description field)
+  - [x] Implement form submission and group creation
+  - [x] Add navigation from Home to CreateGroup and back
+  - [x] Add success feedback after group creation
+- [x] State is persisted in local storage
+  - [x] Create a storage service for groups
+  - [x] Implement save/load functionality for groups
+  - [x] Update UI components to use storage service
+  - [x] Add group listing page
+  - [x] Add group detail view
+  - [x] Fix browser compatibility issues (Feross Buffer polyfill)
+- [ ] Add participants API
+- [ ] UI to add participants
+- [ ] Add a transaction that involves 1 or more participants
+- [ ] Share a link with the current state of the group
+- [ ] Application works offline

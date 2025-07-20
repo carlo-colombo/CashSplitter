@@ -1,6 +1,6 @@
 import { expect } from "jsr:@std/expect";
 import { describe, it } from "jsr:@std/testing/bdd";
-import { revision, transactions, agents, groupId } from "./Group.ts";
+import { agents, groupId, revision, transactions } from "./Group.ts";
 import { createBaseGroup } from "../../test_fixtures.ts";
 
 describe("Group", () => {
@@ -15,14 +15,14 @@ describe("Group", () => {
       expect(revision(group)).toBe(5);
     });
   });
-  
+
   describe("transactions function", () => {
     it("should return the correct transactions", () => {
       expect(transactions(group).length).toBe(1);
       expect(transactions(group)[0][0]).toBe("Dinner");
     });
   });
-  
+
   describe("agents function", () => {
     it("should return the correct agents", () => {
       expect(agents(group).length).toBe(2);
@@ -30,7 +30,7 @@ describe("Group", () => {
       expect(agents(group)[1][1]).toBe("Charlie");
     });
   });
-  
+
   describe("groupId function", () => {
     it("should return the correct group identifier", () => {
       expect(groupId(group)).toEqual(["Test Group", 1672500000000]);

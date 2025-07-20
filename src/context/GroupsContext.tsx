@@ -1,10 +1,15 @@
 // GroupsContext.tsx
 // Provides global access to the groups and their state
-import { createContext, ComponentChildren, FunctionComponent } from "preact";
-import { useState, useEffect, useContext } from "preact/hooks";
+import { ComponentChildren, createContext, FunctionComponent } from "preact";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { Group, groupId } from "../model/Group.ts";
 import { createGroup } from "../model/CreateGroup.ts";
-import { saveGroup, loadGroup, getGroupList, deleteGroup } from "../storage/GroupStorage.ts";
+import {
+  deleteGroup,
+  getGroupList,
+  loadGroup,
+  saveGroup,
+} from "../storage/GroupStorage.ts";
 import { NotificationContext } from "../components/Notification.tsx";
 
 // Define the type for our context
@@ -26,7 +31,9 @@ interface GroupsContextType {
 export const GroupsContext = createContext<GroupsContextType>({
   groups: [],
   selectedGroup: null,
-  addGroup: () => { throw new Error("GroupsContext not initialized"); },
+  addGroup: () => {
+    throw new Error("GroupsContext not initialized");
+  },
   loadGroupDetails: () => Promise.resolve(null),
   removeGroup: () => {},
   refreshGroups: () => {},
@@ -34,21 +41,25 @@ export const GroupsContext = createContext<GroupsContextType>({
 });
 
 // Create the provider component
-export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> = ({ children }) => {
+export const GroupsProvider: FunctionComponent<
+  { children: ComponentChildren }
+> = ({ children }) => {
   const { showNotification } = useContext(NotificationContext);
-  const [groups, setGroups] = useState<Array<{
-    description: string;
-    timestamp: number;
-    storageKey: string;
-  }>>([]);
+  const [groups, setGroups] = useState<
+    Array<{
+      description: string;
+      timestamp: number;
+      storageKey: string;
+    }>
+  >([]);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  
+
   // Load the list of groups from storage on component mount
   useEffect(() => {
     refreshGroups();
   }, []);
-  
+
   // Function to refresh the groups list from storage
   const refreshGroups = () => {
     setIsLoading(true);
@@ -62,7 +73,7 @@ export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> 
       setIsLoading(false);
     }
   };
-  
+
   // Function to create and save a new group
   const addGroup = (description: string): Group => {
     try {
@@ -72,11 +83,16 @@ export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> 
       return newGroup;
     } catch (error) {
       console.error("Error creating group:", error);
-      showNotification("error", `Failed to create group: ${error instanceof Error ? error.message : String(error)}`);
+      showNotification(
+        "error",
+        `Failed to create group: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
       throw error;
     }
   };
-  
+
   // Function to load a group's full details
   const loadGroupDetails = (timestamp: number): Promise<Group | null> => {
     setIsLoading(true);
@@ -86,13 +102,18 @@ export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> 
       return Promise.resolve(group);
     } catch (error) {
       console.error("Error loading group details:", error);
-      showNotification("error", `Failed to load group: ${error instanceof Error ? error.message : String(error)}`);
+      showNotification(
+        "error",
+        `Failed to load group: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
       return Promise.resolve(null);
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   // Function to remove a group
   const removeGroup = (timestamp: number) => {
     try {
@@ -100,7 +121,7 @@ export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> 
       if (deleted) {
         refreshGroups();
         showNotification("success", "Group deleted successfully");
-        
+
         // Clear selected group if it was the one deleted
         if (selectedGroup && groupId(selectedGroup)[1] === timestamp) {
           setSelectedGroup(null);
@@ -108,12 +129,17 @@ export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> 
       }
     } catch (error) {
       console.error("Error removing group:", error);
-      showNotification("error", `Failed to delete group: ${error instanceof Error ? error.message : String(error)}`);
+      showNotification(
+        "error",
+        `Failed to delete group: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
     }
   };
-  
+
   return (
-    <GroupsContext.Provider 
+    <GroupsContext.Provider
       value={{
         groups,
         selectedGroup,
@@ -121,7 +147,7 @@ export const GroupsProvider: FunctionComponent<{ children: ComponentChildren }> 
         loadGroupDetails,
         removeGroup,
         refreshGroups,
-        isLoading
+        isLoading,
       }}
     >
       {children}

@@ -29,7 +29,15 @@ const GROUP_TRANSACTIONS = 6;
  * - List of agents/people in the group
  * - List of transactions between agents
  */
-export type Group = ["cs", 1, Revision, GroupDescription, Timestamp, Agent[], Transaction[]];
+export type Group = [
+  "cs",
+  1,
+  Revision,
+  GroupDescription,
+  Timestamp,
+  Agent[],
+  Transaction[],
+];
 
 /**
  * Get the revision number of a group

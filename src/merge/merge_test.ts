@@ -1,10 +1,18 @@
 import { expect } from "jsr:@std/expect";
 import { describe, it } from "jsr:@std/testing/bdd";
 import { merge, MergeConflictError } from "./merge.ts";
-import { createBaseGroup, cloneGroup, testTransactions, Transaction } from "../../test_fixtures.ts";
+import {
+  cloneGroup,
+  createBaseGroup,
+  testTransactions,
+  Transaction,
+} from "../../test_fixtures.ts";
 
 // Helper function to test for MergeConflictError with expected conflicts
-function expectMergeConflictError(fn: () => void, expectedConflicts: Array<Record<string, unknown>>) {
+function expectMergeConflictError(
+  fn: () => void,
+  expectedConflicts: Array<Record<string, unknown>>,
+) {
   let error: Error | null = null;
   try {
     fn();
@@ -13,10 +21,10 @@ function expectMergeConflictError(fn: () => void, expectedConflicts: Array<Recor
       error = e;
     }
   }
-  
+
   expect(error).not.toBeNull();
   expect(error!.name).toEqual("MergeConflictError");
-  
+
   const mergeError = error as unknown as MergeConflictError;
   expect(mergeError.conflicts).toEqual(expectedConflicts);
 }
@@ -32,13 +40,14 @@ describe("merge function", () => {
 
     const successTests: SuccessTestCase[] = [
       {
-        name: "should combine transactions correctly when groups have the same agents",
+        name:
+          "should combine transactions correctly when groups have the same agents",
         group1: createBaseGroup(),
         group2: createBaseGroup({
           transactions: [
             testTransactions.lunch,
             testTransactions.coffee,
-          ]
+          ],
         }),
         expected: [
           "cs",
@@ -54,22 +63,22 @@ describe("merge function", () => {
             ["Dinner", 1672444800000, [[1, 30], [2, -30]]],
             ["Lunch", 1672531200000, [[1, 50], [2, -50]]],
             ["Coffee", 1672617600000, [[1, 10], [2, -10]]],
-          ]
-        ]
+          ],
+        ],
       },
       {
         name: "should handle duplicate transactions correctly",
         group1: createBaseGroup({
           transactions: [
             testTransactions.dinner,
-            ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction
-          ]
+            ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction,
+          ],
         }),
         group2: createBaseGroup({
           transactions: [
             ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction,
-            testTransactions.coffee
-          ]
+            testTransactions.coffee,
+          ],
         }),
         expected: [
           "cs",
@@ -85,9 +94,9 @@ describe("merge function", () => {
             ["Dinner", 1672444800000, [[1, 30], [2, -30]]],
             ["Lunch", 1672531200000, [[1, 50], [2, -50]]],
             ["Coffee", 1672617600000, [[1, 10], [2, -10]]],
-          ]
-        ]
-      }
+          ],
+        ],
+      },
     ];
 
     // Execute all success test cases using a loop
@@ -113,28 +122,28 @@ describe("merge function", () => {
         group1: createBaseGroup(),
         group2: createBaseGroup({
           description: "Different trip expenses",
-          transactions: [testTransactions.lunch]
+          transactions: [testTransactions.lunch],
         }),
-        expectedConflicts: [{ 
-          type: "groupId", 
-          field: "description", 
-          value1: "Trip expenses", 
-          value2: "Different trip expenses" 
-        }]
+        expectedConflicts: [{
+          type: "groupId",
+          field: "description",
+          value1: "Trip expenses",
+          value2: "Different trip expenses",
+        }],
       },
       {
         name: "should reject groups with different timestamps",
         group1: createBaseGroup(),
         group2: createBaseGroup({
           timestamp: 1673000000000, // Different timestamp (Jan 6, 2023)
-          transactions: [testTransactions.lunch]
+          transactions: [testTransactions.lunch],
         }),
-        expectedConflicts: [{ 
-          type: "groupId", 
-          field: "timestamp", 
-          value1: 1672400000000, 
-          value2: 1673000000000
-        }]
+        expectedConflicts: [{
+          type: "groupId",
+          field: "timestamp",
+          value1: 1672400000000,
+          value2: 1673000000000,
+        }],
       },
       {
         name: "should reject groups with different descriptions and timestamps",
@@ -142,23 +151,23 @@ describe("merge function", () => {
         group2: createBaseGroup({
           description: "Different trip expenses",
           timestamp: 1673000000000,
-          transactions: [testTransactions.lunch]
+          transactions: [testTransactions.lunch],
         }),
         expectedConflicts: [
-          { 
-            type: "groupId", 
-            field: "description", 
-            value1: "Trip expenses", 
-            value2: "Different trip expenses" 
+          {
+            type: "groupId",
+            field: "description",
+            value1: "Trip expenses",
+            value2: "Different trip expenses",
           },
           {
             type: "groupId",
             field: "timestamp",
             value1: 1672400000000,
-            value2: 1673000000000
-          }
-        ]
-      }
+            value2: 1673000000000,
+          },
+        ],
+      },
     ];
 
     // Test cases for agent conflicts
@@ -172,9 +181,9 @@ describe("merge function", () => {
           return group;
         })(),
         expectedConflicts: [
-          { type: "agent", id: 1, value1: "Bob", value2: "Robert" }
-        ]
-      }
+          { type: "agent", id: 1, value1: "Bob", value2: "Robert" },
+        ],
+      },
     ];
 
     // Test cases for transaction conflicts
@@ -183,24 +192,24 @@ describe("merge function", () => {
         name: "should return detailed transaction conflict information",
         group1: createBaseGroup({
           transactions: [
-            testTransactions.dinner, 
-            ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction
-          ]
+            testTransactions.dinner,
+            ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction,
+          ],
         }),
         group2: createBaseGroup({
           transactions: [
             testTransactions.coffee,
-            ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction
-          ]
+            ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction,
+          ],
         }),
-        expectedConflicts: [{ 
-          type: "transaction", 
-          description: "Lunch", 
+        expectedConflicts: [{
+          type: "transaction",
+          description: "Lunch",
           timestamp: 1672531200000,
           value1: [[1, 40], [2, -40]],
-          value2: [[1, 50], [2, -50]] 
-        }]
-      }
+          value2: [[1, 50], [2, -50]],
+        }],
+      },
     ];
 
     // Test cases for multiple conflicts
@@ -209,49 +218,54 @@ describe("merge function", () => {
         name: "should return all conflict details",
         group1: createBaseGroup({
           transactions: [
-            testTransactions.dinner, 
-            ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction
-          ]
+            testTransactions.dinner,
+            ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction,
+          ],
         }),
         group2: (() => {
           const group = cloneGroup(createBaseGroup({
             transactions: [
-              testTransactions.dinner, 
-              ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction
-            ]
+              testTransactions.dinner,
+              ["Lunch", 1672531200000, [[1, 40], [2, -40]]] as Transaction,
+            ],
           }));
           // Add agent conflict
           group[5][0][1] = "Robert";
           // Add transaction conflict
-          group[6][1] = ["Lunch", 1672531200000, [[1, 50], [2, -50]]] as Transaction;
+          group[6][1] = ["Lunch", 1672531200000, [[1, 50], [
+            2,
+            -50,
+          ]]] as Transaction;
           return group;
         })(),
         expectedConflicts: [
           { type: "agent", id: 1, value1: "Bob", value2: "Robert" },
-          { 
-            type: "transaction", 
-            description: "Lunch", 
+          {
+            type: "transaction",
+            description: "Lunch",
             timestamp: 1672531200000,
             value1: [[1, 40], [2, -40]],
-            value2: [[1, 50], [2, -50]] 
-          }
-        ]
-      }
+            value2: [[1, 50], [2, -50]],
+          },
+        ],
+      },
     ];
 
     // Execute all conflict test cases using a loop
-    for (const category of [
-      { name: "group identifier conflicts", tests: groupIdentifierTests },
-      { name: "agent conflicts", tests: agentConflictTests },
-      { name: "transaction conflicts", tests: transactionConflictTests },
-      { name: "multiple conflicts", tests: multipleConflictTests }
-    ]) {
+    for (
+      const category of [
+        { name: "group identifier conflicts", tests: groupIdentifierTests },
+        { name: "agent conflicts", tests: agentConflictTests },
+        { name: "transaction conflicts", tests: transactionConflictTests },
+        { name: "multiple conflicts", tests: multipleConflictTests },
+      ]
+    ) {
       describe(category.name, () => {
         for (const test of category.tests) {
           it(test.name, () => {
             expectMergeConflictError(
               () => merge(test.group1, test.group2),
-              test.expectedConflicts
+              test.expectedConflicts,
             );
           });
         }
