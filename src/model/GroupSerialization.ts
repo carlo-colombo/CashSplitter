@@ -1,6 +1,6 @@
 import { Group } from "./Group.ts";
-// Import our browser-compatible bencode wrapper
-import bencode from "../utils/bencode-browser.ts";
+// Import the original bencode library (Buffer is now available from the polyfill)
+import bencode from "bencode";
 
 /**
  * Serializes a Group object to a bencode string

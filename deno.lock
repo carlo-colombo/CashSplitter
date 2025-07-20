@@ -16,6 +16,7 @@
     "jsr:@std/testing@*": "1.0.14",
     "jsr:@std/testing@^1.0.14": "1.0.14",
     "npm:bencode@2.0.3": "2.0.3",
+    "npm:buffer@6.0.3": "6.0.3",
     "npm:preact-router@4.1.2": "4.1.2_preact@10.19.6",
     "npm:preact@10.19.6": "10.19.6"
   },
@@ -63,8 +64,21 @@
     }
   },
   "npm": {
+    "base64-js@1.5.1": {
+      "integrity": "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="
+    },
     "bencode@2.0.3": {
       "integrity": "sha512-D/vrAD4dLVX23NalHwb8dSvsUsxeRPO8Y7ToKA015JQYq69MLDOMkC0uGZYA/MPpltLO8rt8eqFC2j8DxjTZ/w=="
+    },
+    "buffer@6.0.3": {
+      "integrity": "sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==",
+      "dependencies": [
+        "base64-js",
+        "ieee754"
+      ]
+    },
+    "ieee754@1.2.1": {
+      "integrity": "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
     },
     "preact-router@4.1.2_preact@10.19.6": {
       "integrity": "sha512-uICUaUFYh+XQ+6vZtQn1q+X6rSqwq+zorWOCLWPF5FAsQh3EJ+RsDQ9Ee+fjk545YWQHfUxhrBAaemfxEnMOUg==",
@@ -257,6 +271,7 @@
       "jsr:@std/expect@^1.0.16",
       "jsr:@std/testing@^1.0.14",
       "npm:bencode@2.0.3",
+      "npm:buffer@6.0.3",
       "npm:preact-router@4.1.2",
       "npm:preact@10.19.6"
     ]

@@ -11,6 +11,7 @@
     "@std/expect": "jsr:@std/expect@^1.0.16",
     "@std/testing": "jsr:@std/testing@^1.0.14",
     "bencode": "npm:bencode@2.0.3",
+    "buffer": "npm:buffer@6.0.3",
     "preact": "npm:preact@10.19.6",
     "preact/hooks": "npm:preact@10.19.6/hooks",
     "preact/jsx-runtime": "npm:preact@10.19.6/jsx-runtime",

@@ -22,7 +22,7 @@
   * [x] Update UI components to use storage service
   * [x] Add group listing page
   * [x] Add group detail view
-  * [x] Fix browser compatibility issues (Buffer polyfill)
+  * [x] Fix browser compatibility issues (Feross Buffer polyfill)
 * [ ] Add participants API
 * [ ] UI to add participants
 * [ ] Add a transaction that involves 1 or more participants
