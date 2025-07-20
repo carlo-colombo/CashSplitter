@@ -7,6 +7,7 @@
   * [x] Create layout component structure
   * [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
   * [x] Create initial app shell
+* [x] Set up CI/CD with GitHub Actions
 * [x] Create a group API
 * [x] Implement group serialization and deserialization
 * [x] Implement merge functionality for group changes
