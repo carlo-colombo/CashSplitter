@@ -16,7 +16,9 @@
     "preact/hooks": "npm:preact@10.19.6/hooks",
     "preact/jsx-runtime": "npm:preact@10.19.6/jsx-runtime",
     "wouter": "npm:wouter@3.0.1",
-    "wouter/use-hash-location": "npm:wouter@3.0.1/use-hash-location"
+    "wouter/use-hash-location": "npm:wouter@3.0.1/use-hash-location",
+    "wouter-preact": "npm:wouter-preact@3.7.1",
+    "wouter-preact/use-hash-location": "npm:wouter-preact@3.7.1/use-hash-location"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

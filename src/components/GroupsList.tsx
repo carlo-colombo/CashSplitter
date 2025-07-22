@@ -2,7 +2,7 @@
 // Displays a list of all saved groups
 import { FunctionComponent } from "preact";
 import { useContext, useEffect } from "preact/hooks";
-import { useLocation } from "wouter";
+import { useLocation } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 
 interface GroupsListProps {

@@ -24,7 +24,7 @@ A lightweight expense splitting application for tracking shared costs in groups.
 **Tech Stack**: Single Page Application built with modern web technologies
 - **Frontend**: Preact with TypeScript for lightweight, React-compatible components
 - **Build Tool**: Deno for dependency management, testing, and build scripts
-- **Routing**: Wouter with hash-based navigation for maximum compatibility
+- **Routing**: Wouter-preact with hash-based navigation for maximum compatibility
 - **Storage**: Browser Local Storage (no external dependencies)
 - **Bundling**: Deno's built-in bundler with esbuild integration
 
@@ -77,7 +77,7 @@ deno test --watch    # Run tests in watch mode
 ```
 ├── src/
 │   ├── components/     # Reusable UI components
-│   ├── context/        # React context providers
+│   ├── context/        # Preact context providers
 │   ├── model/          # Business logic and data models
 │   ├── routes/         # Page components
 │   ├── storage/        # Local storage interface

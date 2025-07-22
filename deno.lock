@@ -18,6 +18,7 @@
     "npm:bencode@2.0.3": "2.0.3",
     "npm:buffer@6.0.3": "6.0.3",
     "npm:preact@10.19.6": "10.19.6",
+    "npm:wouter-preact@3.7.1": "3.7.1_preact@10.19.6",
     "npm:wouter@3.0.1": "3.0.1_react@19.1.0"
   },
   "jsr": {
@@ -96,6 +97,14 @@
       "integrity": "sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==",
       "dependencies": [
         "react"
+      ]
+    },
+    "wouter-preact@3.7.1_preact@10.19.6": {
+      "integrity": "sha512-fg8/AVx+O1U2orkGPjnSOSn7h3XQKuVAQ4bU9x8SvyqiDPHUhIQyLeu+cj9FCQSDRCbPOwPn/MmcfLahEU7EtQ==",
+      "dependencies": [
+        "mitt",
+        "preact",
+        "regexparam"
       ]
     },
     "wouter@3.0.1_react@19.1.0": {
@@ -291,6 +300,7 @@
       "npm:bencode@2.0.3",
       "npm:buffer@6.0.3",
       "npm:preact@10.19.6",
+      "npm:wouter-preact@3.7.1",
       "npm:wouter@3.0.1"
     ]
   }

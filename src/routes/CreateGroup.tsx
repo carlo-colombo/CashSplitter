@@ -1,7 +1,7 @@
 // CreateGroup route component
 import { FunctionComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
-import { useLocation } from "wouter";
+import { useLocation } from "wouter-preact";
 import { NotificationContext } from "../components/Notification.tsx";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 

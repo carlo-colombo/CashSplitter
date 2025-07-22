@@ -25,6 +25,7 @@
   - [x] Add group listing page
   - [x] Add group detail view
   - [x] Fix browser compatibility issues (Feross Buffer polyfill)
+  - [x] Fix React hooks compatibility issue (Switch to wouter-preact)
 - [ ] Add participants API
 - [ ] UI to add participants
 - [ ] Add a transaction that involves 1 or more participants
