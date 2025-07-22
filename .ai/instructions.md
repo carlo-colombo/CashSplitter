@@ -20,7 +20,8 @@ tasks as needed to the TODO.
 All code must be properly formatted using `deno fmt` before committing.
 Formatting is enforced in the CI/CD pipeline.
 
-When pushing to the repo check if the application is online and working on github pages. And check the pipeline if is green
+When pushing to the repo check if the application is online and working on
+github pages. And check the pipeline if is green
 
 Be concise, include a summary of the changes but avoid explanations of them
 
