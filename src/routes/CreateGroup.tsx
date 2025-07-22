@@ -1,15 +1,12 @@
 // CreateGroup route component
 import { FunctionComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
-import { route } from "preact-router";
+import { useLocation } from "wouter";
 import { NotificationContext } from "../components/Notification.tsx";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 
-interface CreateGroupProps {
-  path: string;
-}
-
-export const CreateGroup: FunctionComponent<CreateGroupProps> = () => {
+export const CreateGroup: FunctionComponent = () => {
+  const [, navigate] = useLocation();
   const { showNotification } = useContext(NotificationContext);
   const { addGroup } = useContext(GroupsContext);
   const [description, setDescription] = useState<string>("");
@@ -37,7 +34,7 @@ export const CreateGroup: FunctionComponent<CreateGroupProps> = () => {
         "success",
         `Group "${description}" created successfully!`,
       );
-      route("/", true);
+      navigate("/");
     } catch (err) {
       setError(
         `Failed to create group: ${
@@ -80,7 +77,7 @@ export const CreateGroup: FunctionComponent<CreateGroupProps> = () => {
         <div className="actions">
           <button
             type="button"
-            onClick={() => route("/")}
+            onClick={() => navigate("/")}
             disabled={isSubmitting}
           >
             Cancel

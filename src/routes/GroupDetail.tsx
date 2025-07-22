@@ -2,19 +2,15 @@
 // Shows the details of a specific group
 import { FunctionComponent } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { route } from "preact-router";
+import { useLocation, useParams } from "wouter";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
 import { Group, groupId } from "../model/Group.ts";
 
-interface GroupDetailProps {
-  path: string;
-  timestamp?: string;
-}
-
-export const GroupDetail: FunctionComponent<GroupDetailProps> = (
-  { timestamp },
-) => {
+export const GroupDetail: FunctionComponent = () => {
+  const [, navigate] = useLocation();
+  const params = useParams();
+  const timestamp = params.timestamp;
   const { loadGroupDetails, isLoading } = useContext(GroupsContext);
   const { showNotification } = useContext(NotificationContext);
   const [group, setGroup] = useState<Group | null>(null);
@@ -25,7 +21,7 @@ export const GroupDetail: FunctionComponent<GroupDetailProps> = (
 
       if (isNaN(numericTimestamp)) {
         showNotification("error", "Invalid group identifier");
-        route("/");
+        navigate("/");
         return;
       }
 
@@ -75,7 +71,7 @@ export const GroupDetail: FunctionComponent<GroupDetailProps> = (
       <div className="actions">
         <button
           type="button"
-          onClick={() => route("/")}
+          onClick={() => navigate("/")}
         >
           Back to Groups
         </button>

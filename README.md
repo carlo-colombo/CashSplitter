@@ -1,55 +1,107 @@
 # Cashsplitter
 
-Cashsplitter is a tool to help manage expenses when in a group of people. The
-app allows users to create groups for tracking shared expenses and easily split
-costs among participants.
+A lightweight expense splitting application for tracking shared costs in groups. Create groups, add expenses, and automatically calculate who owes what—all while working completely offline.
 
 [![Test and Deploy](https://github.com/user/cashsplitter/actions/workflows/test-and-deploy.yml/badge.svg)](https://github.com/user/cashsplitter/actions/workflows/test-and-deploy.yml)
 
 ## Features
 
-- Create expense groups with descriptions (e.g., "Trip to Paris", "Dinner with
-  friends")
-- Save groups to local storage for persistence between sessions
-- View a list of your groups and access their details
-- Add participants to your groups
-- Record transactions and automatically calculate balances
-- Work offline and share groups via links
-- Merge changes when multiple people update the same group
+### ✅ Currently Available
+- **Group Management**: Create expense groups with descriptions (e.g., "Trip to Paris", "Dinner with friends")
+- **Local Persistence**: All data is saved to browser local storage—no server required
+- **Group Overview**: View a list of your groups and access their details
+- **Conflict Resolution**: Built-in merge functionality to handle simultaneous edits to the same group
 
-## Tech
+### 🚧 Coming Soon
+- Add participants to groups
+- Record and split transactions between participants
+- Share groups via links
+- Full offline functionality
+- Automatic balance calculations
 
-Cashsplitter is a SPA, built with Preact in TypeScript, using Deno for testing
-and support scripts.
+## Architecture
 
-## Antifeature
+**Tech Stack**: Single Page Application built with modern web technologies
+- **Frontend**: Preact with TypeScript for lightweight, React-compatible components
+- **Build Tool**: Deno for dependency management, testing, and build scripts
+- **Routing**: Wouter with hash-based navigation for maximum compatibility
+- **Storage**: Browser Local Storage (no external dependencies)
+- **Bundling**: Deno's built-in bundler with esbuild integration
 
-- Manage actual payments, it only bookkeep transactions between the people in
-  the group
-- Being universal, transaction amount due or owed are scoped to a group
-- Storing state in a server
+**Key Design Principles**:
+- **Offline-first**: Works without internet connection
+- **No backend required**: All data stays in your browser
+- **Privacy-focused**: No data collection or external services
+- **Lightweight**: Minimal dependencies and fast loading
+
+## What Cashsplitter Won't Do
+
+- **Payment processing**: This is a tracking tool, not a payment system
+- **Cross-group transactions**: Each group is independent
+- **Cloud sync**: Data stays local to your device
+- **User accounts**: No registration or login required
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/user/cashsplitter.git
+cd cashsplitter
+
+# Build the application
+deno task build
+
+# Start development server
+deno task serve
+
+# Open http://localhost:8000 in your browser
+```
 
 ## Development
 
-- Run `deno task build` to build the application in the build directory
-- Run `deno task bundle` to directly bundle the TypeScript/JSX into a single JS
-  file
-- Run `deno task serve` to start the development server
-- Open `http://localhost:8000` in your browser to see the application
+### Available Commands
+```bash
+deno task build       # Build production version to ./build/
+deno task bundle      # Bundle TypeScript/JSX to single JS file
+deno task serve       # Start development server on localhost:8000
+```
+
+### Testing
+All tests are written using Deno's built-in testing framework:
+```bash
+deno test            # Run all tests
+deno test --watch    # Run tests in watch mode
+```
+
+### Project Structure
+```
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── context/        # React context providers
+│   ├── model/          # Business logic and data models
+│   ├── routes/         # Page components
+│   ├── storage/        # Local storage interface
+│   ├── merge/          # Conflict resolution logic
+│   └── utils/          # Helper utilities
+├── scripts/            # Build and development scripts
+├── static/             # Static assets (HTML, CSS)
+└── build/              # Production build output
+```
 
 ## CI/CD
 
-This project uses GitHub Actions for continuous integration and deployment:
+Automated testing and deployment via GitHub Actions:
+- **Testing**: All commits trigger test suite
+- **Deployment**: Successful builds on `main` deploy to GitHub Pages
+- **Environment**: Uses Deno v2.4.2 for consistency
 
-- Tests run automatically on all pull requests and pushes to the main branch
-- When changes are merged to main, the application is automatically built and
-  deployed to GitHub Pages
-- The pipeline uses Deno v2.4.2 for testing and building
+## Contributing
 
-## Code structure
+1. Check the [TODO.md](./TODO.md) for current development priorities
+2. Follow TDD practices: write tests first, see them fail, implement features
+3. Keep changes focused and atomic
+4. Update documentation as needed
 
-- .ai/ --> ai instructions
-- build/ --> output file from build scripts
-- scripts/ --> support scripts for development and CI
-- src/ --> source code
-- static/ --> static files as css html and similar
+## License
+
+[Add your license here]

@@ -1,6 +1,7 @@
 // Main App component for Cashsplitter
 import { FunctionComponent } from "preact";
-import { Router } from "preact-router";
+import { Router, Route } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import { Home } from "../routes/Home.tsx";
 import { CreateGroup } from "../routes/CreateGroup.tsx";
 import { GroupDetail } from "../routes/GroupDetail.tsx";
@@ -17,10 +18,10 @@ export const App: FunctionComponent = () => {
           </header>
 
           <main>
-            <Router>
-              <Home path="/" />
-              <CreateGroup path="/create" />
-              <GroupDetail path="/group/:timestamp" />
+            <Router hook={useHashLocation}>
+              <Route path="/" component={Home} />
+              <Route path="/create" component={CreateGroup} />
+              <Route path="/group/:timestamp" component={GroupDetail} />
             </Router>
           </main>
 

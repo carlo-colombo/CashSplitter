@@ -2,11 +2,7 @@
 import { FunctionComponent } from "preact";
 import { GroupsList } from "../components/GroupsList.tsx";
 
-interface HomeProps {
-  path: string;
-}
-
-export const Home: FunctionComponent<HomeProps> = () => {
+export const Home: FunctionComponent = () => {
   return (
     <div className="home-page">
       <h2>Welcome to Cashsplitter</h2>

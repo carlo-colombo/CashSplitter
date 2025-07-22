@@ -4,6 +4,7 @@
   - [x] Create basic project structure with Preact and TypeScript
   - [x] Set up build pipeline with Deno
   - [x] Add basic routing system
+    - [x] Implement hash-based routing with wouter
   - [x] Create layout component structure
   - [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
   - [x] Create initial app shell

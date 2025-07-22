@@ -2,7 +2,7 @@
 // Displays a list of all saved groups
 import { FunctionComponent } from "preact";
 import { useContext, useEffect } from "preact/hooks";
-import { route } from "preact-router";
+import { useLocation } from "wouter";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 
 interface GroupsListProps {
@@ -15,13 +15,14 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
   const { groups, refreshGroups, removeGroup, isLoading } = useContext(
     GroupsContext,
   );
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     refreshGroups();
   }, []);
 
   const handleOpenGroup = (timestamp: number) => {
-    route(`/group/${timestamp}`);
+    navigate(`/group/${timestamp}`);
   };
 
   const handleDeleteGroup = (
@@ -51,7 +52,7 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
         <button
           type="button"
           className="primary"
-          onClick={() => route("/create")}
+          onClick={() => navigate("/create")}
         >
           Create Your First Group
         </button>
@@ -99,7 +100,7 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
           <button
             type="button"
             className="primary"
-            onClick={() => route("/create")}
+            onClick={() => navigate("/create")}
           >
             Create New Group
           </button>
