@@ -8,7 +8,7 @@ import {
 
 // Set up JSDOM for DOM simulation
 const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
-  url: "http://localhost",
+  url: "http://localhost/",
   pretendToBeVisual: true,
   resources: "usable",
 });
@@ -20,6 +20,7 @@ globalThis.navigator = dom.window.navigator;
 globalThis.HTMLElement = dom.window.HTMLElement;
 globalThis.Element = dom.window.Element;
 globalThis.Node = dom.window.Node;
+globalThis.location = dom.window.location;
 
 export interface RenderResult {
   container: HTMLElement;

@@ -5,21 +5,21 @@ import { cleanup, render } from "../test-utils/component-testing.ts";
 import { GroupsList } from "./GroupsList.tsx";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { Group } from "../model/Group.ts";
+import { Router } from "wouter-preact";
 
 // Mock navigation function
 let mockNavigate: (path: string) => void;
-let mockLocation: string;
+let currentPath: string;
 
-// Mock wouter-preact
-// @ts-ignore: Mock implementation
-globalThis["wouter-preact"] = {
-  useLocation: () => [mockLocation, mockNavigate],
+// Create a mock location hook
+const mockLocationHook = () => {
+  return [currentPath, mockNavigate] as [string, (path: string) => void];
 };
 
 describe("GroupsList Component", () => {
   afterEach(() => {
     cleanup();
-    mockLocation = "/";
+    currentPath = "/";
     mockNavigate = () => {};
   });
 
@@ -36,9 +36,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const loadingElement = container.querySelector(".loading");
@@ -60,9 +62,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const emptyState = container.querySelector(".empty-state");
@@ -92,9 +96,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const createButton = container.querySelector(
@@ -132,9 +138,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const groupsList = container.querySelector(".groups-list");
@@ -164,9 +172,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const deleteButtons = container.querySelectorAll("button.danger");
@@ -185,9 +195,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList showActions={false} />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList showActions={false} />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const deleteButtons = container.querySelectorAll("button.danger");
@@ -224,9 +236,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const groupItem = container.querySelector("li") as HTMLLIElement;
@@ -266,9 +280,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const deleteButton = container.querySelector(
@@ -303,9 +319,11 @@ describe("GroupsList Component", () => {
       };
 
       const { container } = render(
-        <GroupsContext.Provider value={mockContext}>
-          <GroupsList />
-        </GroupsContext.Provider>,
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
       );
 
       const deleteButton = container.querySelector(
