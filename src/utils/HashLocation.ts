@@ -9,14 +9,14 @@
 // // Create a custom hook for hash-based location
 // export const useHashLocation = () => {
 //   const [loc, setLoc] = useState(currentLoc());
-  
+
 //   useEffect(() => {
 //     // Update the state when the hash changes
 //     const handler = () => setLoc(currentLoc());
 //     globalThis.addEventListener("hashchange", handler);
 //     return () => globalThis.removeEventListener("hashchange", handler);
 //   }, []);
-  
+
 //   // Navigate to a new location by changing the hash
 //   const navigate = useCallback(
 //     (to: string) => {
@@ -24,6 +24,6 @@
 //     },
 //     []
 //   );
-  
+
 //   return [loc, navigate] as const;
 // };

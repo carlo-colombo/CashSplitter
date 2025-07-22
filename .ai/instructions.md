@@ -17,6 +17,9 @@ are building, when adding a new feature or a development step update it.
 When implementing tasks from the TODO only implement one at the time. Add new
 tasks as needed to the TODO.
 
+All code must be properly formatted using `deno fmt` before committing.
+Formatting is enforced in the CI/CD pipeline.
+
 Be concise, include a summary of the changes but avoid explanations of them
 
 Start the message with a 🏎️ when you are following instructions

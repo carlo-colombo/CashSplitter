@@ -1,18 +1,25 @@
 # Cashsplitter
 
-A lightweight expense splitting application for tracking shared costs in groups. Create groups, add expenses, and automatically calculate who owes what—all while working completely offline.
+A lightweight expense splitting application for tracking shared costs in groups.
+Create groups, add expenses, and automatically calculate who owes what—all while
+working completely offline.
 
 [![Test and Deploy](https://github.com/user/cashsplitter/actions/workflows/test-and-deploy.yml/badge.svg)](https://github.com/user/cashsplitter/actions/workflows/test-and-deploy.yml)
 
 ## Features
 
 ### ✅ Currently Available
-- **Group Management**: Create expense groups with descriptions (e.g., "Trip to Paris", "Dinner with friends")
-- **Local Persistence**: All data is saved to browser local storage—no server required
+
+- **Group Management**: Create expense groups with descriptions (e.g., "Trip to
+  Paris", "Dinner with friends")
+- **Local Persistence**: All data is saved to browser local storage—no server
+  required
 - **Group Overview**: View a list of your groups and access their details
-- **Conflict Resolution**: Built-in merge functionality to handle simultaneous edits to the same group
+- **Conflict Resolution**: Built-in merge functionality to handle simultaneous
+  edits to the same group
 
 ### 🚧 Coming Soon
+
 - Add participants to groups
 - Record and split transactions between participants
 - Share groups via links
@@ -22,13 +29,17 @@ A lightweight expense splitting application for tracking shared costs in groups.
 ## Architecture
 
 **Tech Stack**: Single Page Application built with modern web technologies
-- **Frontend**: Preact with TypeScript for lightweight, React-compatible components
+
+- **Frontend**: Preact with TypeScript for lightweight, React-compatible
+  components
 - **Build Tool**: Deno for dependency management, testing, and build scripts
-- **Routing**: Wouter-preact with hash-based navigation for maximum compatibility
+- **Routing**: Wouter-preact with hash-based navigation for maximum
+  compatibility
 - **Storage**: Browser Local Storage (no external dependencies)
 - **Bundling**: Deno's built-in bundler with esbuild integration
 
 **Key Design Principles**:
+
 - **Offline-first**: Works without internet connection
 - **No backend required**: All data stays in your browser
 - **Privacy-focused**: No data collection or external services
@@ -60,6 +71,7 @@ deno task serve
 ## Development
 
 ### Available Commands
+
 ```bash
 deno task build       # Build production version to ./build/
 deno task bundle      # Bundle TypeScript/JSX to single JS file
@@ -67,13 +79,16 @@ deno task serve       # Start development server on localhost:8000
 ```
 
 ### Testing
+
 All tests are written using Deno's built-in testing framework:
+
 ```bash
 deno test            # Run all tests
 deno test --watch    # Run tests in watch mode
 ```
 
 ### Project Structure
+
 ```
 ├── src/
 │   ├── components/     # Reusable UI components
@@ -91,6 +106,7 @@ deno test --watch    # Run tests in watch mode
 ## CI/CD
 
 Automated testing and deployment via GitHub Actions:
+
 - **Testing**: All commits trigger test suite
 - **Deployment**: Successful builds on `main` deploy to GitHub Pages
 - **Environment**: Uses Deno v2.4.2 for consistency

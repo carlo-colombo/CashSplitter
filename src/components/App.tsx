@@ -1,6 +1,6 @@
 // Main App component for Cashsplitter
 import { FunctionComponent } from "preact";
-import { Router, Route } from "wouter-preact";
+import { Route, Router } from "wouter-preact";
 import { useHashLocation } from "wouter-preact/use-hash-location";
 import { Home } from "../routes/Home.tsx";
 import { CreateGroup } from "../routes/CreateGroup.tsx";
