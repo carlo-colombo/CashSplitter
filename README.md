@@ -85,7 +85,25 @@ All tests are written using Deno's built-in testing framework:
 ```bash
 deno test            # Run all tests
 deno test --watch    # Run tests in watch mode
+
+# Run specific test suites
+deno test src/model/            # Business logic tests
+deno test src/components/       # Component tests
 ```
+
+**Test Coverage:**
+
+- **Business Logic**: Complete test coverage for group creation, serialization,
+  and data models
+- **Components**: Basic test coverage for UI components with JSDOM simulation
+  - Notification component: rendering, interaction, click handlers
+  - Additional component tests in development
+
+**Testing Infrastructure:**
+
+- Custom test utilities for Preact component testing with JSDOM
+- Mock utilities for localStorage and context providers
+- Timer cleanup to prevent test leaks
 
 ### Project Structure
 

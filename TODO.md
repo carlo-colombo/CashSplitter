@@ -26,6 +26,17 @@
   - [x] Add group detail view
   - [x] Fix browser compatibility issues (Feross Buffer polyfill)
   - [x] Fix React hooks compatibility issue (Switch to wouter-preact)
+- [x] Set up component testing infrastructure
+  - [x] Add JSDOM and testing utilities for Preact components
+  - [x] Create test helper functions for component rendering
+  - [x] Add mock utilities for contexts and dependencies
+- [ ] Component tests (TDD approach)
+  - [x] Notification component tests (basic rendering and click handlers)
+  - [ ] Fix auto-dismiss timer tests in JSDOM environment
+  - [ ] GroupsList component tests (in progress - mocking wouter-preact
+        navigation)
+  - [ ] App component tests
+  - [ ] Route component tests
 - [ ] Add participants API
 - [ ] UI to add participants
 - [ ] Add a transaction that involves 1 or more participants
