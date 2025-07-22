@@ -12,6 +12,8 @@ working completely offline.
 
 - **Group Management**: Create expense groups with descriptions (e.g., "Trip to
   Paris", "Dinner with friends")
+- **Add Expenses**: Add expenses to groups that can be split equally among all
+  participants, a selected subset, or with custom amounts for each participant
 - **Local Persistence**: All data is saved to browser local storage—no server
   required
 - **Group Overview**: View a list of your groups and access their details
@@ -20,8 +22,8 @@ working completely offline.
 
 ### 🚧 Coming Soon
 
-- Add participants to groups
-- Record and split transactions between participants
+- Add participants to groups (UI)
+- UI to add expenses through the application interface
 - Share groups via links
 - Full offline functionality
 - Automatic balance calculations

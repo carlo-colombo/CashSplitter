@@ -38,7 +38,21 @@
   - [ ] App component tests
   - [ ] Route component tests
 - [ ] Add participants API
+- [x] Add expense API
+  - [x] Implement addExpense function that splits expenses equally among group
+        members
+  - [x] Add support for subset expense sharing (specify which members
+        participate)
+  - [x] Add support for custom expense splits (specify custom amounts per
+        participant)
+  - [x] Make participants and customSplits always required parameters (explicit
+        API)
+  - [x] Allow payee to not participate in expense splits (payee pays, others owe)
+  - [x] Handle floating point input (2 decimals) and integer storage (cents)
+  - [x] Add comprehensive tests for expense splitting logic
+  - [x] Add validation that custom splits sum to expense amount
 - [ ] UI to add participants
+- [ ] UI to add expenses
 - [ ] Add a transaction that involves 1 or more participants
 - [ ] Share a link with the current state of the group
 - [ ] Application works offline
