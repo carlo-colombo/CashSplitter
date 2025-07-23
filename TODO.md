@@ -47,7 +47,8 @@
         participant)
   - [x] Make participants and customSplits always required parameters (explicit
         API)
-  - [x] Allow payee to not participate in expense splits (payee pays, others owe)
+  - [x] Allow payee to not participate in expense splits (payee pays, others
+        owe)
   - [x] Handle floating point input (2 decimals) and integer storage (cents)
   - [x] Add comprehensive tests for expense splitting logic
   - [x] Add validation that custom splits sum to expense amount
