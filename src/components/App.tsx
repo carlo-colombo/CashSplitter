@@ -14,24 +14,47 @@ export const App: FunctionComponent = () => {
     <NotificationProvider>
       <GroupsProvider>
         <div className="cashsplitter-app">
-          <header>
-            <h1>Cashsplitter</h1>
-          </header>
+          <nav
+            className="navbar is-primary"
+            role="navigation"
+            aria-label="main navigation"
+          >
+            <div className="navbar-brand">
+              <a className="navbar-item" href="/#/">
+                <strong>Cashsplitter</strong>
+              </a>
 
-          <main>
-            <Router hook={useHashLocation}>
-              <Route path="/" component={Home} />
-              <Route path="/create" component={CreateGroup} />
-              <Route path="/group/:timestamp" component={GroupDetail} />
-              <Route
-                path="/group/:timestamp/addExpense"
-                component={AddExpenseRoute}
-              />
-            </Router>
+              <a
+                role="button"
+                className="navbar-burger"
+                aria-label="menu"
+                aria-expanded="false"
+              >
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+              </a>
+            </div>
+          </nav>
+
+          <main className="section">
+            <div className="container">
+              <Router hook={useHashLocation}>
+                <Route path="/" component={Home} />
+                <Route path="/create" component={CreateGroup} />
+                <Route path="/group/:timestamp" component={GroupDetail} />
+                <Route
+                  path="/group/:timestamp/addExpense"
+                  component={AddExpenseRoute}
+                />
+              </Router>
+            </div>
           </main>
 
-          <footer>
-            <p>&copy; {new Date().getFullYear()} Cashsplitter</p>
+          <footer className="footer">
+            <div className="content has-text-centered">
+              <p>&copy; {new Date().getFullYear()} Cashsplitter</p>
+            </div>
           </footer>
         </div>
       </GroupsProvider>

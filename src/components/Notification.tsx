@@ -35,17 +35,28 @@ export const Notification: FunctionComponent<NotificationProps> = ({
 
   if (!visible) return null;
 
+  const getBulmaType = (type: string) => {
+    switch (type) {
+      case "success":
+        return "is-success";
+      case "error":
+        return "is-danger";
+      case "info":
+        return "is-info";
+      default:
+        return "is-info";
+    }
+  };
+
   return (
-    <div className={`notification ${type}`}>
-      <div className="notification-content">{message}</div>
+    <div className={`notification ${getBulmaType(type)}`}>
       <button
         type="button"
-        className="notification-close"
+        className="delete"
         onClick={handleClose}
         aria-label="Close"
-      >
-        ×
-      </button>
+      />
+      {message}
     </div>
   );
 };
@@ -107,7 +118,10 @@ export const NotificationProvider: FunctionComponent<
       value={{ showNotification, notifications, removeNotification }}
     >
       {children}
-      <div className="notifications-container">
+      <div
+        className="notifications-container"
+        style="position: fixed; top: 1rem; right: 1rem; z-index: 1000; min-width: 300px;"
+      >
         {notifications.map((notification) => (
           <Notification
             key={notification.id}

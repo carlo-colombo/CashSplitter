@@ -72,58 +72,79 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = ({
 
   return (
     <div className="add-expense">
-      <h2>Add Expense</h2>
+      <div className="level is-mobile">
+        <div className="level-left">
+          <div className="level-item">
+            <h2 className="title is-4">Add Expense</h2>
+          </div>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="amount">Amount</label>
-          <input
-            id="amount"
-            type="number"
-            step="0.01"
-            min="0.01"
-            value={amount}
-            onInput={(e) => setAmount((e.target as HTMLInputElement).value)}
-            required
-          />
+        <div className="field">
+          <label className="label" htmlFor="amount">Amount</label>
+          <div className="control has-icons-left">
+            <input
+              id="amount"
+              className="input"
+              type="number"
+              step="0.01"
+              min="0.01"
+              value={amount}
+              onInput={(e) => setAmount((e.target as HTMLInputElement).value)}
+              placeholder="0.00"
+              required
+            />
+            <span className="icon is-small is-left">
+              <span>€</span>
+            </span>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <input
-            id="description"
-            type="text"
-            value={description}
-            onInput={(e) =>
-              setDescription((e.target as HTMLInputElement).value)}
-            required
-          />
+        <div className="field">
+          <label className="label" htmlFor="description">Description</label>
+          <div className="control">
+            <input
+              id="description"
+              className="input"
+              type="text"
+              value={description}
+              onInput={(e) =>
+                setDescription((e.target as HTMLInputElement).value)}
+              placeholder="What was this expense for?"
+              required
+            />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="payer">Paid by</label>
-          <select
-            id="payer"
-            value={payerId}
-            onChange={(e) => setPayerId((e.target as HTMLSelectElement).value)}
-            required
-          >
-            <option value="">Select who paid</option>
+        <div className="field">
+          <label className="label" htmlFor="payer">Paid by</label>
+          <div className="control">
+            <div className="select is-fullwidth">
+              <select
+                id="payer"
+                value={payerId}
+                onChange={(e) =>
+                  setPayerId((e.target as HTMLSelectElement).value)}
+                required
+              >
+                <option value="">Select who paid</option>
+                {groupAgents.map(([agentId, name]) => (
+                  <option key={agentId} value={agentId}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="field">
+          <label className="label">Split between</label>
+          <div className="control">
             {groupAgents.map(([agentId, name]) => (
-              <option key={agentId} value={agentId}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <fieldset>
-            <legend>Split between:</legend>
-            {groupAgents.map(([agentId, name]) => (
-              <div key={agentId} className="checkbox-group">
+              <label key={agentId} className="checkbox">
                 <input
-                  id={`participant-${agentId}`}
                   type="checkbox"
                   checked={selectedParticipants.includes(agentId)}
                   onChange={(e) =>
@@ -132,15 +153,23 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = ({
                       (e.target as HTMLInputElement).checked,
                     )}
                 />
-                <label htmlFor={`participant-${agentId}`}>{name}</label>
-              </div>
+                &nbsp;{name}
+              </label>
             ))}
-          </fieldset>
+          </div>
         </div>
 
-        <div className="form-actions">
-          <button type="submit">Add Expense</button>
-          <button type="button" onClick={onCancel}>Cancel</button>
+        <div className="field is-grouped">
+          <div className="control">
+            <button type="submit" className="button is-primary">
+              Add Expense
+            </button>
+          </div>
+          <div className="control">
+            <button type="button" className="button" onClick={onCancel}>
+              Cancel
+            </button>
+          </div>
         </div>
       </form>
     </div>

@@ -62,100 +62,131 @@ export const CreateGroup: FunctionComponent = () => {
 
   return (
     <div className="create-group-page">
-      <h2>Create New Group</h2>
+      <div className="level is-mobile">
+        <div className="level-left">
+          <div className="level-item">
+            <h2 className="title is-4">Create New Group</h2>
+          </div>
+        </div>
+      </div>
 
       {error && (
-        <div className="error-message">
+        <div className="notification is-danger">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="group-description">Group Description:</label>
-          <input
-            id="group-description"
-            type="text"
-            value={description}
-            onInput={(e) =>
-              setDescription((e.target as HTMLInputElement).value)}
-            placeholder="Trip to Paris, Dinner with friends, etc."
-            disabled={isSubmitting}
-            autoFocus
-          />
-          <p className="input-help">
+        <div className="field">
+          <label className="label" htmlFor="group-description">
+            Group Description
+          </label>
+          <div className="control">
+            <input
+              id="group-description"
+              className="input"
+              type="text"
+              value={description}
+              onInput={(e) =>
+                setDescription((e.target as HTMLInputElement).value)}
+              placeholder="Trip to Paris, Dinner with friends, etc."
+              disabled={isSubmitting}
+              autoFocus
+            />
+          </div>
+          <p className="help">
             Give your group a meaningful name to help identify it later.
           </p>
         </div>
 
-        <div className="form-group participants-section">
-          <label htmlFor="participant-name">Participants:</label>
-          <div className="participant-input">
-            <input
-              id="participant-name"
-              type="text"
-              value={currentParticipant}
-              onInput={(e) =>
-                setCurrentParticipant((e.target as HTMLInputElement).value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addParticipant();
-                }
-              }}
-              placeholder="Enter participant name..."
-              disabled={isSubmitting}
-            />
-            <button
-              type="button"
-              onClick={addParticipant}
-              disabled={isSubmitting || !currentParticipant.trim()}
-            >
-              Add
-            </button>
+        <div className="field participants-section">
+          <label className="label" htmlFor="participant-name">
+            Participants
+          </label>
+          <div className="field has-addons">
+            <div className="control is-expanded">
+              <input
+                id="participant-name"
+                className="input"
+                type="text"
+                value={currentParticipant}
+                onInput={(e) =>
+                  setCurrentParticipant((e.target as HTMLInputElement).value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addParticipant();
+                  }
+                }}
+                placeholder="Enter participant name..."
+                disabled={isSubmitting}
+              />
+            </div>
+            <div className="control">
+              <button
+                type="button"
+                className="button is-primary"
+                onClick={addParticipant}
+                disabled={isSubmitting || !currentParticipant.trim()}
+              >
+                Add
+              </button>
+            </div>
           </div>
-          <p className="input-help">
+          <p className="help">
             Add people who will be part of this group. You can add participants
             later too.
           </p>
 
           {participants.length > 0 && (
-            <div className="participants-list">
-              <h4>Participants ({participants.length}):</h4>
-              <ul>
+            <div className="participants-list mt-4">
+              <p className="subtitle is-6">
+                Participants ({participants.length}):
+              </p>
+              <div className="field is-grouped is-grouped-multiline">
                 {participants.map((participant, index) => (
-                  <li key={index}>
-                    <span>{participant}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeParticipant(index)}
-                      disabled={isSubmitting}
-                      data-testid="remove-participant"
-                    >
-                      Remove
-                    </button>
-                  </li>
+                  <div key={index} className="control">
+                    <div className="tags has-addons">
+                      <span className="tag is-primary">{participant}</span>
+                      <button
+                        type="button"
+                        className="tag is-delete"
+                        onClick={() =>
+                          removeParticipant(index)}
+                        disabled={isSubmitting}
+                        data-testid="remove-participant"
+                        aria-label={`Remove ${participant}`}
+                      />
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </div>
 
-        <div className="actions">
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Creating..." : "Create Group"}
-          </button>
+        <div className="field is-grouped">
+          <div className="control">
+            <button
+              type="submit"
+              className={`button is-primary ${
+                isSubmitting ? "is-loading" : ""
+              }`}
+              disabled={isSubmitting}
+            >
+              Create Group
+            </button>
+          </div>
+          <div className="control">
+            <button
+              type="button"
+              className="button"
+              onClick={() => navigate("/")}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </form>
     </div>

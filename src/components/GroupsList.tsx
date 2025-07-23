@@ -41,21 +41,28 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
 
   // Display loading state
   if (isLoading) {
-    return <div className="loading">Loading groups...</div>;
+    return (
+      <div className="notification is-info">
+        <progress className="progress is-primary" max="100"></progress>
+        Loading groups...
+      </div>
+    );
   }
 
   // Display empty state
   if (groups.length === 0) {
     return (
-      <div className="empty-state">
-        <p>You don't have any groups yet.</p>
-        <button
-          type="button"
-          className="primary"
-          onClick={() => navigate("/create")}
-        >
-          Create Your First Group
-        </button>
+      <div className="empty-state has-text-centered">
+        <div className="notification is-light">
+          <p className="title is-5">You don't have any groups yet.</p>
+          <button
+            type="button"
+            className="button is-primary"
+            onClick={() => navigate("/create")}
+          >
+            Create Your First Group
+          </button>
+        </div>
       </div>
     );
   }
@@ -63,49 +70,66 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
   // Display the list of groups
   return (
     <div className="groups-list">
-      <h2>Your Groups</h2>
-
-      <ul>
-        {groups.map((group) => (
-          <li
-            key={group.timestamp}
-            onClick={() => handleOpenGroup(group.timestamp)}
-          >
-            <div className="group-info">
-              <h3>{group.description}</h3>
-              <span className="group-date">
-                {new Date(group.timestamp).toLocaleDateString()}
-              </span>
-            </div>
-
-            {showActions && (
-              <div className="group-actions">
-                <button
-                  type="button"
-                  className="danger small"
-                  onClick={(e) =>
-                    handleDeleteGroup(e, group.timestamp, group.description)}
-                  aria-label={`Delete ${group.description}`}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-
-      {showActions && (
-        <div className="actions">
-          <button
-            type="button"
-            className="primary"
-            onClick={() => navigate("/create")}
-          >
-            Create New Group
-          </button>
+      <div className="level">
+        <div className="level-left">
+          <div className="level-item">
+            <h2 className="title is-4">Your Groups</h2>
+          </div>
         </div>
-      )}
+        {showActions && (
+          <div className="level-right">
+            <div className="level-item">
+              <button
+                type="button"
+                className="button is-primary"
+                onClick={() => navigate("/create")}
+              >
+                <span>Create New Group</span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="columns is-multiline">
+        {groups.map((group) => (
+          <div
+            key={group.timestamp}
+            className="column is-12-mobile is-6-tablet is-4-desktop"
+          >
+            <div
+              className="card is-clickable"
+              onClick={() => handleOpenGroup(group.timestamp)}
+            >
+              <div className="card-content">
+                <div className="content">
+                  <p className="title is-5">{group.description}</p>
+                  <p className="subtitle is-6 has-text-grey">
+                    Created {new Date(group.timestamp).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              {showActions && (
+                <footer className="card-footer">
+                  <a
+                    className="card-footer-item"
+                    onClick={() => handleOpenGroup(group.timestamp)}
+                  >
+                    View
+                  </a>
+                  <a
+                    className="card-footer-item has-text-danger"
+                    onClick={(e) =>
+                      handleDeleteGroup(e, group.timestamp, group.description)}
+                  >
+                    Delete
+                  </a>
+                </footer>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

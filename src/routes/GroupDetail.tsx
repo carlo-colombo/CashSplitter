@@ -40,7 +40,12 @@ export const GroupDetail: FunctionComponent = () => {
   }, [timestamp]);
 
   if (isLoading) {
-    return <div className="loading">Loading group details...</div>;
+    return (
+      <div className="notification is-info">
+        <progress className="progress is-primary" max="100"></progress>
+        Loading group details...
+      </div>
+    );
   }
 
   if (!group) {
@@ -51,37 +56,49 @@ export const GroupDetail: FunctionComponent = () => {
 
   return (
     <div className="group-detail-page">
-      <header>
-        <h2>{description}</h2>
-        <div className="group-meta">
-          <span>Created: {new Date(createdAt).toLocaleDateString()}</span>
+      <div className="level is-mobile mb-5">
+        <div className="level-left">
+          <div className="level-item">
+            <div>
+              <h2 className="title is-3">{description}</h2>
+              <p className="subtitle is-6">
+                Created {new Date(createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
         </div>
-      </header>
-
-      <div className="section participants">
-        <h3>Participants</h3>
-        {/* This will be populated in a future task */}
-        <p className="empty">No participants added yet</p>
+        <div className="level-right">
+          <div className="level-item">
+            <div className="buttons">
+              <button
+                type="button"
+                className="button is-primary"
+                onClick={() => navigate(`/group/${timestamp}/addExpense`)}
+              >
+                Add Expense
+              </button>
+              <button
+                type="button"
+                className="button"
+                onClick={() => navigate("/")}
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="section transactions">
-        <h3>Expenses</h3>
+      <div className="section-participants mb-5">
+        <h3 className="title is-5">Participants</h3>
+        <div className="notification is-light">
+          <p>No participants added yet</p>
+        </div>
+      </div>
+
+      <div className="section-transactions">
+        <h3 className="title is-5">Expenses</h3>
         <ExpensesList group={group} />
-      </div>
-
-      <div className="actions">
-        <button
-          type="button"
-          onClick={() => navigate(`/group/${timestamp}/addExpense`)}
-        >
-          Add Expense
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/")}
-        >
-          Back to Groups
-        </button>
       </div>
     </div>
   );
