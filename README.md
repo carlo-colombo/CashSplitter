@@ -18,6 +18,8 @@ working completely offline.
 - **UI to Add Expenses**: User-friendly interface to add expenses with form
   validation, including amount, description, payer selection, and participant
   selection for splitting
+- **Expenses Display**: View all group expenses in a formatted table showing
+  description, date, amount, payers, and participants for each expense
 - **Local Persistence**: All data is saved to browser local storage—no server
   required
 - **Group Overview**: View a list of your groups and access their details
