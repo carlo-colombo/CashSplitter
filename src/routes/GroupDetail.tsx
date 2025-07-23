@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation, useParams } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
+import { ExpensesList } from "../components/ExpensesList.tsx";
 import { Group } from "../model/Group.ts";
 import { groupId } from "../model/Accessors.ts";
 
@@ -32,7 +33,7 @@ export const GroupDetail: FunctionComponent = () => {
             setGroup(loadedGroup);
           } else {
             showNotification("error", "Group not found");
-            route("/");
+            navigate("/");
           }
         });
     }
@@ -64,9 +65,8 @@ export const GroupDetail: FunctionComponent = () => {
       </div>
 
       <div className="section transactions">
-        <h3>Transactions</h3>
-        {/* This will be populated in a future task */}
-        <p className="empty">No transactions recorded yet</p>
+        <h3>Expenses</h3>
+        <ExpensesList group={group} />
       </div>
 
       <div className="actions">
