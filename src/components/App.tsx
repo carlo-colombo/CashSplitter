@@ -14,29 +14,6 @@ export const App: FunctionComponent = () => {
     <NotificationProvider>
       <GroupsProvider>
         <div className="cashsplitter-app">
-          <nav
-            className="navbar is-primary"
-            role="navigation"
-            aria-label="main navigation"
-          >
-            <div className="navbar-brand">
-              <a className="navbar-item" href="/#/">
-                <strong>Cashsplitter</strong>
-              </a>
-
-              <a
-                role="button"
-                className="navbar-burger"
-                aria-label="menu"
-                aria-expanded="false"
-              >
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-              </a>
-            </div>
-          </nav>
-
           <main className="section">
             <div className="container">
               <Router hook={useHashLocation}>
