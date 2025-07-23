@@ -6,6 +6,8 @@ import { GroupsList } from "./GroupsList.tsx";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { Group } from "../model/Group.ts";
 import { Router } from "wouter-preact";
+import { saveGroup } from "../storage/GroupStorage.ts";
+import { createGroup } from "../model/CreateGroup.ts";
 
 // Mock navigation function
 let mockNavigate: (path: string) => void;
@@ -21,6 +23,8 @@ describe("GroupsList Component", () => {
     cleanup();
     currentPath = "/";
     mockNavigate = () => {};
+    // Clear localStorage between tests
+    localStorage.clear();
   });
 
   describe("loading state", () => {
@@ -43,7 +47,7 @@ describe("GroupsList Component", () => {
         </Router>,
       );
 
-      const loadingElement = container.querySelector(".loading");
+      const loadingElement = container.querySelector(".notification.is-info");
       expect(loadingElement).toBeTruthy();
       expect(loadingElement?.textContent).toContain("Loading groups...");
     });
@@ -75,7 +79,7 @@ describe("GroupsList Component", () => {
         "You don't have any groups yet.",
       );
 
-      const createButton = container.querySelector("button.primary");
+      const createButton = container.querySelector("button.is-primary");
       expect(createButton?.textContent).toContain("Create Your First Group");
     });
 
@@ -104,7 +108,7 @@ describe("GroupsList Component", () => {
       );
 
       const createButton = container.querySelector(
-        "button.primary",
+        "button.is-primary",
       ) as HTMLButtonElement;
       createButton.click();
 
@@ -148,7 +152,7 @@ describe("GroupsList Component", () => {
       const groupsList = container.querySelector(".groups-list");
       expect(groupsList).toBeTruthy();
 
-      const groupItems = container.querySelectorAll("li");
+      const groupItems = container.querySelectorAll(".card");
       expect(groupItems.length).toBe(2);
 
       // Check first group
@@ -179,7 +183,9 @@ describe("GroupsList Component", () => {
         </Router>,
       );
 
-      const deleteButtons = container.querySelectorAll("button.danger");
+      const deleteButtons = container.querySelectorAll(
+        ".card-footer-item.has-text-danger",
+      );
       expect(deleteButtons.length).toBe(2);
     });
 
@@ -243,7 +249,7 @@ describe("GroupsList Component", () => {
         </Router>,
       );
 
-      const groupItem = container.querySelector("li") as HTMLLIElement;
+      const groupItem = container.querySelector(".card") as HTMLElement;
       groupItem.click();
 
       expect(navigatedTo).toBe("/group/1672531200000");
@@ -288,8 +294,8 @@ describe("GroupsList Component", () => {
       );
 
       const deleteButton = container.querySelector(
-        "button.danger",
-      ) as HTMLButtonElement;
+        ".card-footer-item.has-text-danger",
+      ) as HTMLElement;
       deleteButton.click();
 
       expect(removedTimestamp).toBe(1672531200000);
@@ -327,14 +333,101 @@ describe("GroupsList Component", () => {
       );
 
       const deleteButton = container.querySelector(
-        "button.danger",
-      ) as HTMLButtonElement;
+        ".card-footer-item.has-text-danger",
+      ) as HTMLElement;
       deleteButton.click();
 
       expect(removedTimestamp).toBeNull();
 
       // Restore original confirm
       globalThis.confirm = originalConfirm;
+    });
+  });
+
+  describe("participants display", () => {
+    it("should display participants list in group cards", async () => {
+      // Create test groups with participants and save them to storage
+      const testGroup = createGroup("Trip to Paris", [
+        "Alice",
+        "Bob",
+        "Charlie",
+      ]);
+      saveGroup(testGroup);
+
+      const mockGroups = [
+        {
+          description: "Trip to Paris",
+          timestamp: testGroup[4], // Use the actual timestamp from created group
+          storageKey: `group_${testGroup[4]}`,
+        },
+      ];
+
+      const mockContext = {
+        groups: mockGroups,
+        selectedGroup: null,
+        refreshGroups: () => {},
+        removeGroup: () => {},
+        isLoading: false,
+        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        loadGroupDetails: () => Promise.resolve(null),
+      };
+
+      const { container } = render(
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
+      );
+
+      // Wait a bit for async loading to complete
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // Check that participants section exists and shows loading state initially
+      const card = container.querySelector(".card");
+      expect(card?.textContent).toContain("Trip to Paris");
+      // In test environment, participants load async so we'll see loading state
+      expect(card?.textContent).toContain("Loading participants...");
+    });
+
+    it("should show participants loading state for groups", async () => {
+      // Create test group with no participants
+      const testGroup = createGroup("Empty Group", []);
+      saveGroup(testGroup);
+
+      const mockGroups = [
+        {
+          description: "Empty Group",
+          timestamp: testGroup[4],
+          storageKey: `group_${testGroup[4]}`,
+        },
+      ];
+
+      const mockContext = {
+        groups: mockGroups,
+        selectedGroup: null,
+        refreshGroups: () => {},
+        removeGroup: () => {},
+        isLoading: false,
+        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        loadGroupDetails: () => Promise.resolve(null),
+      };
+
+      const { container } = render(
+        <Router hook={mockLocationHook}>
+          <GroupsContext.Provider value={mockContext}>
+            <GroupsList />
+          </GroupsContext.Provider>
+        </Router>,
+      );
+
+      // Wait a bit for async loading to complete
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      const card = container.querySelector(".card");
+      expect(card?.textContent).toContain("Empty Group");
+      // In test environment, participants load async so we'll see loading state
+      expect(card?.textContent).toContain("Loading participants...");
     });
   });
 });

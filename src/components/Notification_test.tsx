@@ -19,7 +19,7 @@ describe("Notification Component", () => {
 
       const notification = container.querySelector(".notification");
       expect(notification).toBeTruthy();
-      expect(notification?.classList.contains("success")).toBe(true);
+      expect(notification?.classList.contains("is-success")).toBe(true);
       expect(notification?.textContent).toContain("Operation successful");
     });
 
@@ -31,7 +31,7 @@ describe("Notification Component", () => {
 
       const notification = container.querySelector(".notification");
       expect(notification).toBeTruthy();
-      expect(notification?.classList.contains("error")).toBe(true);
+      expect(notification?.classList.contains("is-danger")).toBe(true);
       expect(notification?.textContent).toContain("Something went wrong");
     });
 
@@ -43,7 +43,7 @@ describe("Notification Component", () => {
 
       const notification = container.querySelector(".notification");
       expect(notification).toBeTruthy();
-      expect(notification?.classList.contains("info")).toBe(true);
+      expect(notification?.classList.contains("is-info")).toBe(true);
       expect(notification?.textContent).toContain("Here's some information");
     });
 
@@ -53,7 +53,7 @@ describe("Notification Component", () => {
         <Notification type="success" message="Test message" />,
       );
 
-      const closeButton = container.querySelector(".notification-close");
+      const closeButton = container.querySelector(".delete");
       expect(closeButton).toBeTruthy();
       expect(closeButton?.getAttribute("aria-label")).toBe("Close");
     });
@@ -76,7 +76,7 @@ describe("Notification Component", () => {
       );
 
       const closeButton = container.querySelector(
-        ".notification-close",
+        ".delete",
       ) as HTMLButtonElement;
       closeButton.click();
 
@@ -90,7 +90,7 @@ describe("Notification Component", () => {
       );
 
       const closeButton = container.querySelector(
-        ".notification-close",
+        ".delete",
       ) as HTMLButtonElement;
       closeButton.click();
 

@@ -86,6 +86,7 @@ deno task serve
 deno task build       # Build production version to ./build/
 deno task bundle      # Bundle TypeScript/JSX to single JS file
 deno task serve       # Start development server on localhost:8000
+deno task test        # Run all tests with required permissions
 ```
 
 ### Testing
@@ -93,7 +94,7 @@ deno task serve       # Start development server on localhost:8000
 All tests are written using Deno's built-in testing framework:
 
 ```bash
-deno test            # Run all tests
+deno task test       # Run all tests with required permissions
 deno test --watch    # Run tests in watch mode
 
 # Run specific test suites
@@ -136,6 +137,7 @@ deno task lint        # Show linting issues
 **Available Tasks:**
 
 ```bash
+deno task test        # Run all tests with required permissions
 deno task fmt         # Format all code
 deno task fmt:check   # Check formatting without changing files
 deno task lint        # Run linter

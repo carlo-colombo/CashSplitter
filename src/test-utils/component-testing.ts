@@ -62,6 +62,8 @@ export function createTestWrapper(providers: FunctionComponent[] = []) {
 // Utility to clean up after tests
 export function cleanup() {
   document.body.innerHTML = "";
+  // Clear localStorage
+  mockLocalStorage.clear();
   // Clear any pending timers to prevent leaks
   const highestTimeoutId = setTimeout(() => {}, 0);
   for (let i = 0; i <= highestTimeoutId; i++) {

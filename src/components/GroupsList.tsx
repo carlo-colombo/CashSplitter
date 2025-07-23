@@ -1,9 +1,70 @@
 // GroupsList component
 // Displays a list of all saved groups
 import { FunctionComponent } from "preact";
-import { useContext, useEffect } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
+import { agents } from "../model/Accessors.ts";
+import { loadGroup } from "../storage/GroupStorage.ts";
+
+interface GroupsListProps {
+  showActions?: boolean;
+}
+
+// Hook to load participants for a group
+function useGroupParticipants(timestamp: number) {
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadParticipants = () => {
+      try {
+        const group = loadGroup(timestamp);
+        if (group) {
+          const groupAgents = agents(group);
+          const participantNames = groupAgents.map(([_, name]) => name);
+          setParticipants(participantNames);
+        } else {
+          setParticipants([]);
+        }
+      } catch (error) {
+        console.error("Error loading participants:", error);
+        setParticipants([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Use setTimeout to ensure this runs in the next tick
+    setTimeout(loadParticipants, 0);
+  }, [timestamp]);
+
+  return { participants, loading };
+}
+
+// Component to display participants for a group
+const GroupParticipants: FunctionComponent<{ timestamp: number }> = (
+  { timestamp },
+) => {
+  const { participants, loading } = useGroupParticipants(timestamp);
+
+  if (loading) {
+    return (
+      <p className="subtitle is-7 has-text-grey">Loading participants...</p>
+    );
+  }
+
+  if (participants.length === 0) {
+    return <p className="subtitle is-7 has-text-grey">No participants</p>;
+  }
+
+  return (
+    <div>
+      <p className="subtitle is-7 has-text-grey-dark">Participants:</p>
+      <p className="subtitle is-7 has-text-grey">{participants.join(", ")}</p>
+    </div>
+  );
+};
 
 interface GroupsListProps {
   showActions?: boolean;
@@ -107,6 +168,7 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
                   <p className="subtitle is-6 has-text-grey">
                     Created {new Date(group.timestamp).toLocaleDateString()}
                   </p>
+                  <GroupParticipants timestamp={group.timestamp} />
                 </div>
               </div>
               {showActions && (
