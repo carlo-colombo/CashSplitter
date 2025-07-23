@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "playwright-mcp": {
+      "command": "deno",
+      "args": [
+        "run",
+        "-A",
+        "npm:@playwright/mcp@latest"
+      ]
+    }
+  }
+}

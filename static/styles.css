@@ -24,8 +24,11 @@
   --bulma-primary-h: 210deg;
   --bulma-primary-s: 29%;
   --bulma-primary-l: 24%;
-  --bulma-primary-invert-l: 80%;
+  --bulma-primary-invert-l: 90%;
+  --bulma-success-invert-l: 90%;
+  --bulma-danger-invert-l: 80%;
   --bulma-text: var(--notebook-text-dark);
+
   --bulma-text-strong: var(--notebook-text-dark);
   --bulma-border: #e8e5d8;
   --bulma-border-hover: var(--leather-blue);

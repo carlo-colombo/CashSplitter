@@ -6,6 +6,7 @@ import { useLocation, useParams } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
 import { ExpensesList } from "../components/ExpensesList.tsx";
+import { ParticipantsList } from "../components/ParticipantsList.tsx";
 import { Group } from "../model/Group.ts";
 import { groupId } from "../model/Accessors.ts";
 
@@ -90,10 +91,8 @@ export const GroupDetail: FunctionComponent = () => {
       </div>
 
       <div className="section-participants mb-5">
-        <h3 className="title is-5">Participants</h3>
-        <div className="notification is-light">
-          <p>No participants added yet</p>
-        </div>
+        <h3 className="title is-5">Participants & Balances</h3>
+        <ParticipantsList group={group} />
       </div>
 
       <div className="section-transactions">

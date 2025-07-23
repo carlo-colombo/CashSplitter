@@ -21,6 +21,11 @@ working completely offline.
   participant selection for splitting
 - **Expenses Display**: View all group expenses in a formatted table showing
   description, date, amount, payers, and participants for each expense
+- **Balance Calculations**: Automatic calculation and display of outstanding
+  debts and owed amounts for each participant, showing who owes money and who is
+  owed money with precise balance tracking
+- **Participants Display**: View all group participants with their current
+  balance status in an organized table (desktop) and card layout (mobile)
 - **Local Persistence**: All data is saved to browser local storage—no server
   required
 - **Group Overview**: View a list of your groups and access their details
@@ -34,7 +39,6 @@ working completely offline.
 - Add participants to groups (UI)
 - Share groups via links
 - Full offline functionality
-- Automatic balance calculations
 
 ## Architecture
 

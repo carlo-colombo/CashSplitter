@@ -71,6 +71,15 @@
   - [x] Add navigation from GroupDetail to AddExpense
   - [x] Add success feedback and navigation back to group after expense creation
   - [x] Write component tests following TDD approach
+- [x] Balance calculations and participants display
+  - [x] Implement calculateBalances function with comprehensive test coverage
+  - [x] Create ParticipantsList component with TDD approach
+  - [x] Display participants with outstanding debts and owed amounts
+  - [x] Show balance status (owes money, is owed money, balanced)
+  - [x] Format currency amounts correctly (€0.00 format)
+  - [x] Responsive design (table for desktop, cards for mobile)
+  - [x] Update GroupDetail to show participants instead of placeholder
+  - [x] Update README to reflect new balance calculation feature
 - [ ] UI to add participants
 - [ ] Share a link with the current state of the group
 - [ ] Application works offline
