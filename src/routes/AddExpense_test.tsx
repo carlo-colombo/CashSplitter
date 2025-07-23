@@ -81,4 +81,23 @@ describe("AddExpense", () => {
     expect(select).toBeTruthy();
     expect(select!.children.length).toBeGreaterThan(3); // Default option + 3 participants
   });
+
+  it("should have correct input attributes for decimal amounts", () => {
+    const { container } = render(
+      <AddExpense
+        group={testGroup}
+        onSubmit={mockOnSubmit}
+        onCancel={mockOnCancel}
+      />,
+    );
+
+    const amountInput = container.querySelector("#amount") as HTMLInputElement;
+
+    expect(amountInput).toBeTruthy();
+    expect(amountInput.type).toBe("number");
+    expect(amountInput.step).toBe("0.01");
+    expect(amountInput.min).toBe("0.01");
+    expect(amountInput.placeholder).toBe("0.00");
+    expect(amountInput.required).toBe(true);
+  });
 });

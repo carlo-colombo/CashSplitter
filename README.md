@@ -14,10 +14,11 @@ working completely offline.
   Paris", "Dinner with friends")
 - **Add Expenses**: Add expenses to groups with single or multiple payers that
   can be split equally among all participants, a selected subset, or with custom
-  amounts for each participant
+  amounts for each participant. Supports decimal amounts with precise handling
+  down to 0.01 currency units
 - **UI to Add Expenses**: User-friendly interface to add expenses with form
-  validation, including amount, description, payer selection, and participant
-  selection for splitting
+  validation, including decimal amount input, description, payer selection, and
+  participant selection for splitting
 - **Expenses Display**: View all group expenses in a formatted table showing
   description, date, amount, payers, and participants for each expense
 - **Local Persistence**: All data is saved to browser local storage—no server

@@ -448,5 +448,112 @@ describe("Group Expense", () => {
         );
       }).toThrow("Payer amounts must equal split amounts");
     });
+
+    describe("decimal amount handling", () => {
+      it("should handle various decimal amounts correctly", () => {
+        const group = createBaseGroup({
+          revision: 1,
+          description: "Decimal Test",
+          timestamp: 1672500000000,
+        });
+
+        // Test 12.34 split equally between 2 people
+        const updated1 = addExpense(
+          group,
+          [[1, 12.34]],
+          "Coffee",
+          Date.now(),
+          [[1, 6.17], [2, 6.17]],
+        );
+
+        const transactions1 = transactions(updated1);
+        const expense1 = transactions1[1];
+        const entries1 = expense1[2];
+
+        // Alice pays 12.34 (stored as -1234 cents)
+        const alicePayment = entries1.find(([id, amount]) =>
+          id === 1 && amount < 0
+        );
+        expect(alicePayment).toEqual([1, -1234]);
+
+        // Both get 6.17 (stored as 617 cents)
+        const aliceShare = entries1.find(([id, amount]) =>
+          id === 1 && amount > 0
+        );
+        const bobShare = entries1.find(([id, amount]) =>
+          id === 2 && amount > 0
+        );
+        expect(aliceShare).toEqual([1, 617]);
+        expect(bobShare).toEqual([2, 617]);
+      });
+
+      it("should handle minimum amount of 0.01", () => {
+        const group = createBaseGroup({
+          revision: 1,
+          description: "Minimal Test",
+          timestamp: 1672500000000,
+        });
+
+        const updated = addExpense(
+          group,
+          [[1, 0.01]],
+          "Penny",
+          Date.now(),
+          [[1, 0.01]],
+        );
+
+        const newTransactions = transactions(updated);
+        const expense = newTransactions[1];
+        const entries = expense[2];
+
+        // Alice pays 0.01 (stored as -1 cent)
+        const payment = entries.find(([id, amount]) => id === 1 && amount < 0);
+        expect(payment).toEqual([1, -1]);
+
+        // Alice gets 0.01 (stored as 1 cent)
+        const share = entries.find(([id, amount]) => id === 1 && amount > 0);
+        expect(share).toEqual([1, 1]);
+      });
+
+      it("should handle complex decimal amounts with 3-way split", () => {
+        const threePersonGroup: Group = [
+          "cs",
+          1,
+          1,
+          "Three Friends",
+          1672500000000,
+          [[1, "Alice"], [2, "Bob"], [3, "Charlie"]],
+          [],
+        ];
+
+        // 10.99 split 3 ways: 3.66, 3.67, 3.66 (sums to 10.99)
+        const updated = addExpense(
+          threePersonGroup,
+          [[2, 10.99]],
+          "Lunch",
+          Date.now(),
+          [[1, 3.66], [2, 3.67], [3, 3.66]],
+        );
+
+        const newTransactions = transactions(updated);
+        const expense = newTransactions[0];
+        const entries = expense[2];
+
+        // Bob pays 10.99 (stored as -1099 cents)
+        const bobPayment = entries.find(([id, amount]) =>
+          id === 2 && amount < 0
+        );
+        expect(bobPayment).toEqual([2, -1099]);
+
+        // Check shares
+        const aliceShare = entries.find(([id, _amount]) => id === 1);
+        const bobShare = entries.find(([id, amount]) => id === 2 && amount > 0);
+        const charlieShare = entries.find(([id, _amount]) => id === 3);
+
+        expect(aliceShare).toEqual([1, 366]); // 3.66
+        expect(bobShare).toEqual([2, 367]); // 3.67
+        expect(charlieShare).toEqual([3, 366]); // 3.66
+      });
+    });
   });
 });
