@@ -4,7 +4,8 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation, useParams } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
-import { addExpense, Group } from "../model/Group.ts";
+import { addExpense } from "../model/Expense.ts";
+import { Group } from "../model/Group.ts";
 import { saveGroup } from "../storage/GroupStorage.ts";
 import { AddExpense } from "./AddExpense.tsx";
 

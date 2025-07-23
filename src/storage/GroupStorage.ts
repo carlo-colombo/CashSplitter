@@ -1,6 +1,7 @@
 // Group Storage Service
 // Handles persisting groups to local storage and retrieving them
-import { Group, groupId } from "../model/Group.ts";
+import { Group } from "../model/Group.ts";
+import { groupId } from "../model/Accessors.ts";
 import { decode, encode } from "../model/GroupSerialization.ts";
 
 // Prefix for all keys in localStorage to avoid conflicts

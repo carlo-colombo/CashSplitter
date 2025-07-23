@@ -2,7 +2,8 @@
 // Provides global access to the groups and their state
 import { ComponentChildren, createContext, FunctionComponent } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { Group, groupId } from "../model/Group.ts";
+import { Group } from "../model/Group.ts";
+import { groupId } from "../model/Accessors.ts";
 import { createGroup } from "../model/CreateGroup.ts";
 import {
   deleteGroup,

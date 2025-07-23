@@ -1,7 +1,8 @@
 // AddExpense component for adding expenses to a group
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
-import { agents, Group } from "../model/Group.ts";
+import { agents } from "../model/Accessors.ts";
+import { Group } from "../model/Group.ts";
 
 interface AddExpenseProps {
   group: Group;

@@ -1,10 +1,5 @@
-import {
-  agents,
-  Group,
-  groupId,
-  revision,
-  transactions,
-} from "../model/Group.ts";
+import { Group } from "../model/Group.ts";
+import { agents, groupId, revision, transactions } from "../model/Accessors.ts";
 
 // Define a conflict error class with conflicts array
 export class MergeConflictError extends Error {

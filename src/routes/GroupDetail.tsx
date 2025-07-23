@@ -5,7 +5,8 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation, useParams } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
-import { Group, groupId } from "../model/Group.ts";
+import { Group } from "../model/Group.ts";
+import { groupId } from "../model/Accessors.ts";
 
 export const GroupDetail: FunctionComponent = () => {
   const [, navigate] = useLocation();
