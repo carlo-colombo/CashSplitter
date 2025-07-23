@@ -9,6 +9,10 @@
   - [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
   - [x] Create initial app shell
 - [x] Set up CI/CD with GitHub Actions
+- [x] Set up development tools
+  - [x] Implement pre-commit git hooks for deno fmt and lint
+  - [x] Add fmt and lint tasks to deno.json
+  - [x] Update README with code quality documentation
 - [x] Create a group API
 - [x] Implement group serialization and deserialization
 - [x] Implement merge functionality for group changes

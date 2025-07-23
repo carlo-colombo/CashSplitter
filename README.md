@@ -110,6 +110,32 @@ deno test src/components/       # Component tests
 - Mock utilities for localStorage and context providers
 - Timer cleanup to prevent test leaks
 
+### Code Quality & Development Tools
+
+**Pre-commit Hooks:** Automatic code quality checks are enforced via git
+pre-commit hooks:
+
+```bash
+# Pre-commit automatically runs:
+deno fmt --check       # Verify code formatting
+deno lint             # Check for linting issues
+```
+
+If checks fail, the commit is rejected. Fix issues with:
+
+```bash
+deno task fmt         # Auto-format code
+deno task lint        # Show linting issues
+```
+
+**Available Tasks:**
+
+```bash
+deno task fmt         # Format all code
+deno task fmt:check   # Check formatting without changing files
+deno task lint        # Run linter
+```
+
 ### Project Structure
 
 ```
