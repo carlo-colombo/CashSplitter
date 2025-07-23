@@ -98,7 +98,7 @@ export const CreateGroup: FunctionComponent = () => {
               onInput={(e) =>
                 setCurrentParticipant((e.target as HTMLInputElement).value)}
               onKeyPress={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   e.preventDefault();
                   addParticipant();
                 }
@@ -115,9 +115,10 @@ export const CreateGroup: FunctionComponent = () => {
             </button>
           </div>
           <p className="input-help">
-            Add people who will be part of this group. You can add participants later too.
+            Add people who will be part of this group. You can add participants
+            later too.
           </p>
-          
+
           {participants.length > 0 && (
             <div className="participants-list">
               <h4>Participants ({participants.length}):</h4>

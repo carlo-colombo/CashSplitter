@@ -1,5 +1,5 @@
-import { expect } from "jsr:@std/expect";
-import { describe, it } from "jsr:@std/testing/bdd";
+import { expect } from "@std/expect";
+import { describe, it } from "@std/testing/bdd";
 import { createGroup } from "./CreateGroup.ts";
 import { agents, groupId, revision } from "./Group.ts";
 
@@ -47,7 +47,7 @@ describe("CreateGroup", () => {
       expect(groupAgents[0][1]).toBe("Alice");
       expect(groupAgents[1][1]).toBe("Bob");
       expect(groupAgents[2][1]).toBe("Charlie");
-      
+
       // Check that agent IDs are sequential starting from 1
       expect(groupAgents[0][0]).toBe(1);
       expect(groupAgents[1][0]).toBe(2);

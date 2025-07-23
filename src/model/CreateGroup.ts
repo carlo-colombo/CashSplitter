@@ -6,11 +6,16 @@ import { Group } from "./Group.ts";
  * @param participants Optional array of participant names to add to the group
  * @returns A new Group instance
  */
-export function createGroup(description: string, participants?: string[]): Group {
+export function createGroup(
+  description: string,
+  participants?: string[],
+): Group {
   const timestamp = Date.now(); // Current timestamp
 
   // Create agents array from participants if provided
-  const agents = participants ? participants.map((name, index) => [index + 1, name] as [number, string]) : [];
+  const agents = participants
+    ? participants.map((name, index) => [index + 1, name] as [number, string])
+    : [];
 
   return [
     "cs", // Header identifier
