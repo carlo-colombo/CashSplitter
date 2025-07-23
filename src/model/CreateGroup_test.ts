@@ -1,7 +1,7 @@
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 import { createGroup } from "./CreateGroup.ts";
-import { agents, groupId, revision } from "./Group.ts";
+import { agents, groupId, revision } from "./Accessors.ts";
 
 describe("CreateGroup", () => {
   describe("createGroup function", () => {
