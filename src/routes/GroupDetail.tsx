@@ -71,6 +71,12 @@ export const GroupDetail: FunctionComponent = () => {
       <div className="actions">
         <button
           type="button"
+          onClick={() => navigate(`/group/${timestamp}/addExpense`)}
+        >
+          Add Expense
+        </button>
+        <button
+          type="button"
           onClick={() => navigate("/")}
         >
           Back to Groups

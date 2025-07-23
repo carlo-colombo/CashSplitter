@@ -53,7 +53,16 @@
   - [x] Add comprehensive tests for expense splitting logic
   - [x] Add validation that custom splits sum to expense amount
   - [x] and expense can be payed by multiple participants
-- [ ] UI to add expenses
+- [x] UI to add expenses
+  - [x] Create AddExpense component with form validation
+  - [x] Add route /group/:timestamp/addExpense
+  - [x] Implement form with amount, description, payer dropdown, and participant
+        checkboxes
+  - [x] Add form validation (amount > 0, payer selected, at least 1 participant)
+  - [x] Integrate with existing expense API for equal splitting
+  - [x] Add navigation from GroupDetail to AddExpense
+  - [x] Add success feedback and navigation back to group after expense creation
+  - [x] Write component tests following TDD approach
 - [ ] UI to add participants
 - [ ] Share a link with the current state of the group
 - [ ] Application works offline

@@ -15,6 +15,9 @@ working completely offline.
 - **Add Expenses**: Add expenses to groups with single or multiple payers that
   can be split equally among all participants, a selected subset, or with custom
   amounts for each participant
+- **UI to Add Expenses**: User-friendly interface to add expenses with form
+  validation, including amount, description, payer selection, and participant
+  selection for splitting
 - **Local Persistence**: All data is saved to browser local storage—no server
   required
 - **Group Overview**: View a list of your groups and access their details
@@ -24,7 +27,6 @@ working completely offline.
 ### 🚧 Coming Soon
 
 - Add participants to groups (UI)
-- UI to add expenses through the application interface
 - Share groups via links
 - Full offline functionality
 - Automatic balance calculations
