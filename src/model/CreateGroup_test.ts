@@ -37,5 +37,31 @@ describe("CreateGroup", () => {
       expect(Array.isArray(group[5])).toBe(true);
       expect(Array.isArray(group[6])).toBe(true);
     });
+
+    it("should create a group with participants when provided", () => {
+      const participants = ["Alice", "Bob", "Charlie"];
+      const group = createGroup("Test Group", participants);
+
+      const groupAgents = agents(group);
+      expect(groupAgents.length).toBe(3);
+      expect(groupAgents[0][1]).toBe("Alice");
+      expect(groupAgents[1][1]).toBe("Bob");
+      expect(groupAgents[2][1]).toBe("Charlie");
+      
+      // Check that agent IDs are sequential starting from 1
+      expect(groupAgents[0][0]).toBe(1);
+      expect(groupAgents[1][0]).toBe(2);
+      expect(groupAgents[2][0]).toBe(3);
+    });
+
+    it("should create a group with no participants when empty array provided", () => {
+      const group = createGroup("Test Group", []);
+      expect(agents(group).length).toBe(0);
+    });
+
+    it("should create a group with no participants when participants not provided", () => {
+      const group = createGroup("Test Group");
+      expect(agents(group).length).toBe(0);
+    });
   });
 });

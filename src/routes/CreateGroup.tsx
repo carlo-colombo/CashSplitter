@@ -10,8 +10,22 @@ export const CreateGroup: FunctionComponent = () => {
   const { showNotification } = useContext(NotificationContext);
   const { addGroup } = useContext(GroupsContext);
   const [description, setDescription] = useState<string>("");
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [currentParticipant, setCurrentParticipant] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const addParticipant = () => {
+    const name = currentParticipant.trim();
+    if (name && !participants.includes(name)) {
+      setParticipants([...participants, name]);
+      setCurrentParticipant("");
+    }
+  };
+
+  const removeParticipant = (index: number) => {
+    setParticipants(participants.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (e: Event) => {
     e.preventDefault();
@@ -26,8 +40,8 @@ export const CreateGroup: FunctionComponent = () => {
     }
 
     try {
-      // Create and save the group using our context
-      addGroup(description.trim());
+      // Create and save the group using our context with participants
+      addGroup(description.trim(), participants);
 
       // Show success notification and navigate back to home
       showNotification(
@@ -72,6 +86,58 @@ export const CreateGroup: FunctionComponent = () => {
           <p className="input-help">
             Give your group a meaningful name to help identify it later.
           </p>
+        </div>
+
+        <div className="form-group participants-section">
+          <label htmlFor="participant-name">Participants:</label>
+          <div className="participant-input">
+            <input
+              id="participant-name"
+              type="text"
+              value={currentParticipant}
+              onInput={(e) =>
+                setCurrentParticipant((e.target as HTMLInputElement).value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addParticipant();
+                }
+              }}
+              placeholder="Enter participant name..."
+              disabled={isSubmitting}
+            />
+            <button
+              type="button"
+              onClick={addParticipant}
+              disabled={isSubmitting || !currentParticipant.trim()}
+            >
+              Add
+            </button>
+          </div>
+          <p className="input-help">
+            Add people who will be part of this group. You can add participants later too.
+          </p>
+          
+          {participants.length > 0 && (
+            <div className="participants-list">
+              <h4>Participants ({participants.length}):</h4>
+              <ul>
+                {participants.map((participant, index) => (
+                  <li key={index}>
+                    <span>{participant}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeParticipant(index)}
+                      disabled={isSubmitting}
+                      data-testid="remove-participant"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="actions">

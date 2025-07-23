@@ -20,7 +20,7 @@ interface GroupsContextType {
     storageKey: string;
   }>;
   selectedGroup: Group | null;
-  addGroup: (description: string) => Group;
+  addGroup: (description: string, participants?: string[]) => Group;
   loadGroupDetails: (timestamp: number) => Promise<Group | null>;
   removeGroup: (timestamp: number) => void;
   refreshGroups: () => void;
@@ -75,9 +75,9 @@ export const GroupsProvider: FunctionComponent<
   };
 
   // Function to create and save a new group
-  const addGroup = (description: string): Group => {
+  const addGroup = (description: string, participants?: string[]): Group => {
     try {
-      const newGroup = createGroup(description);
+      const newGroup = createGroup(description, participants);
       saveGroup(newGroup);
       refreshGroups();
       return newGroup;

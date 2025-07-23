@@ -38,6 +38,10 @@
   - [ ] App component tests
   - [ ] Route component tests
 - [ ] Add participants API
+  - [x] Update createGroup function to accept participants parameter (TDD)
+  - [x] Update CreateGroup UI to include participants form (TDD)
+  - [ ] Add form validation for participants
+  - [ ] Update README to reflect participants in group creation
 - [x] Add expense API
   - [x] Implement addExpense function that splits expenses equally among group
         members
