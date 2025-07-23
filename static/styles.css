@@ -1,62 +1,32 @@
 /* Custom styles to complement Bulma.io for Cashsplitter */
 
-/* Custom clickable card styles */
-.card.is-clickable {
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+/* Custom Color Scheme - Notebook Theme */
+:root {
+  /* Background: Very light yellow (notebook page) */
+  --notebook-bg: #fffef7;
+  /* Primary: Dark blue (leather-like) */
+  --leather-blue: #2c3e50;
+  /* Text on dark backgrounds: White with slight yellow tint */
+  --notebook-text-light: #ffffff;
+  /* Text on light backgrounds: Dark blue */
+  --notebook-text-dark: #2c3e50;
+  /* Accent colors matching the theme */
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --info-color: #3498db;
 
-.card.is-clickable:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
-/* Enhanced mobile-specific spacing */
-@media screen and (max-width: 768px) {
-  .section {
-    padding: 1.5rem 1rem;
-  }
-
-  .container {
-    padding: 0 0.75rem;
-  }
-
-  .level.is-mobile {
-    display: flex !important;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .level.is-mobile .level-left,
-  .level.is-mobile .level-right {
-    margin-bottom: 0.75rem;
-  }
-
-  .level.is-mobile .level-right {
-    margin-bottom: 0;
-  }
-
-  .buttons {
-    justify-content: center;
-  }
-
-  .buttons .button {
-    flex: 1;
-    margin: 0 0.25rem;
-  }
-}
-
-/* Form enhancements */
-.field .checkbox {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.field .checkbox:last-child {
-  margin-bottom: 0;
-}
-
-/* Notification positioning */
-.notifications-container .notification {
-  margin-bottom: 0.5rem;
+  /* Override Bulma CSS variables */
+  --bulma-scheme-main: var(--notebook-bg);
+  --bulma-scheme-main-bis: var(--notebook-bg);
+  --bulma-scheme-main-ter: #f9f8f0;
+  --bulma-primary: var(--leather-blue);
+  --bulma-primary-h: 210deg;
+  --bulma-primary-s: 29%;
+  --bulma-primary-l: 24%;
+  --bulma-primary-invert-l: 80%;
+  --bulma-text: var(--notebook-text-dark);
+  --bulma-text-strong: var(--notebook-text-dark);
+  --bulma-border: #e8e5d8;
+  --bulma-border-hover: var(--leather-blue);
 }
