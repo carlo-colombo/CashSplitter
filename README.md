@@ -25,6 +25,8 @@ working completely offline.
 - **Group Overview**: View a list of your groups and access their details
 - **Conflict Resolution**: Built-in merge functionality to handle simultaneous
   edits to the same group
+- **Responsive Design**: Mobile-first design built with Bulma.io framework for
+  optimal viewing on all devices
 
 ### 🚧 Coming Soon
 
@@ -39,6 +41,7 @@ working completely offline.
 
 - **Frontend**: Preact with TypeScript for lightweight, React-compatible
   components
+- **Styling**: Bulma.io CSS framework for responsive, mobile-first design
 - **Build Tool**: Deno for dependency management, testing, and build scripts
 - **Routing**: Wouter-preact with hash-based navigation for maximum
   compatibility

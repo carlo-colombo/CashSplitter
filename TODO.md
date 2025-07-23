@@ -6,7 +6,7 @@
   - [x] Add basic routing system
     - [x] Implement hash-based routing with wouter
   - [x] Create layout component structure
-  - [ ] Set up CSS styling approach (e.g., CSS modules, Tailwind)
+  - [x] Set up CSS styling approach with Bulma.io framework
   - [x] Create initial app shell
 - [x] Set up CI/CD with GitHub Actions
 - [x] Set up development tools
