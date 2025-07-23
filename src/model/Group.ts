@@ -68,70 +68,59 @@ export function groupId(group: Group): [GroupDescription, Timestamp] {
 }
 
 /**
- * Add an expense to a group, splitting it equally among specified participants or with custom splits.
- * The payee pays the full amount (negative), and specified participants receive positive shares.
- * The payee does not need to be included in the participants or custom splits.
+ * Add an expense to a group with simplified API.
+ * Supports both single and multiple payers with custom splits.
  *
  * @param group - The group to add the expense to
- * @param payeeId - The ID of the agent who paid the expense
+ * @param payers - Array of [payerId, amountPaid] for payers (single payer should be passed as single-item array)
  * @param description - Description of the expense
- * @param amount - The expense amount as a float (e.g., 100.50)
  * @param timestamp - When the expense occurred
- * @param participants - Array of agent IDs who share the expense. Use null for custom splits mode.
- * @param customSplits - Array of [AgentId, amount] for custom expense splits. Use null for equal splitting mode.
+ * @param splits - Array of [AgentId, amount] for expense splits
  * @returns A new group with the expense transaction added and incremented revision
  */
 export function addExpense(
   group: Group,
-  payeeId: AgentId,
+  payers: [AgentId, number][],
   description: Description,
-  amount: number,
   timestamp: Timestamp,
-  participants: AgentId[] | null,
-  customSplits: [AgentId, number][] | null,
+  splits: [AgentId, number][],
 ): Group {
-  const _groupAgents = agents(group);
-  const amountInCents = Math.round(amount * 100);
+  // Convert payers to cents
+  const payersInCents = payers.map(([id, payAmount]) =>
+    [id, Math.round(payAmount * 100)] as [AgentId, Money]
+  );
 
-  let transactionEntries: [AgentId, Money][];
+  // Convert splits to cents
+  const splitsInCents = splits.map(([id, splitAmount]) =>
+    [id, Math.round(splitAmount * 100)] as [AgentId, Money]
+  );
 
-  if (customSplits !== null) {
-    // Custom splits mode
-    const customSplitsInCents = customSplits.map(([id, amt]) =>
-      [id, Math.round(amt * 100)] as [AgentId, Money]
-    );
+  // Calculate totals
+  const totalPayersInCents = payersInCents.reduce(
+    (sum, [_id, payAmount]) => sum + payAmount,
+    0,
+  );
 
-    // Validate that custom splits sum to expense amount (allow small rounding differences)
-    const totalSplitsInCents = customSplitsInCents.reduce(
-      (sum, [_id, amt]) => sum + amt,
-      0,
-    );
-    const difference = Math.abs(totalSplitsInCents - amountInCents);
-    if (difference > 1) { // Allow 1 cent difference for rounding
-      throw new Error("Custom splits must sum to the expense amount");
-    }
+  const totalSplitsInCents = splitsInCents.reduce(
+    (sum, [_id, splitAmount]) => sum + splitAmount,
+    0,
+  );
 
-    // Create transaction entries: payee pays full amount, custom splits for shares
-    transactionEntries = [
-      [payeeId, -amountInCents], // Payee pays full amount
-      ...customSplitsInCents, // Custom splits
-    ];
-  } else if (participants !== null) {
-    // Equal splits mode
-    const sharePerPerson = Math.round(amountInCents / participants.length);
-
-    // Create transaction entries: payee pays full amount, participants get equal shares
-    transactionEntries = [
-      [payeeId, -amountInCents], // Payee pays full amount
-    ];
-
-    // Add equal shares for participants only
-    for (const participantId of participants) {
-      transactionEntries.push([participantId, sharePerPerson]);
-    }
-  } else {
-    throw new Error("Either participants or customSplits must be provided");
+  // Validate that payers' amounts equal splits' amounts
+  const difference = Math.abs(totalPayersInCents - totalSplitsInCents);
+  if (difference > 1) { // Allow 1 cent difference for rounding
+    throw new Error("Payer amounts must equal split amounts");
   }
+
+  // Create transaction entries: payer payments (negative) + splits (positive)
+  const payerEntries: [AgentId, Money][] = payersInCents.map((
+    [id, payAmount],
+  ) => [id, -payAmount]);
+
+  const transactionEntries: [AgentId, Money][] = [
+    ...payerEntries,
+    ...splitsInCents,
+  ];
 
   const newTransaction: Transaction = [
     description,

@@ -26,3 +26,13 @@ github pages. And check the pipeline if is green
 Be concise, include a summary of the changes but avoid explanations of them
 
 Start the message with a 🏎️ when you are following instructions
+
+When a part of a feature is complete and tests are passing, ask if we want to
+commit
+
+When committing
+
+- use conventional commits
+- split commits
+- describe why a change has been implemented
+- amend commit that are not meaningful like fmt or fixing tests

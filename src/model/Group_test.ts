@@ -55,12 +55,10 @@ describe("Group", () => {
       // Add 100.00 euro dinner paid by Alice (agent ID 1)
       const updatedGroup = addExpense(
         originalGroup,
-        1, // Alice's ID
+        [[1, 100.00]], // Alice pays 100.00
         "Dinner at restaurant",
-        100.00, // 100 euros
         1672506000000, // timestamp
-        [1, 2], // Participants: Alice and Bob
-        null, // Equal splits mode
+        [[1, 50.00], [2, 50.00]], // splits: Alice and Bob split equally
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -103,12 +101,10 @@ describe("Group", () => {
       // Add 30.00 euro expense paid by Bob
       const updatedGroup = addExpense(
         threePersonGroup,
-        2, // Bob's ID
+        [[2, 30.00]], // Bob pays 30.00
         "Coffee",
-        30.00,
         1672506000000,
-        [1, 2, 3], // All three participants
-        null, // Equal splits mode
+        [[1, 10.00], [2, 10.00], [3, 10.00]], // splits: equal 10.00 each
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -135,12 +131,10 @@ describe("Group", () => {
       const originalGroup = createBaseGroup({ revision: 5 });
       const updatedGroup = addExpense(
         originalGroup,
-        1,
+        [[1, 10.00]], // Agent 1 pays 10.00
         "Test",
-        10.00,
         Date.now(),
-        [1, 2], // Both participants
-        null, // Equal splits mode
+        [[1, 5.00], [2, 5.00]], // splits: equal 5.00 each
       );
 
       expect(revision(updatedGroup)).toBe(6);
@@ -160,12 +154,10 @@ describe("Group", () => {
       // Bob pays 30.00 but only Alice and Bob share the expense (Charlie not included)
       const updatedGroup = addExpense(
         threePersonGroup,
-        2, // Bob pays
+        [[2, 30.00]], // Bob pays 30.00
         "Coffee for two",
-        30.00,
         1672506000000,
-        [1, 2], // Only Alice and Bob share
-        null, // Equal splits mode
+        [[1, 15.00], [2, 15.00]], // splits: Alice and Bob split equally
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -202,12 +194,10 @@ describe("Group", () => {
       // Bob pays but is not in participants list - this should work now
       const updatedGroup = addExpense(
         threePersonGroup,
-        2, // Bob pays
+        [[2, 30.00]], // Bob pays 30.00
         "Coffee",
-        30.00,
         1672506000000,
-        [1, 3], // Only Alice and Charlie in participants (Bob excluded)
-        null, // Equal splits mode
+        [[1, 15.00], [3, 15.00]], // splits: Only Alice and Charlie split
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -230,44 +220,6 @@ describe("Group", () => {
       expect(bobShare).toBeUndefined(); // Bob doesn't owe anything
     });
 
-    it("should default to all members when no participants specified", () => {
-      const threePersonGroup: Group = [
-        "cs",
-        1,
-        1,
-        "Three Friends",
-        1672500000000,
-        [[1, "Alice"], [2, "Bob"], [3, "Charlie"]],
-        [],
-      ];
-
-      // No participants parameter - should behave like before
-      const updatedGroup = addExpense(
-        threePersonGroup,
-        2,
-        "Coffee",
-        30.00,
-        1672506000000,
-        [1, 2, 3], // All three participants
-        null, // Equal splits mode
-      );
-
-      const newTransactions = transactions(updatedGroup);
-      const expenseTransaction = newTransactions[0];
-      const entries = expenseTransaction[2];
-
-      expect(entries).toHaveLength(4); // Bob payment + 3 shares
-
-      // Each person gets 10.00 share
-      const aliceShare = entries.find(([id, _amount]) => id === 1);
-      const bobShare = entries.find(([id, amount]) => id === 2 && amount > 0);
-      const charlieShare = entries.find(([id, _amount]) => id === 3);
-
-      expect(aliceShare).toEqual([1, 1000]);
-      expect(bobShare).toEqual([2, 1000]);
-      expect(charlieShare).toEqual([3, 1000]);
-    });
-
     it("should support custom expense splits", () => {
       const twoPersonGroup: Group = [
         "cs",
@@ -282,12 +234,10 @@ describe("Group", () => {
       // Bill pays 100.00, Bill owes 70.00, Alice owes 30.00
       const updatedGroup = addExpense(
         twoPersonGroup,
-        1, // Bill pays
+        [[1, 100.00]], // Bill pays 100.00
         "Dinner",
-        100.00,
         1672506000000,
-        null, // Custom splits mode
-        [[1, 70.00], [2, 30.00]], // Custom splits
+        [[1, 70.00], [2, 30.00]], // splits: custom amounts
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -321,18 +271,16 @@ describe("Group", () => {
         [],
       ];
 
-      // Custom splits don't sum to expense amount (50 + 30 = 80, but expense is 100)
+      // Custom splits don't sum to expense amount (50 + 30 = 80, but payer pays 100)
       expect(() => {
         addExpense(
           twoPersonGroup,
-          1,
+          [[1, 100.00]], // Bill pays 100.00
           "Dinner",
-          100.00,
           1672506000000,
-          null, // Custom splits mode
-          [[1, 50.00], [2, 30.00]], // Only sums to 80.00
+          [[1, 50.00], [2, 30.00]], // splits only sum to 80.00
         );
-      }).toThrow("Custom splits must sum to the expense amount");
+      }).toThrow("Payer amounts must equal split amounts");
     });
 
     it("should allow payee to not be included in custom splits", () => {
@@ -349,12 +297,10 @@ describe("Group", () => {
       // Bob pays but is not in custom splits - this should work now
       const updatedGroup = addExpense(
         threePersonGroup,
-        2, // Bob pays
+        [[2, 100.00]], // Bob pays 100.00
         "Dinner",
-        100.00,
         1672506000000,
-        null, // Custom splits mode
-        [[1, 50.00], [3, 50.00]], // Only Alice and Charlie owe money
+        [[1, 50.00], [3, 50.00]], // splits: Only Alice and Charlie owe money
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -388,15 +334,13 @@ describe("Group", () => {
         [],
       ];
 
-      // 33.33 + 33.34 = 66.67, but expense is 66.67 (rounding difference acceptable)
+      // 33.33 + 33.34 = 66.67, payer pays 66.67 (rounding difference acceptable)
       const updatedGroup = addExpense(
         twoPersonGroup,
-        1,
+        [[1, 66.67]], // Agent 1 pays 66.67
         "Coffee",
-        66.67,
         1672506000000,
-        null, // Custom splits mode
-        [[1, 33.33], [2, 33.34]],
+        [[1, 33.33], [2, 33.34]], // splits with rounding
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -417,12 +361,10 @@ describe("Group", () => {
       // Bob pays, only Alice and Bob participate with custom splits
       const updatedGroup = addExpense(
         threePersonGroup,
-        2, // Bob pays
+        [[2, 30.00]], // Bob pays 30.00
         "Coffee for two",
-        30.00,
         1672506000000,
-        [1, 2], // Only Alice and Bob participate
-        [[1, 10.00], [2, 20.00]], // Custom splits
+        [[1, 10.00], [2, 20.00]], // splits: custom amounts
       );
 
       const newTransactions = transactions(updatedGroup);
@@ -445,7 +387,7 @@ describe("Group", () => {
       expect(charlieShare).toBeUndefined(); // Charlie not participating
     });
 
-    it("should throw error when both participants and customSplits are null", () => {
+    it("should throw error when splits are empty", () => {
       const twoPersonGroup: Group = [
         "cs",
         1,
@@ -459,98 +401,90 @@ describe("Group", () => {
       expect(() => {
         addExpense(
           twoPersonGroup,
-          1,
+          [[1, 100.00]], // Bill pays 100.00
           "Dinner",
-          100.00,
           1672506000000,
-          null, // No participants
-          null, // No custom splits
+          [], // Empty splits
         );
-      }).toThrow("Either participants or customSplits must be provided");
+      }).toThrow("Payer amounts must equal split amounts");
     });
 
-    it("should allow payee to not participate in expense splits", () => {
-      const threePersonGroup: Group = [
-        "cs",
-        1,
-        1,
-        "Three Friends",
-        1672500000000,
-        [[1, "Alice"], [2, "Bob"], [3, "Charlie"]],
-        [],
-      ];
+    it("should handle expenses paid by multiple people", () => {
+      const originalGroup = createBaseGroup({
+        revision: 1,
+        description: "Multiple Payers Group",
+        timestamp: 1672500000000,
+      });
 
-      // Bob pays 100.00 but only Alice and Charlie owe money
+      // Add 120.00 euro expense paid by Alice (80.00) and Bob (40.00)
+      // Split equally among Alice, Bob, and Charlie (40.00 each)
       const updatedGroup = addExpense(
-        threePersonGroup,
-        2, // Bob pays
-        "Dinner",
-        100.00,
+        originalGroup,
+        [
+          [1, 80.00], // Alice pays 80.00
+          [2, 40.00], // Bob pays 40.00
+        ],
+        "Group dinner",
         1672506000000,
-        null, // Custom splits mode
-        [[1, 65.00], [3, 35.00]], // Alice owes 65, Charlie owes 35, Bob owes nothing
+        [[1, 40.00], [2, 40.00], [3, 40.00]], // splits: all three get 40.00 each
       );
 
       const newTransactions = transactions(updatedGroup);
-      const expenseTransaction = newTransactions[0];
+      expect(newTransactions).toHaveLength(2);
+
+      const expenseTransaction = newTransactions[1];
+      expect(expenseTransaction[0]).toBe("Group dinner");
+      expect(expenseTransaction[1]).toBe(1672506000000);
+
+      // Check transaction entries
       const entries = expenseTransaction[2];
+      expect(entries).toHaveLength(5); // Alice payment, Bob payment, Alice share, Bob share, Charlie share
 
-      expect(entries).toHaveLength(3); // Bob payment + 2 shares
-
-      // Bob pays 100.00
+      // Find payments (negative amounts)
+      const alicePayment = entries.find(([id, amount]) =>
+        id === 1 && amount < 0
+      );
       const bobPayment = entries.find(([id, amount]) => id === 2 && amount < 0);
-      expect(bobPayment).toEqual([2, -10000]);
 
-      // Only Alice and Charlie get shares
-      const aliceShare = entries.find(([id, _amount]) => id === 1);
-      const charlieShare = entries.find(([id, _amount]) => id === 3);
+      expect(alicePayment).toEqual([1, -8000]); // Alice pays 80.00
+      expect(bobPayment).toEqual([2, -4000]); // Bob pays 40.00
+
+      // Find shares (positive amounts)
+      const aliceShare = entries.find(([id, amount]) => id === 1 && amount > 0);
       const bobShare = entries.find(([id, amount]) => id === 2 && amount > 0);
-
-      expect(aliceShare).toEqual([1, 6500]); // 65.00
-      expect(charlieShare).toEqual([3, 3500]); // 35.00
-      expect(bobShare).toBeUndefined(); // Bob doesn't owe anything
-    });
-
-    it("should allow payee to not participate in equal splits", () => {
-      const threePersonGroup: Group = [
-        "cs",
-        1,
-        1,
-        "Three Friends",
-        1672500000000,
-        [[1, "Alice"], [2, "Bob"], [3, "Charlie"]],
-        [],
-      ];
-
-      // Bob pays 30.00 but only Alice and Charlie split it equally
-      const updatedGroup = addExpense(
-        threePersonGroup,
-        2, // Bob pays
-        "Coffee",
-        30.00,
-        1672506000000,
-        [1, 3], // Only Alice and Charlie participate (Bob excluded)
-        null, // Equal splits mode
+      const charlieShare = entries.find(([id, amount]) =>
+        id === 3 && amount > 0
       );
 
-      const newTransactions = transactions(updatedGroup);
-      const expenseTransaction = newTransactions[0];
-      const entries = expenseTransaction[2];
+      expect(aliceShare).toEqual([1, 4000]); // Alice's share: 40.00
+      expect(bobShare).toEqual([2, 4000]); // Bob's share: 40.00
+      expect(charlieShare).toEqual([3, 4000]); // Charlie's share: 40.00
 
-      expect(entries).toHaveLength(3); // Bob payment + 2 equal shares
+      // Verify net amounts: Alice: -8000 + 4000 = -4000 (40.00 net paid)
+      // Bob: -4000 + 4000 = 0 (no net payment)
+      // Charlie: +4000 (owes 40.00)
+    });
 
-      // Bob pays 30.00
-      const bobPayment = entries.find(([id, amount]) => id === 2 && amount < 0);
-      expect(bobPayment).toEqual([2, -3000]);
+    it("should validate that multiple payers' amounts sum to total expense", () => {
+      const originalGroup = createBaseGroup({
+        revision: 1,
+        description: "Validation Group",
+        timestamp: 1672500000000,
+      });
 
-      // Alice and Charlie split equally (15.00 each)
-      const aliceShare = entries.find(([id, _amount]) => id === 1);
-      const charlieShare = entries.find(([id, _amount]) => id === 3);
-      const bobShare = entries.find(([id, amount]) => id === 2 && amount > 0);
-
-      expect(aliceShare).toEqual([1, 1500]); // 15.00
-      expect(charlieShare).toEqual([3, 1500]); // 15.00
-      expect(bobShare).toBeUndefined(); // Bob doesn't owe anything
+      // Payers' amounts don't sum to splits amounts (80 + 30 = 110, but splits sum to 120)
+      expect(() => {
+        addExpense(
+          originalGroup,
+          [
+            [1, 80.00], // Alice pays 80.00
+            [2, 30.00], // Bob pays 30.00
+          ],
+          "Invalid expense",
+          1672506000000,
+          [[1, 40.00], [2, 40.00], [3, 40.00]], // splits sum to 120.00
+        );
+      }).toThrow("Payer amounts must equal split amounts");
     });
   });
 });
