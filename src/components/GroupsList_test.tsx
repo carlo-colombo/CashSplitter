@@ -152,7 +152,8 @@ describe("GroupsList Component", () => {
       const groupsList = container.querySelector(".groups-list");
       expect(groupsList).toBeTruthy();
 
-      const groupItems = container.querySelectorAll(".card");
+      // Select only group cards within the columns section, not the title card
+      const groupItems = container.querySelectorAll(".columns .card");
       expect(groupItems.length).toBe(2);
 
       // Check first group
@@ -249,7 +250,9 @@ describe("GroupsList Component", () => {
         </Router>,
       );
 
-      const groupItem = container.querySelector(".card") as HTMLElement;
+      const groupItem = container.querySelector(
+        ".columns .card",
+      ) as HTMLElement;
       groupItem.click();
 
       expect(navigatedTo).toBe("/group/1672531200000");
@@ -384,7 +387,7 @@ describe("GroupsList Component", () => {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Check that participants section exists and shows loading state initially
-      const card = container.querySelector(".card");
+      const card = container.querySelector(".columns .card");
       expect(card?.textContent).toContain("Trip to Paris");
       // In test environment, participants load async so we'll see loading state
       expect(card?.textContent).toContain("Loading participants...");
@@ -424,7 +427,7 @@ describe("GroupsList Component", () => {
       // Wait a bit for async loading to complete
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      const card = container.querySelector(".card");
+      const card = container.querySelector(".columns .card");
       expect(card?.textContent).toContain("Empty Group");
       // In test environment, participants load async so we'll see loading state
       expect(card?.textContent).toContain("Loading participants...");

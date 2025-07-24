@@ -131,25 +131,29 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
   // Display the list of groups
   return (
     <div className="groups-list">
-      <div className="level">
-        <div className="level-left">
-          <div className="level-item">
-            <h2 className="title is-4">Your Groups</h2>
+      <div className="card mb-5">
+        <div className="card-content">
+          <div className="level">
+            <div className="level-left">
+              <div className="level-item">
+                <h2 className="title is-4">Your Groups</h2>
+              </div>
+            </div>
+            {showActions && (
+              <div className="level-right">
+                <div className="level-item">
+                  <button
+                    type="button"
+                    className="button is-primary"
+                    onClick={() => navigate("/create")}
+                  >
+                    <span>Create New Group</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        {showActions && (
-          <div className="level-right">
-            <div className="level-item">
-              <button
-                type="button"
-                className="button is-primary"
-                onClick={() => navigate("/create")}
-              >
-                <span>Create New Group</span>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="columns is-multiline">
