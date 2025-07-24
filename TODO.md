@@ -40,7 +40,7 @@
   - [ ] GroupsList component tests (in progress - mocking wouter-preact
         navigation)
   - [ ] App component tests
-  - [ ] Route component tests
+  - [ ] Route component tests (GroupDetail, Home)
 - [ ] Add participants API
   - [x] Update createGroup function to accept participants parameter (TDD)
   - [x] Update CreateGroup UI to include participants form (TDD)
@@ -81,5 +81,24 @@
   - [x] Update GroupDetail to show participants instead of placeholder
   - [x] Update README to reflect new balance calculation feature
 - [ ] UI to add participants
+- [ ] Edit and delete expenses
+  - [ ] Implement delete transaction functionality to void existing expenses
+  - [ ] Add edit functionality using delete transaction + new transaction
+        pattern
+  - [ ] Add delete functionality using delete transactions
+  - [ ] Update UI to show edit/delete buttons
+- [ ] Edit group details
+  - [ ] Allow editing group description
+  - [ ] Allow adding/removing participants from existing groups
+- [ ] Data export functionality
+  - [ ] Export group data as CSV
+  - [ ] Export group data as PDF report
+- [ ] Error handling improvements
+  - [ ] Add error boundary components
+  - [ ] Add loading states for operations
+  - [ ] Improve error messages and user feedback
 - [ ] Share a link with the current state of the group
 - [ ] Application works offline
+  - [ ] Add service worker for offline functionality
+  - [ ] Cache application assets
+  - [ ] Handle offline data synchronization

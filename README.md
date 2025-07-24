@@ -60,6 +60,33 @@ working completely offline.
 - **Privacy-focused**: No data collection or external services
 - **Lightweight**: Minimal dependencies and fast loading
 
+## Data Model & Transaction Immutability
+
+**Immutable Transaction Design**: Cashsplitter follows an append-only data model
+where all transactions (expenses) are immutable once created. This ensures data
+integrity and enables reliable conflict resolution for concurrent edits.
+
+**Key Principles**:
+
+- **No Editing**: Transactions cannot be modified after creation
+- **No Direct Deletion**: Transactions cannot be removed from the history
+- **Correction Pattern**: To "edit" or "delete" an expense, use delete
+  transactions and replacements:
+  - **Add a delete transaction** that voids the existing transaction
+  - **If necessary**, add a new transaction with the correct values
+    (participants, amounts, shares, datetime)
+
+**Benefits**:
+
+- **Audit Trail**: Complete history of all financial changes
+- **Conflict Resolution**: Concurrent edits can be merged safely
+- **Data Integrity**: No risk of accidentally losing transaction history
+- **Rollback Capability**: Can always trace back to any previous state
+
+**Implementation**: When future edit/delete UI features are added, they will
+create appropriate corrective transactions behind the scenes while presenting a
+user-friendly editing interface.
+
 ## What Cashsplitter Won't Do
 
 - **Payment processing**: This is a tracking tool, not a payment system

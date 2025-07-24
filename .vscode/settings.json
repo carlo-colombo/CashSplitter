@@ -1,0 +1,8 @@
+{
+  "github.copilot.chat.agent.terminal.allowList": {
+    "deno": true,
+    "git": true
+  },
+  "github.copilot.chat.agent.thinkingTool": true,
+  "chat.mcp.discovery.enabled": true
+}
