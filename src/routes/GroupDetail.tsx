@@ -57,46 +57,58 @@ export const GroupDetail: FunctionComponent = () => {
 
   return (
     <div className="group-detail-page">
-      <div className="level is-mobile mb-5">
-        <div className="level-left">
-          <div className="level-item">
-            <div>
-              <h2 className="title is-3">{description}</h2>
-              <p className="subtitle is-6">
-                Created {new Date(createdAt).toLocaleDateString()}
-              </p>
+      <div className="card mb-5">
+        <div className="card-content">
+          <div className="level is-mobile">
+            <div className="level-left">
+              <div className="level-item">
+                <div>
+                  <h2 className="title is-3">{description}</h2>
+                  <p className="subtitle is-6">
+                    Created {new Date(createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="level-right">
-          <div className="level-item">
-            <div className="buttons">
-              <button
-                type="button"
-                className="button is-primary"
-                onClick={() => navigate(`/group/${timestamp}/addExpense`)}
-              >
-                Add Expense
-              </button>
-              <button
-                type="button"
-                className="button"
-                onClick={() => navigate("/")}
-              >
-                Back
-              </button>
+            <div className="level-right">
+              <div className="level-item">
+                <div className="buttons">
+                  <button
+                    type="button"
+                    className="button is-primary"
+                    onClick={() => navigate(`/group/${timestamp}/addExpense`)}
+                  >
+                    Add Expense
+                  </button>
+                  <button
+                    type="button"
+                    className="button"
+                    onClick={() => navigate("/")}
+                  >
+                    Back
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="section-participants mb-5">
-        <h3 className="title is-5">Participants & Balances</h3>
+        <div className="card mb-3">
+          <div className="card-content">
+            <h3 className="title is-5">Participants & Balances</h3>
+          </div>
+        </div>
         <ParticipantsList group={group} />
       </div>
 
       <div className="section-transactions">
-        <h3 className="title is-5">Expenses</h3>
+        <div className="card mb-3">
+          <div className="card-content">
+            <h3 className="title is-5">Expenses</h3>
+          </div>
+        </div>
         <ExpensesList group={group} />
       </div>
     </div>
