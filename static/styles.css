@@ -15,6 +15,10 @@
   --warning-color: #f39c12;
   --danger-color: #e74c3c;
   --info-color: #3498db;
+  /* Notebook lines color */
+  --notebook-lines: #d3c6ff;
+  /* Notebook lines spacing */
+  --notebook-line-height: 55px;
 
   /* Override Bulma CSS variables */
   --bulma-scheme-main: var(--notebook-bg);
@@ -32,4 +36,25 @@
   --bulma-text-strong: var(--notebook-text-dark);
   --bulma-border: #e8e5d8;
   --bulma-border-hover: var(--leather-blue);
+  --bulma-success-invert-l: 100%;
+  --bulma-danger-invert-l: 100%;
+}
+
+/* Notebook lined background */
+.cashsplitter-app {
+  background-color: var(--notebook-bg);
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent calc(var(--notebook-line-height) - 1px),
+    var(--notebook-lines) calc(var(--notebook-line-height) - 1px),
+    var(--notebook-lines) var(--notebook-line-height)
+  );
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content should grow to fill available space */
+.cashsplitter-app main {
+  flex: 1;
 }

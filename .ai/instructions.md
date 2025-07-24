@@ -7,7 +7,10 @@ When developing new production code we are following TDD practise to
 
 Do not skip any step, and check with the user if you can proceed
 
-When creating support scripts for development, TDD is not necessary
+TDD is not necessary when
+
+- only styles changes are required
+- build and support scripts that are not part of the final app
 
 When developing a feature prepare a plan to follow and ask for confirmation
 

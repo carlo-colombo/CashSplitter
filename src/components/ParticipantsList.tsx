@@ -50,58 +50,63 @@ export const ParticipantsList: FunctionComponent<ParticipantsListProps> = ({
     <div className="participants-list">
       {/* Desktop view - table */}
       <div className="is-hidden-mobile">
-        <table className="table is-fullwidth is-hoverable">
-          <thead>
-            <tr>
-              <th>Participant</th>
-              <th>Balance</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {balances.map(([agentId, name, balanceInCents]) => {
-              const { status, amount, class: statusClass } = getBalanceStatus(
-                balanceInCents,
-              );
-
-              return (
-                <tr key={agentId}>
-                  <td>
-                    <strong>{name}</strong>
-                  </td>
-                  <td>
-                    <span className={statusClass}>
-                      {amount}
-                    </span>
-                  </td>
-                  <td>
-                    <span
-                      className={`tag ${
-                        status === "owes"
-                          ? "is-danger"
-                          : status === "owed"
-                          ? "is-success"
-                          : "is-light"
-                      }`}
-                    >
-                      {status === "owes"
-                        ? "Owes"
-                        : status === "owed"
-                        ? "Is owed"
-                        : "Even"}
-                    </span>
-                  </td>
+        <div className="card">
+          <div className="card-content">
+            <table className="table is-fullwidth is-hoverable">
+              <thead>
+                <tr>
+                  <th>Participant</th>
+                  <th>Balance</th>
+                  <th>Status</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {balances.map(([agentId, name, balanceInCents]) => {
+                  const { status, amount, class: statusClass } =
+                    getBalanceStatus(
+                      balanceInCents,
+                    );
+
+                  return (
+                    <tr key={agentId}>
+                      <td>
+                        <strong>{name}</strong>
+                      </td>
+                      <td>
+                        <span className={statusClass}>
+                          {amount}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className={`tag ${
+                            status === "owes"
+                              ? "is-danger"
+                              : status === "owed"
+                              ? "is-success"
+                              : "is-light"
+                          }`}
+                        >
+                          {status === "owes"
+                            ? "Owes"
+                            : status === "owed"
+                            ? "Is owed"
+                            : "Even"}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       {/* Mobile view - cards */}
       <div className="is-hidden-tablet">
         {balances.map(([agentId, name, balanceInCents]) => {
-          const { status, amount, class: statusClass } = getBalanceStatus(
+          const { status, amount, class: _statusClass } = getBalanceStatus(
             balanceInCents,
           );
 
@@ -128,9 +133,7 @@ export const ParticipantsList: FunctionComponent<ParticipantsListProps> = ({
                               : "is-light"
                           }`}
                         >
-                          <span className={statusClass}>
-                            {amount}
-                          </span>
+                          {amount}
                         </span>
                       </div>
                     </div>
