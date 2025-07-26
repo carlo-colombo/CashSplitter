@@ -1,10 +1,14 @@
 // Test utilities for Preact component testing
 import { JSDOM } from "jsdom";
+import { ComponentChildren, FunctionComponent } from "preact";
 import {
-  ComponentChildren,
-  FunctionComponent,
-  render as preactRender,
-} from "preact";
+  act,
+  fireEvent,
+  render as rtlRender,
+  renderHook,
+  screen,
+  waitFor,
+} from "npm:@testing-library/preact";
 
 // Set up JSDOM for DOM simulation
 const dom = new JSDOM("<!DOCTYPE html><html><body></body></html>", {
@@ -22,38 +26,22 @@ globalThis.Element = dom.window.Element;
 globalThis.Node = dom.window.Node;
 globalThis.location = dom.window.location;
 
-export interface RenderResult {
-  container: HTMLElement;
-  unmount: () => void;
-  rerender: (component: ComponentChildren) => void;
-}
+// Export Testing Library's render result type for convenience
+export type RenderResult = ReturnType<typeof rtlRender>;
 
-// Custom render function for component testing
-export function render(component: ComponentChildren): RenderResult {
-  const container = document.createElement("div");
-  document.body.appendChild(container);
-
-  preactRender(component, container);
-
-  return {
-    container,
-    unmount: () => {
-      preactRender(null, container);
-      container.remove();
-    },
-    rerender: (newComponent: ComponentChildren) => {
-      preactRender(newComponent, container);
-    },
-  };
+// Custom render function that wraps with providers if needed
+export function render(
+  component: ComponentChildren,
+  { wrapper }: { wrapper?: FunctionComponent } = {},
+): RenderResult {
+  return rtlRender(component, { wrapper });
 }
 
 // Utility to create a test wrapper with providers
 export function createTestWrapper(providers: FunctionComponent[] = []) {
   return function TestWrapper({ children }: { children: ComponentChildren }) {
     return providers.reduceRight(
-      (acc, Provider) => {
-        return Provider({ children: acc });
-      },
+      (acc, Provider) => Provider({ children: acc }),
       children,
     );
   };
@@ -98,3 +86,6 @@ export const mockLocalStorage = {
 // Set up mock localStorage globally
 (globalThis as unknown as { localStorage: typeof mockLocalStorage })
   .localStorage = mockLocalStorage;
+
+// Export Testing Library helpers for convenience
+export { act, fireEvent, renderHook, screen, waitFor };

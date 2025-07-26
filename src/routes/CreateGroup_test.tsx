@@ -126,7 +126,9 @@ describe("CreateGroup Component", () => {
       // Check for participant-specific help text (there are multiple help texts, find the right one)
       const allHelpTexts = container.querySelectorAll(".help");
       const participantHelpText = Array.from(allHelpTexts).find((help) =>
-        help.textContent?.includes("Add people who will be part of this group")
+        (help as HTMLElement).textContent?.includes(
+          "Add people who will be part of this group",
+        )
       );
       expect(participantHelpText).toBeTruthy();
     });

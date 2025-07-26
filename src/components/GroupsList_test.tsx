@@ -386,11 +386,12 @@ describe("GroupsList Component", () => {
       // Wait a bit for async loading to complete
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Check that participants section exists and shows loading state initially
+      // Check that participants section exists and shows the actual participants
       const card = container.querySelector(".columns .card");
       expect(card?.textContent).toContain("Trip to Paris");
-      // In test environment, participants load async so we'll see loading state
-      expect(card?.textContent).toContain("Loading participants...");
+      expect(card?.textContent).toContain("Alice");
+      expect(card?.textContent).toContain("Bob");
+      expect(card?.textContent).toContain("Charlie");
     });
 
     it("should show participants loading state for groups", async () => {
@@ -429,8 +430,7 @@ describe("GroupsList Component", () => {
 
       const card = container.querySelector(".columns .card");
       expect(card?.textContent).toContain("Empty Group");
-      // In test environment, participants load async so we'll see loading state
-      expect(card?.textContent).toContain("Loading participants...");
+      expect(card?.textContent).toContain("No participants");
     });
   });
 });
