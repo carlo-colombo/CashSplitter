@@ -4,8 +4,8 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation, useParams } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
-import { addExpense } from "../model/Expense.ts";
-import { Group } from "../model/Group.ts";
+import { addTransaction } from "../model/Expense.ts";
+import { Group2 } from "../model/Group.ts";
 import { saveGroup } from "../storage/GroupStorage.ts";
 import { AddExpense } from "./AddExpense.tsx";
 
@@ -15,7 +15,7 @@ export const AddExpenseRoute: FunctionComponent = () => {
   const timestamp = params.timestamp;
   const { loadGroupDetails, isLoading } = useContext(GroupsContext);
   const { showNotification } = useContext(NotificationContext);
-  const [group, setGroup] = useState<Group | null>(null);
+  const [group, setGroup] = useState<Group2 | null>(null);
 
   useEffect(() => {
     if (timestamp) {
@@ -50,20 +50,19 @@ export const AddExpenseRoute: FunctionComponent = () => {
     try {
       // Calculate equal splits for selected participants
       const splitAmount = data.amount / data.selectedParticipants.length;
-      const splits = data.selectedParticipants.map((participantId) =>
-        [participantId, splitAmount] as [number, number]
-      );
+      const movements: [number, number][] = [
+        [data.payerId, data.amount],
+        ...data.selectedParticipants.map((participantId) =>
+          [participantId, -splitAmount] as [number, number]
+        ),
+      ];
 
-      // Create payers array (single payer for now)
-      const payers = [[data.payerId, data.amount]] as [number, number][];
-
-      // Add the expense to the group
-      const updatedGroup = addExpense(
+      // Add the transaction to the group
+      const updatedGroup = addTransaction(
         group,
-        payers,
         data.description,
+        movements,
         Date.now(),
-        splits,
       );
 
       // Save the updated group

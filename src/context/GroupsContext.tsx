@@ -2,7 +2,7 @@
 // Provides global access to the groups and their state
 import { ComponentChildren, createContext, FunctionComponent } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { Group } from "../model/Group.ts";
+import { Group2 } from "../model/Group.ts";
 import { groupId } from "../model/Accessors.ts";
 import { createGroup } from "../model/CreateGroup.ts";
 import {
@@ -20,9 +20,9 @@ interface GroupsContextType {
     timestamp: number;
     storageKey: string;
   }>;
-  selectedGroup: Group | null;
-  addGroup: (description: string, participants?: string[]) => Group;
-  loadGroupDetails: (timestamp: number) => Promise<Group | null>;
+  selectedGroup: Group2 | null;
+  addGroup: (description: string, members?: string[]) => Group2;
+  loadGroupDetails: (timestamp: number) => Promise<Group2 | null>;
   removeGroup: (timestamp: number) => void;
   refreshGroups: () => void;
   isLoading: boolean;
@@ -53,7 +53,7 @@ export const GroupsProvider: FunctionComponent<
       storageKey: string;
     }>
   >([]);
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<Group2 | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Load the list of groups from storage on component mount
@@ -76,9 +76,9 @@ export const GroupsProvider: FunctionComponent<
   };
 
   // Function to create and save a new group
-  const addGroup = (description: string, participants?: string[]): Group => {
+  const addGroup = (description: string, members?: string[]): Group2 => {
     try {
-      const newGroup = createGroup(description, participants);
+      const newGroup = createGroup(description, members);
       saveGroup(newGroup);
       refreshGroups();
       return newGroup;
@@ -95,7 +95,7 @@ export const GroupsProvider: FunctionComponent<
   };
 
   // Function to load a group's full details
-  const loadGroupDetails = (timestamp: number): Promise<Group | null> => {
+  const loadGroupDetails = (timestamp: number): Promise<Group2 | null> => {
     setIsLoading(true);
     try {
       const group = loadGroup(timestamp);

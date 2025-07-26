@@ -3,22 +3,21 @@ import { afterEach, describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
 import { cleanup, render } from "../test-utils/component-testing.ts";
 import { ParticipantsList } from "./ParticipantsList.tsx";
-import { Group } from "../model/Group.ts";
-import { addExpense } from "../model/Expense.ts";
+import { Group2 } from "../model/Group.ts";
+import { addTransaction } from "../model/Expense.ts";
 
 // Test data
-const testGroupNoExpenses: Group = [
+const testGroupNoExpenses: Group2 = [
   "cs",
-  1,
+  2,
   1,
   "Test Group",
   1672500000000,
   [
-    [1, "Alice"],
-    [2, "Bob"],
-    [3, "Charlie"],
-  ],
-  [], // No expenses
+    [1, 1, "Alice"],
+    [1, 2, "Bob"],
+    [1, 3, "Charlie"],
+  ], // AddMember ops
 ];
 
 describe("ParticipantsList", () => {
@@ -44,12 +43,15 @@ describe("ParticipantsList", () => {
     let group = testGroupNoExpenses;
 
     // Alice pays 100.00, split equally among all three
-    group = addExpense(
+    group = addTransaction(
       group,
-      [[1, 100.00]], // Alice pays 100.00
       "Dinner",
+      [
+        [1, 10000 - 3333], // Alice paid 100.00, owes 33.33
+        [2, -3333],
+        [3, -3334],
+      ],
       1672506000000,
-      [[1, 33.33], [2, 33.33], [3, 33.34]], // Split with rounding
     );
 
     const { container } = render(
@@ -72,12 +74,14 @@ describe("ParticipantsList", () => {
     let group = testGroupNoExpenses;
 
     // Simple case: Alice pays 60.00, split equally between Alice and Bob
-    group = addExpense(
+    group = addTransaction(
       group,
-      [[1, 60.00]], // Alice pays 60.00
       "Lunch",
+      [
+        [1, 6000 - 3000],
+        [2, -3000],
+      ],
       1672506000000,
-      [[1, 30.00], [2, 30.00]], // Split equally
     );
 
     const { container } = render(
@@ -92,26 +96,26 @@ describe("ParticipantsList", () => {
   });
 
   it("should handle participants with zero balance", () => {
-    let group: Group = [
+    let group: Group2 = [
       "cs",
-      1,
+      2,
       1,
       "Test Group",
       1672500000000,
       [
-        [1, "Alice"],
-        [2, "Bob"],
+        [1, 1, "Alice"],
+        [1, 2, "Bob"],
       ],
-      [],
     ];
-
-    // Alice pays 100.00, split equally - both have 0 net balance
-    group = addExpense(
+    // Both pay 50, both owe 50, net 0
+    group = addTransaction(
       group,
-      [[1, 50.00], [2, 50.00]], // Both pay 50.00
       "Shared payment",
+      [
+        [1, 0],
+        [2, 0],
+      ],
       1672506000000,
-      [[1, 50.00], [2, 50.00]], // Both owe 50.00
     );
 
     const { container } = render(
@@ -132,43 +136,50 @@ describe("ParticipantsList", () => {
   });
 
   it("should handle complex multi-expense scenarios", () => {
-    let group: Group = [
+    let group: Group2 = [
       "cs",
-      1,
+      2,
       1,
       "Trip Group",
       1672500000000,
       [
-        [1, "Alice"],
-        [2, "Bob"],
-        [3, "Charlie"],
+        [1, 1, "Alice"],
+        [1, 2, "Bob"],
+        [1, 3, "Charlie"],
       ],
-      [],
     ];
-
-    // Multiple expenses that should balance out Alice
-    group = addExpense(
+    // Alice pays 120, split 40 each
+    group = addTransaction(
       group,
-      [[1, 120.00]], // Alice pays 120.00
       "Dinner",
+      [
+        [1, 12000 - 4000],
+        [2, -4000],
+        [3, -4000],
+      ],
       1672506000000,
-      [[1, 40.00], [2, 40.00], [3, 40.00]], // Split three ways
     );
-
-    group = addExpense(
+    // Bob pays 90, split 30 each
+    group = addTransaction(
       group,
-      [[2, 90.00]], // Bob pays 90.00
       "Drinks",
+      [
+        [1, -3000],
+        [2, 9000 - 3000],
+        [3, -3000],
+      ],
       1672516000000,
-      [[1, 30.00], [2, 30.00], [3, 30.00]], // Split three ways
     );
-
-    group = addExpense(
+    // Charlie pays 30, split 10 each
+    group = addTransaction(
       group,
-      [[3, 30.00]], // Charlie pays 30.00
       "Snacks",
+      [
+        [1, -1000],
+        [2, -1000],
+        [3, 2000],
+      ],
       1672526000000,
-      [[1, 10.00], [2, 10.00], [3, 10.00]], // Split three ways
     );
 
     const { container } = render(

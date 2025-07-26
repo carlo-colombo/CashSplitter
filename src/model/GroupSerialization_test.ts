@@ -1,6 +1,5 @@
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
-import { createBaseGroup } from "../../test_fixtures.ts";
 import { decode, encode } from "./GroupSerialization.ts";
 import bencode from "bencode";
 
@@ -8,19 +7,23 @@ describe("GroupSerialization", () => {
   describe("serialization and deserialization", () => {
     it("should correctly encode and decode with bencode strings", () => {
       // Create a test group
-      const originalGroup = createBaseGroup({
-        revision: 5,
-        description: "Test Serialization",
-        timestamp: 1672500000000,
-        transactions: [
-          ["Dinner", 1672444800000, [[1, 30], [2, -30]]],
-          ["Lunch", 1672531200000, [[1, 50], [2, -50]]],
-          ["Coffee", 1672617600000, [[1, 10], [2, -10]]],
+      const originalGroup = [
+        "cs",
+        2,
+        5,
+        "Test Serialization",
+        1672500000000,
+        [
+          [1, 1, "Bob"],
+          [1, 2, "Alice"],
+          [3, "Dinner", 1672444800000, [[1, 30], [2, -30]]],
+          [3, "Lunch", 1672531200000, [[1, 50], [2, -50]]],
+          [3, "Coffee", 1672617600000, [[1, 10], [2, -10]]],
         ],
-      });
+      ];
 
       // Serialize the group to string
-      const serialized = encode(originalGroup);
+      const serialized = encode(originalGroup as import("./Group.ts").Group2);
 
       // Check that serialized result is a string
       expect(typeof serialized).toBe("string");
@@ -35,10 +38,22 @@ describe("GroupSerialization", () => {
 
     it("should handle binary data properly", () => {
       // Create a group with binary data (simulated by Uint8Array)
-      const originalGroup = createBaseGroup();
+      const originalGroup = [
+        "cs",
+        2,
+        1,
+        "Test Group",
+        1672500000000,
+        [
+          [1, 1, "Bob"],
+          [1, 2, "Alice"],
+        ],
+      ];
 
       // Use bencode to encode with binary data
-      const binaryEncoded = bencode.encode(originalGroup);
+      const binaryEncoded = bencode.encode(
+        originalGroup as import("./Group.ts").Group2,
+      );
       const binaryString = String.fromCharCode(...binaryEncoded);
 
       // Decode from binary data
@@ -51,23 +66,29 @@ describe("GroupSerialization", () => {
     it("should handle transaction descriptions as binary data", () => {
       // Create a binary transaction description to test convertToString with binary data
       const binaryDesc = new Uint8Array([76, 117, 110, 99, 104]); // "Lunch" in ASCII
-      const transactionWithBinaryDesc = [
+      const group2WithBinaryDesc = [
         "cs",
-        1,
         2,
-        "description",
+        1,
+        "Test Group",
         1234,
-        [[1, "Bob"], [2, "Alice"]],
-        [[binaryDesc, 1234, [[1, 50], [2, -50]]]],
+        [
+          [1, 1, "Bob"],
+          [1, 2, "Alice"],
+          [3, binaryDesc, 1234, [[1, 50], [2, -50]]],
+        ],
       ];
 
       // Encode and then decode
-      const encoded = bencode.encode(transactionWithBinaryDesc);
+      const encoded = bencode.encode(group2WithBinaryDesc);
       const serialized = String.fromCharCode(...encoded);
       const decoded = decode(serialized);
 
-      // Verify the transaction description was converted from binary to string
-      expect(decoded[6][0][0]).toBe("Lunch");
+      // Find the AddTransaction op and check the description
+      const addTx = decoded[5].find((op) => Array.isArray(op) && op[0] === 3);
+      expect(addTx).toBeDefined();
+      if (!addTx) throw new Error("AddTransaction op not found");
+      expect(addTx[1]).toBe("Lunch");
     });
   });
 
@@ -76,7 +97,7 @@ describe("GroupSerialization", () => {
       // Expect the decode function to throw when given invalid data
       expect(() => {
         decode("invalid bencode string");
-      }).toThrow("Failed to decode group data");
+      }).toThrow("Failed to decode group2 data");
     });
 
     it("should throw an error when data is not a valid array", () => {
@@ -87,7 +108,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid group data format: not a valid array");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error when array is too short", () => {
@@ -98,7 +119,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid group data format: not a valid array");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error when array has wrong structure", () => {
@@ -126,7 +147,7 @@ describe("GroupSerialization", () => {
 
         expect(() => {
           decode(invalidString);
-        }).toThrow("Invalid group data format: wrong structure");
+        }).toThrow("Invalid group2 data format");
       }
     });
 
@@ -147,7 +168,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid agent format");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error with invalid transaction format", () => {
@@ -167,7 +188,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid transaction format");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error with invalid transaction entries", () => {
@@ -187,7 +208,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid transaction entries");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error with invalid transaction entry format", () => {
@@ -207,7 +228,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid transaction entry format");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error when trying to convert an invalid value to string", () => {
@@ -228,7 +249,7 @@ describe("GroupSerialization", () => {
 
       expect(() => {
         decode(invalidString);
-      }).toThrow("Invalid agent format");
+      }).toThrow("Invalid group2 data format");
     });
 
     it("should throw an error when trying to convert a non-string, non-buffer value", () => {

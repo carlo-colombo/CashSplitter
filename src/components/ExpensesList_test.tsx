@@ -2,21 +2,23 @@ import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 import { render } from "../test-utils/component-testing.ts";
 import { ExpensesList } from "./ExpensesList.tsx";
-import { createBaseGroup } from "../../test_fixtures.ts";
-import { addExpense } from "../model/Expense.ts";
-import { Group } from "../model/Group.ts";
+
+import { addTransaction } from "../model/Expense.ts";
+import { Group2 } from "../model/Group.ts";
 
 describe("ExpensesList", () => {
   it("should display 'No expenses yet' when group has no transactions", () => {
     // Create a group with no transactions
-    const group: Group = [
+    const group: Group2 = [
       "cs",
-      1,
+      2,
       1,
       "Test Group",
       1672500000000,
-      [[1, "Alice"], [2, "Bob"]], // agents
-      [], // empty transactions
+      [
+        [1, 1, "Alice"],
+        [1, 2, "Bob"],
+      ], // AddMember operations
     ];
 
     const { container } = render(<ExpensesList group={group} />);
@@ -25,22 +27,31 @@ describe("ExpensesList", () => {
   });
 
   it("should display expenses in a table format", () => {
-    let group = createBaseGroup({
-      revision: 1,
-      description: "Trip Group",
-      timestamp: 1672500000000,
-    });
-
+    const group: Group2 = [
+      "cs",
+      2,
+      1,
+      "Trip Group",
+      1672500000000,
+      [
+        [1, 1, "Bob"],
+        [1, 2, "Charlie"],
+      ],
+    ];
     // Add an expense: Bob pays 100€ for dinner, split between Bob and Charlie
-    group = addExpense(
+    // Bob pays 10000 cents, split 50/50
+    const movements: [number, number][] = [
+      [1, -10000], // Bob pays
+      [1, 5000], // Bob's share
+      [2, 5000], // Charlie's share
+    ];
+    const groupWithExpense = addTransaction(
       group,
-      [[1, 100.00]], // Bob (ID 1) pays 100€
       "Dinner at restaurant",
+      movements,
       1672506000000,
-      [[1, 50.00], [2, 50.00]], // Split equally between Bob and Charlie
     );
-
-    const { container } = render(<ExpensesList group={group} />);
+    const { container } = render(<ExpensesList group={groupWithExpense} />);
 
     // Check for table presence
     const table = container.querySelector("table");
@@ -61,24 +72,27 @@ describe("ExpensesList", () => {
 
   it("should format dates correctly", () => {
     // Create a group with no initial transactions
-    const group: Group = [
+    const group: Group2 = [
       "cs",
-      1,
+      2,
       1,
       "Test Group",
       1672500000000,
-      [[1, "Alice"]],
-      [], // no initial transactions
+      [
+        [1, 1, "Alice"],
+      ],
     ];
-
-    const groupWithExpense = addExpense(
+    // Alice pays 5000 cents, gets 5000 cents
+    const movements: [number, number][] = [
+      [1, -5000],
+      [1, 5000],
+    ];
+    const groupWithExpense = addTransaction(
       group,
-      [[1, 50.00]],
       "Test expense",
-      1672531200000, // January 1, 2023, 00:00:00 GMT
-      [[1, 50.00]],
+      movements,
+      1672531200000,
     );
-
     const { container } = render(<ExpensesList group={groupWithExpense} />);
 
     // Should display formatted date (format depends on locale, but should contain year 2023)
@@ -87,25 +101,31 @@ describe("ExpensesList", () => {
 
   it("should handle multiple payers correctly", () => {
     // Create a group with two agents and no initial transactions
-    const group: Group = [
+    const group: Group2 = [
       "cs",
-      1,
+      2,
       1,
       "Test Group",
       1672500000000,
-      [[1, "Alice"], [2, "Bob"]], // agents
-      [], // no initial transactions
+      [
+        [1, 1, "Alice"],
+        [1, 2, "Bob"],
+      ],
     ];
-
     // Alice and Bob both pay for a 120€ expense
-    const groupWithExpense = addExpense(
+    // Alice pays 8000, Bob pays 4000, split 60/60
+    const movements: [number, number][] = [
+      [1, -8000],
+      [2, -4000],
+      [1, 6000],
+      [2, 6000],
+    ];
+    const groupWithExpense = addTransaction(
       group,
-      [[1, 80.00], [2, 40.00]], // Alice pays 80€, Bob pays 40€
       "Shared payment",
+      movements,
       1672506000000,
-      [[1, 60.00], [2, 60.00]], // Split equally
     );
-
     const { container } = render(<ExpensesList group={groupWithExpense} />);
 
     expect(container.textContent).toContain("Alice, Bob");

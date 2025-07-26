@@ -17,10 +17,21 @@ export const CreateGroup: FunctionComponent = () => {
 
   const addParticipant = () => {
     const name = currentParticipant.trim();
-    if (name && !participants.includes(name)) {
+    // Check if name is valid (non-empty, at least 2 characters, not a duplicate)
+    if (
+      name && name.length >= 2 &&
+      !participants.some((p) => p.toLowerCase() === name.toLowerCase())
+    ) {
       setParticipants([...participants, name]);
       setCurrentParticipant("");
     }
+  };
+
+  // Helper function to check if current participant input is valid
+  const isCurrentParticipantValid = () => {
+    const name = currentParticipant.trim();
+    return name.length >= 2 &&
+      !participants.some((p) => p.toLowerCase() === name.toLowerCase());
   };
 
   const removeParticipant = (index: number) => {
@@ -127,7 +138,7 @@ export const CreateGroup: FunctionComponent = () => {
                 type="button"
                 className="button is-primary"
                 onClick={addParticipant}
-                disabled={isSubmitting || !currentParticipant.trim()}
+                disabled={isSubmitting || !isCurrentParticipantValid()}
               >
                 Add
               </button>

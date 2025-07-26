@@ -1,5 +1,8 @@
 # Cashsplitter
 
+**Migration to Group2/addTransaction complete. All legacy Group/addExpense code
+has been removed.**
+
 A lightweight expense splitting application for tracking shared costs in groups.
 Create groups, add expenses, and automatically calculate who owes what—all while
 working completely offline.
@@ -10,8 +13,10 @@ working completely offline.
 
 ### ✅ Currently Available
 
-- **Group Management**: Create expense groups with descriptions (e.g., "Trip to
-  Paris", "Dinner with friends")
+- **Group Management**: Create expense groups with descriptions and participants
+  (e.g., "Trip to Paris" with Alice, Bob, Charlie). Add participants during
+  group creation with built-in validation to prevent duplicates and ensure
+  proper formatting
 - **Add Expenses**: Add expenses to groups with single or multiple payers that
   can be split equally among all participants, a selected subset, or with custom
   amounts for each participant. Supports decimal amounts with precise handling
@@ -36,7 +41,7 @@ working completely offline.
 
 ### 🚧 Coming Soon
 
-- Add participants to groups (UI)
+- Add participants to existing groups (edit functionality)
 - Share groups via links
 - Full offline functionality
 

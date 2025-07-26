@@ -4,7 +4,7 @@ import { expect } from "@std/expect";
 import { cleanup, render } from "../test-utils/component-testing.ts";
 import { GroupsList } from "./GroupsList.tsx";
 import { GroupsContext } from "../context/GroupsContext.tsx";
-import { Group } from "../model/Group.ts";
+import { Group2 } from "../model/Group.ts";
 import { Router } from "wouter-preact";
 import { saveGroup } from "../storage/GroupStorage.ts";
 import { createGroup } from "../model/CreateGroup.ts";
@@ -35,7 +35,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: true,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -61,7 +61,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -95,7 +95,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -137,7 +137,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -172,7 +172,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -197,7 +197,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -238,7 +238,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -284,7 +284,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: mockRemoveGroup,
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -323,7 +323,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: mockRemoveGroup,
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -371,7 +371,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 
@@ -412,7 +412,7 @@ describe("GroupsList Component", () => {
         refreshGroups: () => {},
         removeGroup: () => {},
         isLoading: false,
-        addGroup: () => ["cs", 1, 1, "", Date.now(), [], []] as Group,
+        addGroup: () => ["cs", 2, 1, "", Date.now(), []] as Group2,
         loadGroupDetails: () => Promise.resolve(null),
       };
 

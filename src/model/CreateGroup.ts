@@ -1,29 +1,28 @@
-import { Group } from "./Group.ts";
+import { Group2, GroupOperation } from "./Group.ts";
 
 /**
- * Creates a new group with the given description and optional participants
+ * Creates a new group with the given description and optional members
  * @param description The description for the group (e.g., "Trip to Paris")
- * @param participants Optional array of participant names to add to the group
- * @returns A new Group instance
+ * @param members Optional array of member names to add to the group
+ * @returns A new Group2 instance
  */
 export function createGroup(
   description: string,
-  participants?: string[],
-): Group {
+  members?: string[],
+): Group2 {
   const timestamp = Date.now(); // Current timestamp
 
-  // Create agents array from participants if provided
-  const agents = participants
-    ? participants.map((name, index) => [index + 1, name] as [number, string])
+  // Create AddMember operations from members if provided
+  const operations: GroupOperation[] = members
+    ? members.map((name, index) => [1, index + 1, name] as [1, number, string])
     : [];
 
   return [
     "cs", // Header identifier
-    1, // Version number
+    2, // Version number (2 for Group2)
     1, // Initial revision
     description,
     timestamp,
-    agents, // Agents array with participants
-    [], // Empty transactions array
+    operations, // Operations array with AddMember operations for members
   ];
 }

@@ -4,49 +4,51 @@ import { FunctionComponent } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
-import { agents } from "../model/Accessors.ts";
+import { members } from "../model/Accessors.ts";
 import { loadGroup } from "../storage/GroupStorage.ts";
 
+// All group objects are Group2 (operation-based model)
 interface GroupsListProps {
   showActions?: boolean;
 }
 
-// Hook to load participants for a group
-function useGroupParticipants(timestamp: number) {
-  const [participants, setParticipants] = useState<string[]>([]);
+// Hook to load members for a group
+function useGroupMembers(timestamp: number) {
+  const [membersList, setMembersList] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadParticipants = () => {
+    const loadMembers = () => {
       try {
         const group = loadGroup(timestamp);
         if (group) {
-          const groupAgents = agents(group);
-          const participantNames = groupAgents.map(([_, name]) => name);
-          setParticipants(participantNames);
+          const groupMembers = members(group);
+          const memberNames = groupMembers.map(([_, name]) => String(name))
+            .filter((n): n is string => typeof n === "string");
+          setMembersList(memberNames);
         } else {
-          setParticipants([]);
+          setMembersList([]);
         }
       } catch (error) {
-        console.error("Error loading participants:", error);
-        setParticipants([]);
+        console.error("Error loading members:", error);
+        setMembersList([]);
       } finally {
         setLoading(false);
       }
     };
 
     // Use setTimeout to ensure this runs in the next tick
-    setTimeout(loadParticipants, 0);
+    setTimeout(loadMembers, 0);
   }, [timestamp]);
 
-  return { participants, loading };
+  return { membersList, loading };
 }
 
-// Component to display participants for a group
-const GroupParticipants: FunctionComponent<{ timestamp: number }> = (
+// Component to display members for a group
+const GroupMembers: FunctionComponent<{ timestamp: number }> = (
   { timestamp },
 ) => {
-  const { participants, loading } = useGroupParticipants(timestamp);
+  const { membersList, loading } = useGroupMembers(timestamp);
 
   if (loading) {
     return (
@@ -54,14 +56,14 @@ const GroupParticipants: FunctionComponent<{ timestamp: number }> = (
     );
   }
 
-  if (participants.length === 0) {
+  if (membersList.length === 0) {
     return <p className="subtitle is-7 has-text-grey">No participants</p>;
   }
 
   return (
     <div>
-      <p className="subtitle is-7 has-text-grey-dark">Participants:</p>
-      <p className="subtitle is-7 has-text-grey">{participants.join(", ")}</p>
+      <p className="subtitle is-7 has-text-grey-dark">Members:</p>
+      <p className="subtitle is-7 has-text-grey">{membersList.join(", ")}</p>
     </div>
   );
 };
@@ -172,7 +174,7 @@ export const GroupsList: FunctionComponent<GroupsListProps> = (
                   <p className="subtitle is-6 has-text-grey">
                     Created {new Date(group.timestamp).toLocaleDateString()}
                   </p>
-                  <GroupParticipants timestamp={group.timestamp} />
+                  <GroupMembers timestamp={group.timestamp} />
                 </div>
               </div>
               {showActions && (

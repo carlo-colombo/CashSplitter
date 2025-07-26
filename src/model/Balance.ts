@@ -1,40 +1,44 @@
-import { Group } from "./Group.ts";
-import { agents, transactions } from "./Accessors.ts";
+import { Group2 } from "./Group.ts";
 
 /**
- * Calculate the net balance for each participant in a group.
+ * Calculate the net balance for each participant in a Group2.
  * Returns an array of [agentId, name, balanceInCents] tuples.
  *
  * Positive balance = participant owes money
  * Negative balance = participant is owed money
  * Zero balance = participant is even
  *
- * @param group - The group to calculate balances for
+ * @param group - The Group2 to calculate balances for
  * @returns Array of [agentId, name, balanceInCents] tuples
  */
-export function calculateBalances(group: Group): [number, string, number][] {
-  const groupAgents = agents(group);
-  const groupTransactions = transactions(group);
+export function calculateBalances(group: Group2): [number, string, number][] {
+  // Group2: ["cs", 2, revision, description, timestamp, operations[]]
+  // Find all AddMember ops: [1, agentId, name]
+  const ops = group[5];
+  const members: [number, string][] = ops
+    .filter((op) => Array.isArray(op) && op[0] === 1)
+    .map((op) => [op[1] as number, op[2] as string]);
 
   // Initialize balances map with all participants
   const balances = new Map<number, number>();
   const agentNames = new Map<number, string>();
-
-  groupAgents.forEach(([agentId, name]) => {
+  members.forEach(([agentId, name]) => {
     balances.set(agentId, 0);
     agentNames.set(agentId, name);
   });
 
-  // Process all transactions to calculate net balances
-  groupTransactions.forEach(([_description, _timestamp, entries]) => {
-    entries.forEach(([agentId, amount]) => {
+  // Find all AddTransaction ops: [3, description, timestamp, movements]
+  const transactions = ops.filter((op) => Array.isArray(op) && op[0] === 3);
+  transactions.forEach((op) => {
+    const movements = op[3] as [number, number][];
+    movements.forEach(([agentId, amount]) => {
       const currentBalance = balances.get(agentId) || 0;
       balances.set(agentId, currentBalance + amount);
     });
   });
 
   // Convert to array format and return
-  return groupAgents.map(([agentId, name]) => {
+  return members.map(([agentId, name]) => {
     const balance = balances.get(agentId) || 0;
     return [agentId, name, balance] as [number, string, number];
   });

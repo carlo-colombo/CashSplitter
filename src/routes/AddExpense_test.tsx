@@ -3,21 +3,20 @@ import { afterEach, describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
 import { cleanup, render } from "../test-utils/component-testing.ts";
 import { AddExpense } from "./AddExpense.tsx";
-import { Group } from "../model/Group.ts";
+import { Group2 } from "../model/Group.ts";
 
-// Test data
-const testGroup: Group = [
+// Test data (Group2: ["cs", 2, revision, description, timestamp, operations[]])
+const testGroup: Group2 = [
   "cs",
-  1,
+  2,
   1,
   "Test Group",
   1640995200000, // 2022-01-01 00:00:00
   [
-    [1, "Alice"],
-    [2, "Bob"],
-    [3, "Charlie"],
+    [1, 1, "Alice"],
+    [1, 2, "Bob"],
+    [1, 3, "Charlie"],
   ],
-  [],
 ];
 
 // Mock functions

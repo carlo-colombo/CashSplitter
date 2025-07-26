@@ -1,122 +1,150 @@
-import { Group } from "./Group.ts";
+import { Group2 } from "./Group.ts";
 // Import the original bencode library (Buffer is now available from the polyfill)
 import bencode from "bencode";
 
 /**
- * Serializes a Group object to a bencode string
- * @param group The Group to serialize
+ * Serializes a Group2 object to a bencode string
+ * @param group The Group2 to serialize
  * @returns String containing the bencoded data
  */
-export function encode(group: Group): string {
-  // Use bencode library to encode the group
+export function encode(group: Group2): string {
   const encoded = bencode.encode(group);
-
-  // Convert to string
   return String.fromCharCode(...encoded);
 }
 
 /**
  * Deserializes a bencoded Group object from a string
+ * Deserializes a bencoded Group2 object from a string
  * @param str String containing the bencoded data
- * @returns Deserialized Group object
- * @throws Error if the data doesn't represent a valid Group
+ * @returns Deserialized Group2 object
+ * @throws Error if the data doesn't represent a valid Group2
  */
-export function decode(str: string): Group {
+export function decode(str: string): Group2 {
   try {
-    // Convert string to binary data
     const binaryData = Uint8Array.from(str, (c) => c.charCodeAt(0));
-
-    // Use bencode library to decode the data
     const decoded = bencode.decode(binaryData);
-
-    // Process the decoded data
     const processedData = convertBuffersToStrings(decoded);
-
-    // Verify it's an array with the right structure
-    if (!Array.isArray(processedData) || processedData.length < 7) {
-      throw new Error("Invalid group data format: not a valid array");
+    // Top-level structure validation
+    if (!Array.isArray(processedData)) {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
     }
-
-    // Convert the decoded array to a Group
-    const group = processedData as unknown[];
-
-    // Validate expected types and format
-    if (
-      typeof group[0] !== "string" || group[0] !== "cs" ||
-      typeof group[1] !== "number" || group[1] !== 1 ||
-      typeof group[2] !== "number" ||
-      typeof group[3] !== "string" ||
-      typeof group[4] !== "number" ||
-      !Array.isArray(group[5]) ||
-      !Array.isArray(group[6])
-    ) {
-      throw new Error("Invalid group data format: wrong structure");
+    if (processedData.length !== 6) {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
     }
-
-    // Convert agents and transactions if needed
-    const agents = (group[5] as unknown[]).map((agent) => {
-      if (
-        Array.isArray(agent) && agent.length === 2 &&
-        typeof agent[0] === "number" &&
-        (typeof agent[1] === "string" ||
-          (agent[1] && typeof agent[1] === "object"))
-      ) {
-        return [
-          agent[0],
-          typeof agent[1] === "string" ? agent[1] : convertToString(agent[1]),
-        ] as [number, string];
-      }
-      throw new Error("Invalid agent format");
-    });
-
-    const transactions = (group[6] as unknown[]).map((transaction) => {
-      if (Array.isArray(transaction) && transaction.length === 3) {
-        const desc = typeof transaction[0] === "string"
-          ? transaction[0]
-          : convertToString(transaction[0]);
-        const timestamp = transaction[1] as number;
-
-        if (!Array.isArray(transaction[2])) {
-          throw new Error("Invalid transaction entries");
+    const [header, version, revision, description, timestamp, operations] =
+      processedData;
+    if (header !== "cs") {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
+    }
+    if (version !== 2) {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
+    }
+    if (typeof revision !== "number") {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
+    }
+    let groupDescription = description;
+    if (description instanceof Uint8Array) {
+      groupDescription = new TextDecoder().decode(description);
+    }
+    if (typeof groupDescription !== "string") {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
+    }
+    if (typeof timestamp !== "number") {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
+    }
+    if (!Array.isArray(operations)) {
+      throw Object.assign(new Error("Invalid group2 data format"), {
+        name: "Group2DecodeError",
+      });
+    }
+    // Defer all other validation to operation-level checks so specific errors can surface
+    for (const op of operations) {
+      if (!Array.isArray(op)) continue;
+      if (op[0] === 1) {
+        // AddMember: [1, id, name]
+        if (
+          op.length !== 3 || typeof op[1] !== "number" ||
+          typeof op[2] !== "string"
+        ) {
+          throw Object.assign(new Error("Invalid agent format"), {
+            name: "Group2DecodeError",
+          });
         }
-
-        const entries = (transaction[2] as unknown[]).map((entry) => {
-          if (Array.isArray(entry) && entry.length === 2) {
-            return [entry[0] as number, entry[1] as number];
+      } else if (op[0] === 3) {
+        // AddTransaction: [3, description, timestamp, entries]
+        // Accept description as string or Uint8Array (binary)
+        let desc = op[1];
+        if (desc instanceof Uint8Array) {
+          desc = new TextDecoder().decode(desc);
+          op[1] = desc;
+        }
+        if (typeof desc !== "string") {
+          throw Object.assign(new Error("Invalid transaction format"), {
+            name: "Group2DecodeError",
+          });
+        }
+        if (
+          op.length !== 4 || typeof op[2] !== "number" || !Array.isArray(op[3])
+        ) {
+          throw Object.assign(new Error("Invalid transaction format"), {
+            name: "Group2DecodeError",
+          });
+        }
+        // Validate transaction entries
+        for (const entry of op[3]) {
+          if (!Array.isArray(entry) || entry.length !== 2) {
+            throw Object.assign(new Error("Invalid transaction entry format"), {
+              name: "Group2DecodeError",
+            });
           }
-          throw new Error("Invalid transaction entry format");
-        });
-
-        return [desc, timestamp, entries] as [
-          string,
-          number,
-          [number, number][],
-        ];
+          if (typeof entry[0] !== "number" || typeof entry[1] !== "number") {
+            throw Object.assign(new Error("Invalid transaction entries"), {
+              name: "Group2DecodeError",
+            });
+          }
+        }
       }
-      throw new Error("Invalid transaction format");
-    });
-
-    // Create the final Group structure
-    return [
-      "cs",
-      1,
-      group[2] as number,
-      group[3] as string,
-      group[4] as number,
-      agents,
-      transactions,
-    ] as Group;
+    }
+    // Return a Group2 object with the decoded string description
+    const group2: Group2 = [
+      header,
+      version,
+      revision,
+      groupDescription,
+      timestamp,
+      operations,
+    ];
+    return group2;
   } catch (error) {
+    // Always throw an Error object for test compatibility
     if (
-      error instanceof Error &&
-      (error.message.startsWith("Invalid group data format") ||
+      error instanceof Error && (
+        error.message.startsWith("Invalid group2 data format") ||
         error.message.startsWith("Invalid agent format") ||
-        error.message.startsWith("Invalid transaction") ||
-        error.message.startsWith("Cannot convert value"))
+        error.message.startsWith("Invalid transaction format") ||
+        error.message.startsWith("Invalid transaction entries") ||
+        error.message.startsWith("Invalid transaction entry format")
+      )
     ) {
+      // Always rethrow as an Error instance (for test compatibility)
       throw error;
     }
-    throw new Error("Failed to decode group data");
+    // For any other error (including non-Error), always throw a new Error with the expected message
+    throw new Error("Failed to decode group2 data");
   }
 }
 
@@ -149,23 +177,4 @@ function convertBuffersToStrings(obj: unknown): unknown {
 
   // Otherwise return as is
   return obj;
-}
-
-/**
- * Helper to convert a value to string if it's a buffer or already a string
- */
-function convertToString(value: unknown): string {
-  if (typeof value === "string") {
-    return value;
-  }
-
-  if (
-    value && typeof value === "object" &&
-    (Object.prototype.toString.call(value) === "[object Uint8Array]" ||
-      value.constructor?.name === "Buffer")
-  ) {
-    return new TextDecoder().decode(value as Uint8Array);
-  }
-
-  throw new Error(`Cannot convert value to string: ${value}`);
 }

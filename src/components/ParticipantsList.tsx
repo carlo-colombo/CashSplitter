@@ -1,11 +1,11 @@
 // ParticipantsList component
 // Shows the list of participants in a group with their outstanding balances
 import { FunctionComponent } from "preact";
-import { Group } from "../model/Group.ts";
+import { Group2 } from "../model/Group.ts";
 import { calculateBalances } from "../model/Balance.ts";
 
 interface ParticipantsListProps {
-  group: Group;
+  group: Group2;
 }
 
 export const ParticipantsList: FunctionComponent<ParticipantsListProps> = ({

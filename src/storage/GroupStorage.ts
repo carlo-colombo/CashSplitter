@@ -1,6 +1,6 @@
 // Group Storage Service
 // Handles persisting groups to local storage and retrieving them
-import { Group } from "../model/Group.ts";
+import { Group2 } from "../model/Group.ts";
 import { groupId } from "../model/Accessors.ts";
 import { decode, encode } from "../model/GroupSerialization.ts";
 
@@ -13,7 +13,7 @@ const GROUP_LIST_KEY = "cashsplitter:groups";
  * @param group The group to save
  * @returns The storage key used to save the group
  */
-export function saveGroup(group: Group): string {
+export function saveGroup(group: Group2): string {
   const [description, timestamp] = groupId(group);
   const storageKey = `${STORAGE_PREFIX}${timestamp}`;
 
@@ -41,14 +41,21 @@ export function saveGroup(group: Group): string {
  * @param timestamp The timestamp identifier of the group to load
  * @returns The deserialized Group or null if not found
  */
-export function loadGroup(timestamp: number): Group | null {
+export function loadGroup(timestamp: number): Group2 | null {
   const storageKey = `${STORAGE_PREFIX}${timestamp}`;
 
   try {
     const serialized = localStorage.getItem(storageKey);
     if (!serialized) return null;
 
-    return decode(serialized);
+    const decoded = decode(serialized);
+    // Ensure only Group2 is returned
+    if (Array.isArray(decoded) && decoded[1] === 2 && decoded.length === 6) {
+      return decoded as Group2;
+    }
+    throw new Error(
+      "Legacy Group format is not supported. Migration required.",
+    );
   } catch (error) {
     console.error(`Failed to load group from ${storageKey}:`, error);
     throw new Error(

@@ -1,11 +1,11 @@
 // AddExpense component for adding expenses to a group
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
-import { agents } from "../model/Accessors.ts";
-import { Group } from "../model/Group.ts";
+import { members } from "../model/Accessors.ts";
+import { Group2 } from "../model/Group.ts";
 
 interface AddExpenseProps {
-  group: Group;
+  group: Group2;
   onSubmit: (data: {
     amount: number;
     description: string;
@@ -15,19 +15,16 @@ interface AddExpenseProps {
   onCancel: () => void;
 }
 
-export const AddExpense: FunctionComponent<AddExpenseProps> = ({
-  group,
-  onSubmit,
-  onCancel,
-}) => {
+export const AddExpense: FunctionComponent<AddExpenseProps> = (props) => {
+  const { group, onSubmit, onCancel } = props;
   const [amount, setAmount] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [payerId, setPayerId] = useState<string>("");
   const [selectedParticipants, setSelectedParticipants] = useState<number[]>(
     [],
   );
-
-  const groupAgents = agents(group);
+  // For Group2, use members() accessor to get agents (AddActor[])
+  const groupMembers = members(group);
 
   const handleParticipantChange = (agentId: number, checked: boolean) => {
     setSelectedParticipants((prev) => {
@@ -42,7 +39,7 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = ({
   const handleSubmit = (e: Event) => {
     e.preventDefault();
 
-    const amountNum = parseFloat(amount);
+    const amountNum = parseFloat(amount) * 100;
     const payerIdNum = parseInt(payerId, 10);
 
     // Validation
@@ -129,11 +126,15 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = ({
                 required
               >
                 <option value="">Select who paid</option>
-                {groupAgents.map(([agentId, name]) => (
-                  <option key={agentId} value={agentId}>
-                    {name}
-                  </option>
-                ))}
+                {groupMembers.map((actor) => {
+                  // groupMembers: [id, name]
+                  const [agentId, name] = actor;
+                  return (
+                    <option key={agentId} value={agentId}>
+                      {name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -142,20 +143,23 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = ({
         <div className="field">
           <label className="label">Split between</label>
           <div className="control">
-            {groupAgents.map(([agentId, name]) => (
-              <label key={agentId} className="checkbox">
-                <input
-                  type="checkbox"
-                  checked={selectedParticipants.includes(agentId)}
-                  onChange={(e) =>
-                    handleParticipantChange(
-                      agentId,
-                      (e.target as HTMLInputElement).checked,
-                    )}
-                />
-                &nbsp;{name}
-              </label>
-            ))}
+            {groupMembers.map((actor) => {
+              const [agentId, name] = actor;
+              return (
+                <label key={agentId} className="checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedParticipants.includes(Number(agentId))}
+                    onChange={(e) =>
+                      handleParticipantChange(
+                        Number(agentId),
+                        (e.target as HTMLInputElement).checked,
+                      )}
+                  />
+                  &nbsp;{name}
+                </label>
+              );
+            })}
           </div>
         </div>
 

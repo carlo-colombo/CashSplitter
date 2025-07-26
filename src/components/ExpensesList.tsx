@@ -1,19 +1,21 @@
 import { FunctionComponent } from "preact";
-import { Group } from "../model/Group.ts";
-import { agents, transactions } from "../model/Accessors.ts";
+import { Group2 } from "../model/Group.ts";
+import { members, transactions } from "../model/Accessors.ts";
 
 interface ExpensesListProps {
-  group: Group;
+  group: Group2;
 }
 
 export const ExpensesList: FunctionComponent<ExpensesListProps> = (
   { group },
 ) => {
   const groupTransactions = transactions(group);
-  const groupAgents = agents(group);
+  const groupMembers = members(group);
 
-  // Create a map of agent IDs to names for quick lookup
-  const agentMap = new Map(groupAgents.map(([id, name]) => [id, name]));
+  // Create a map of member IDs to names for quick lookup
+  const memberMap = new Map<number, string>(
+    groupMembers.map(([id, name]) => [id as number, String(name)]),
+  );
 
   if (groupTransactions.length === 0) {
     return (
@@ -41,28 +43,37 @@ export const ExpensesList: FunctionComponent<ExpensesListProps> = (
               </thead>
               <tbody>
                 {groupTransactions.map(
-                  ([description, timestamp, entries], index) => {
-                    // Calculate total amount and find payers/participants
+                  ([, description, timestamp, entries], index) => {
+                    // Calculate total amount and find payers/members
                     const payers: { name: string; amount: number }[] = [];
-                    const participants: { name: string; amount: number }[] = [];
+                    const splitMembers: { name: string; amount: number }[] = [];
                     let totalAmount = 0;
 
-                    entries.forEach(([agentId, amount]) => {
-                      const agentName = agentMap.get(agentId) ||
-                        `Agent ${agentId}`;
+                    if (Array.isArray(entries)) {
+                      (entries as [number, number][]).forEach(
+                        ([memberId, amount]) => {
+                          const memberName = memberMap.get(memberId) ||
+                            `Member ${memberId}`;
+                          if (amount < 0) {
+                            // This is a payment (negative amount)
+                            payers.push({
+                              name: String(memberName),
+                              amount: Math.abs(amount),
+                            });
+                            totalAmount += amount; // sum negative amounts only
+                          } else if (amount > 0) {
+                            // This is a split (positive amount)
+                            splitMembers.push({
+                              name: String(memberName),
+                              amount,
+                            });
+                          }
+                        },
+                      );
+                    }
 
-                      if (amount < 0) {
-                        // This is a payment (negative amount)
-                        payers.push({
-                          name: agentName,
-                          amount: Math.abs(amount),
-                        });
-                        totalAmount += Math.abs(amount);
-                      } else if (amount > 0) {
-                        // This is a split (positive amount)
-                        participants.push({ name: agentName, amount });
-                      }
-                    });
+                    // totalAmount is negative, so display as positive
+                    const displayTotalAmount = Math.abs(totalAmount);
 
                     // Format currency (amounts are stored in cents)
                     const formatCurrency = (cents: number) =>
@@ -74,20 +85,18 @@ export const ExpensesList: FunctionComponent<ExpensesListProps> = (
 
                     // Create display strings
                     const payersDisplay = payers.map((p) => p.name).join(", ");
-                    const participantsDisplay = participants.map((p) => p.name)
-                      .join(
-                        ", ",
-                      );
+                    const splitMembersDisplay = splitMembers.map((p) => p.name)
+                      .join(", ");
 
                     return (
                       <tr key={index}>
                         <td>{description}</td>
-                        <td>{formatDate(timestamp)}</td>
+                        <td>{formatDate(Number(timestamp))}</td>
                         <td>
-                          <strong>{formatCurrency(totalAmount)}</strong>
+                          <strong>{formatCurrency(displayTotalAmount)}</strong>
                         </td>
                         <td>{payersDisplay}</td>
-                        <td>{participantsDisplay}</td>
+                        <td>{splitMembersDisplay}</td>
                       </tr>
                     );
                   },
@@ -100,24 +109,29 @@ export const ExpensesList: FunctionComponent<ExpensesListProps> = (
 
       {/* Mobile view - cards */}
       <div className="is-hidden-tablet">
-        {groupTransactions.map(([description, timestamp, entries], index) => {
-          // Calculate total amount and find payers/participants
+        {groupTransactions.map(([, description, timestamp, entries], index) => {
+          // Calculate total amount and find payers/members
           const payers: { name: string; amount: number }[] = [];
-          const participants: { name: string; amount: number }[] = [];
+          const splitMembers: { name: string; amount: number }[] = [];
           let totalAmount = 0;
 
-          entries.forEach(([agentId, amount]) => {
-            const agentName = agentMap.get(agentId) || `Agent ${agentId}`;
-
-            if (amount < 0) {
-              // This is a payment (negative amount)
-              payers.push({ name: agentName, amount: Math.abs(amount) });
-              totalAmount += Math.abs(amount);
-            } else if (amount > 0) {
-              // This is a split (positive amount)
-              participants.push({ name: agentName, amount });
-            }
-          });
+          if (Array.isArray(entries)) {
+            (entries as [number, number][]).forEach(([memberId, amount]) => {
+              const memberName = memberMap.get(memberId) ||
+                `Member ${memberId}`;
+              if (amount < 0) {
+                // This is a payment (negative amount)
+                payers.push({
+                  name: String(memberName),
+                  amount: Math.abs(amount),
+                });
+                totalAmount += Math.abs(amount);
+              } else if (amount > 0) {
+                // This is a split (positive amount)
+                splitMembers.push({ name: String(memberName), amount });
+              }
+            });
+          }
 
           // Format currency (amounts are stored in cents)
           const formatCurrency = (cents: number) =>
@@ -129,7 +143,7 @@ export const ExpensesList: FunctionComponent<ExpensesListProps> = (
 
           // Create display strings
           const payersDisplay = payers.map((p) => p.name).join(", ");
-          const participantsDisplay = participants.map((p) => p.name).join(
+          const splitMembersDisplay = splitMembers.map((p) => p.name).join(
             ", ",
           );
 
@@ -143,7 +157,7 @@ export const ExpensesList: FunctionComponent<ExpensesListProps> = (
                         <div>
                           <p className="title is-6">{description}</p>
                           <p className="subtitle is-7">
-                            {formatDate(timestamp)}
+                            {formatDate(Number(timestamp))}
                           </p>
                         </div>
                       </div>
@@ -162,7 +176,7 @@ export const ExpensesList: FunctionComponent<ExpensesListProps> = (
                   </div>
                   <div className="field">
                     <label className="label is-small">Split between</label>
-                    <p className="is-size-7">{participantsDisplay}</p>
+                    <p className="is-size-7">{splitMembersDisplay}</p>
                   </div>
                 </div>
               </div>

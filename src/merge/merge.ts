@@ -1,5 +1,10 @@
-import { Group } from "../model/Group.ts";
-import { agents, groupId, revision, transactions } from "../model/Accessors.ts";
+import { Group2 } from "../model/Group.ts";
+import {
+  groupId,
+  members,
+  revision,
+  transactions,
+} from "../model/Accessors.ts";
 
 // Define a conflict error class with conflicts array
 export class MergeConflictError extends Error {
@@ -24,27 +29,22 @@ type Conflict = {
 };
 
 /**
- * Find conflicts between two groups
+ * Find conflicts between two groups2
  * Returns an array of conflicts (empty if no conflicts)
  */
-function findConflicts(group1: Group, group2: Group): Array<Conflict> {
+function findConflicts(group1: Group2, group2: Group2): Array<Conflict> {
   const conflicts: Conflict[] = [];
-
-  // Check for agent conflicts
-  const agents1 = agents(group1);
-  const agents2 = agents(group2);
-
-  // Create map of agents by ID for faster lookup
-  const agentMap1 = new Map(agents1.map((agent) => [agent[0], agent[1]]));
-  const agentMap2 = new Map(agents2.map((agent) => [agent[0], agent[1]]));
-
-  // Find agents with same ID but different name
-  for (const [id, name1] of agentMap1) {
-    if (agentMap2.has(id)) {
-      const name2 = agentMap2.get(id);
+  // Check for member conflicts
+  const members1 = members(group1);
+  const members2 = members(group2);
+  const memberMap1 = new Map(members1.map(([id, name]) => [id, name]));
+  const memberMap2 = new Map(members2.map(([id, name]) => [id, name]));
+  for (const [id, name1] of memberMap1) {
+    if (memberMap2.has(id)) {
+      const name2 = memberMap2.get(id);
       if (name1 !== name2) {
         conflicts.push({
-          type: "agent",
+          type: "member",
           id,
           value1: name1,
           value2: name2,
@@ -52,12 +52,10 @@ function findConflicts(group1: Group, group2: Group): Array<Conflict> {
       }
     }
   }
-
   // Check for transaction conflicts
   const transactions1 = transactions(group1);
   const transactions2 = transactions(group2);
-
-  // Create map for transactions by description and timestamp
+  // ...existing code...
   const transactionMap = new Map();
 
   // Add all transactions from group1
@@ -95,7 +93,7 @@ function findConflicts(group1: Group, group2: Group): Array<Conflict> {
  * @throws Error if group descriptions or creation timestamps don't match
  * @throws MergeConflictError with a conflicts array if there are agent or transaction conflicts
  */
-export function merge(group1: Group, group2: Group): Group {
+export function merge(group1: Group2, group2: Group2): Group2 {
   // Check that group identifiers match
   const [desc1, timestamp1] = groupId(group1);
   const [desc2, timestamp2] = groupId(group2);
@@ -153,15 +151,23 @@ export function merge(group1: Group, group2: Group): Group {
   }
 
   // Get the final merged transaction list
-  const mergedTransactions = Array.from(uniqueTransactions.values());
+  // const mergedTransactions = Array.from(uniqueTransactions.values());
+
+  // Merge operations: combine all operations from both groups, deduplicated
+  const ops1 = group1[5];
+  const ops2 = group2[5];
+  // Use stringified op for deduplication
+  const uniqueOps = new Map<string, unknown>();
+  for (const op of ops1) uniqueOps.set(JSON.stringify(op), op);
+  for (const op of ops2) uniqueOps.set(JSON.stringify(op), op);
+  const mergedOps = Array.from(uniqueOps.values());
 
   return [
     "cs",
-    1,
+    2,
     newRevision,
     desc1,
     timestamp1,
-    agents(group1),
-    mergedTransactions,
+    mergedOps as import("../model/Group.ts").GroupOperation[],
   ];
 }

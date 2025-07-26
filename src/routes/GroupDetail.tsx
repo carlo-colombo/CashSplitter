@@ -7,7 +7,7 @@ import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
 import { ExpensesList } from "../components/ExpensesList.tsx";
 import { ParticipantsList } from "../components/ParticipantsList.tsx";
-import { Group } from "../model/Group.ts";
+import { Group2 } from "../model/Group.ts";
 import { groupId } from "../model/Accessors.ts";
 
 export const GroupDetail: FunctionComponent = () => {
@@ -16,7 +16,7 @@ export const GroupDetail: FunctionComponent = () => {
   const timestamp = params.timestamp;
   const { loadGroupDetails, isLoading } = useContext(GroupsContext);
   const { showNotification } = useContext(NotificationContext);
-  const [group, setGroup] = useState<Group | null>(null);
+  const [group, setGroup] = useState<Group2 | null>(null);
 
   useEffect(() => {
     if (timestamp) {

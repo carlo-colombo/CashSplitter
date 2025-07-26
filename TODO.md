@@ -41,11 +41,11 @@
         navigation)
   - [ ] App component tests
   - [ ] Route component tests (GroupDetail, Home)
-- [ ] Add participants API
+- [x] Add participants API
   - [x] Update createGroup function to accept participants parameter (TDD)
   - [x] Update CreateGroup UI to include participants form (TDD)
-  - [ ] Add form validation for participants
-  - [ ] Update README to reflect participants in group creation
+  - [x] Add form validation for participants
+  - [x] Update README to reflect participants in group creation
 - [x] Add expense API
   - [x] Implement addExpense function that splits expenses equally among group
         members
@@ -94,6 +94,8 @@
   - [ ] Export group data as CSV
   - [ ] Export group data as PDF report
 - [ ] Error handling improvements
+  - [ ] Add detailed Group2 validation and error messages in deserialization
+        (GroupSerialization.ts)
   - [ ] Add error boundary components
   - [ ] Add loading states for operations
   - [ ] Improve error messages and user feedback
