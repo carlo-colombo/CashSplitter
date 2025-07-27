@@ -1,7 +1,7 @@
 // 🏎️ Utility functions for constructing transactions for CashSplitter
 // These are helpers for tests and internal logic, not for direct use in production code
 
-import { AddTransaction, OP_ADD_TRANSACTION } from "./Group.ts";
+import { AddTransaction } from "./Group.ts";
 
 /**
  * Creates an AddTransaction operation.
@@ -15,5 +15,5 @@ export function makeAddTransaction(
   movements: [number, number][],
   timestamp: number,
 ): AddTransaction {
-  return [OP_ADD_TRANSACTION, description, timestamp, movements];
+  return [3, description, timestamp, movements];
 }
