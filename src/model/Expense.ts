@@ -1,3 +1,4 @@
+import { makeAddTransaction } from "./constructors.ts";
 import { Group2 } from "./Group.ts";
 
 /**
@@ -21,13 +22,9 @@ export function addTransaction(
       `Movements must sum to zero (±1 cent allowed). Got: ${sum}`,
     );
   }
-  // AddTransaction operation: [3, description, timestamp, movements] (mutable)
-  const op: [3, string, number, [number, number][]] = [
-    3,
-    description,
-    timestamp,
-    movements,
-  ];
+
+  const op = makeAddTransaction(description, movements, timestamp);
+
   return [
     group[0], // "cs"
     group[1], // version
