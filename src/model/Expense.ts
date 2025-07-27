@@ -1,5 +1,5 @@
 import { makeAddTransaction } from "./constructors.ts";
-import { Group2 } from "./Group.ts";
+import { AddTransaction, Group2 } from "./Group.ts";
 
 /**
  * Appends an AddTransaction operation to a Group2.
@@ -23,7 +23,11 @@ export function addTransaction(
     );
   }
 
-  const op = makeAddTransaction(description, movements, timestamp);
+  const op: AddTransaction = makeAddTransaction(
+    description,
+    movements,
+    timestamp,
+  );
 
   return [
     group[0], // "cs"
