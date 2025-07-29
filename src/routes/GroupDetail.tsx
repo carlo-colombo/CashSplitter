@@ -55,6 +55,28 @@ export const GroupDetail: FunctionComponent = () => {
 
   const [description, createdAt] = groupId(group);
 
+  const handleCopyLink = () => {
+    if (!timestamp) return;
+
+    const storageKey = `cashsplitter:group:${timestamp}`;
+    const serializedGroup = localStorage.getItem(storageKey);
+
+    if (serializedGroup) {
+      const shareLink =
+        `${globalThis.location.origin}/group-share?${serializedGroup}`;
+      navigator.clipboard.writeText(shareLink)
+        .then(() => {
+          showNotification("success", "Link copied to clipboard!");
+        })
+        .catch((err) => {
+          console.error("Failed to copy link: ", err);
+          showNotification("error", "Failed to copy link");
+        });
+    } else {
+      showNotification("error", "Could not find group data to share");
+    }
+  };
+
   return (
     <div className="group-detail-page">
       <div className="card mb-5">
@@ -79,6 +101,13 @@ export const GroupDetail: FunctionComponent = () => {
                     onClick={() => navigate(`/group/${timestamp}/addExpense`)}
                   >
                     Add Expense
+                  </button>
+                  <button
+                    type="button"
+                    className="button"
+                    onClick={handleCopyLink}
+                  >
+                    Copy Link
                   </button>
                   <button
                     type="button"

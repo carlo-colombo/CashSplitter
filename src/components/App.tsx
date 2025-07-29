@@ -6,6 +6,7 @@ import { Home } from "../routes/Home.tsx";
 import { CreateGroup } from "../routes/CreateGroup.tsx";
 import { GroupDetail } from "../routes/GroupDetail.tsx";
 import { AddExpenseRoute } from "../routes/AddExpenseRoute.tsx";
+import { GroupShare } from "../routes/GroupShare.tsx";
 import { NotificationProvider } from "./Notification.tsx";
 import { GroupsProvider } from "../context/GroupsContext.tsx";
 
@@ -20,6 +21,7 @@ export const App: FunctionComponent = () => {
                 <Route path="/" component={Home} />
                 <Route path="/create" component={CreateGroup} />
                 <Route path="/group/:timestamp" component={GroupDetail} />
+                <Route path="/group-share" component={GroupShare} />
                 <Route
                   path="/group/:timestamp/addExpense"
                   component={AddExpenseRoute}
