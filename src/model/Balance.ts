@@ -1,3 +1,4 @@
+import { movements, transactions } from "./Accessors.ts";
 import { Group2 } from "./Group.ts";
 
 /**
@@ -28,14 +29,13 @@ export function calculateBalances(group: Group2): [number, string, number][] {
   });
 
   // Find all AddTransaction ops: [3, description, timestamp, movements]
-  const transactions = ops.filter((op) => Array.isArray(op) && op[0] === 3);
-  transactions.forEach((op) => {
-    const movements = op[3] as [number, number][];
-    movements.forEach(([agentId, amount]) => {
-      const currentBalance = balances.get(agentId) || 0;
-      balances.set(agentId, currentBalance + amount);
-    });
-  });
+
+  transactions(group)
+    .flatMap(movements)
+    .reduce((acc, [agentId, amount]) => {
+      acc.set(agentId, (acc.get(agentId) || 0) + amount);
+      return acc;
+    }, balances);
 
   // Convert to array format and return
   return members.map(([agentId, name]) => {

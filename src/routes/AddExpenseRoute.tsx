@@ -4,7 +4,10 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import { useLocation, useParams } from "wouter-preact";
 import { GroupsContext } from "../context/GroupsContext.tsx";
 import { NotificationContext } from "../components/Notification.tsx";
-import { addTransaction } from "../model/Expense.ts";
+import {
+  addTransaction,
+  EqualSplitStrategy,
+} from "../model/operations/addTransaction.ts";
 import { Group2 } from "../model/Group.ts";
 import { saveGroup } from "../storage/GroupStorage.ts";
 import { AddExpense } from "./AddExpense.tsx";
@@ -48,26 +51,22 @@ export const AddExpenseRoute: FunctionComponent = () => {
     if (!group) return;
 
     try {
-      // Calculate equal splits for selected participants
-      const splitAmount = data.amount / data.selectedParticipants.length;
-      const movements: [number, number][] = [
-        [data.payerId, data.amount],
-        ...data.selectedParticipants.map((participantId) =>
-          [participantId, -splitAmount] as [number, number]
-        ),
-      ];
+      // Use EqualSplitStrategy for payer and payees
+      const payerStrategy = new EqualSplitStrategy(data.payerId);
+      const payeesStrategy = new EqualSplitStrategy(
+        ...data.selectedParticipants,
+      );
 
-      // Add the transaction to the group
       const updatedGroup = addTransaction(
         group,
         data.description,
-        movements,
         Date.now(),
+        data.amount,
+        payerStrategy,
+        payeesStrategy,
       );
 
-      // Save the updated group
       saveGroup(updatedGroup);
-
       showNotification("success", "Expense added successfully");
       navigate(`/group/${timestamp}`);
     } catch (error) {

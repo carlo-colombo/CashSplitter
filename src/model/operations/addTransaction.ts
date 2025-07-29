@@ -50,7 +50,7 @@ export function addTransaction(
   if (amount <= 0) {
     throw new Error("Invalid amount to split: " + amount);
   }
-  const movements = [...payer.split(amount), ...payees.split(-amount)];
+  const movements = [...payer.split(-amount), ...payees.split(+amount)];
   return [
     "cs",
     group[1],

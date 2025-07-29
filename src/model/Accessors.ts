@@ -1,4 +1,4 @@
-import { AddTransaction, Group2 } from "./Group.ts";
+import { AddTransaction, Group2, Movement } from "./Group.ts";
 
 // Index constants for better readability - only used internally
 const GROUP_REVISION = 2;
@@ -40,4 +40,8 @@ export function members(group: Group2): [number, string][] {
  */
 export function groupId(group: Group2): [string, number] {
   return [group[GROUP_DESCRIPTION], group[GROUP_CREATION_TIMESTAMP]];
+}
+
+export function movements(tx: AddTransaction): Movement[] {
+  return tx[3];
 }

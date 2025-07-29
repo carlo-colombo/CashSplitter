@@ -25,9 +25,9 @@ describe("addTransaction", () => {
 
     expect(movements).toHaveLength(3);
     expect(movements).toEqual(expect.arrayContaining([
-      [2, -500],
-      [1, -500],
-      [1, 1000],
+      [2, +500],
+      [1, +500],
+      [1, -1000],
     ]));
   });
 
