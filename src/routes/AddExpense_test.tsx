@@ -79,14 +79,13 @@ describe("AddExpense", () => {
     payerSelect.value = "1";
     fireEvent.change(payerSelect);
 
-    // Select all participants by label text
+    // Select all participants by finding the participant row and clicking the checkbox
     ["Alice", "Bob", "Charlie"].forEach((name) => {
-      const label = Array.from(container.querySelectorAll("label.checkbox"))
-        .find((l) => (l as HTMLLabelElement).textContent?.includes(name)) as
-          | HTMLLabelElement
-          | undefined;
-      if (label) {
-        const cb = label.querySelector(
+      const participantRow = Array.from(
+        container.querySelectorAll(".participant-row"),
+      ).find((row) => (row as HTMLElement).textContent?.includes(name));
+      if (participantRow) {
+        const cb = (participantRow as HTMLElement).querySelector(
           'input[type="checkbox"]',
         ) as HTMLInputElement;
         if (cb && !cb.checked) {

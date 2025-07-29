@@ -3,6 +3,7 @@ import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
 import { members } from "../model/Accessors.ts";
 import { Group2 } from "../model/Group.ts";
+import { EqualSplitStrategy } from "../model/SplitStrategy.ts";
 
 interface AddExpenseProps {
   group: Group2;
@@ -23,7 +24,6 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = (props) => {
   const [selectedParticipants, setSelectedParticipants] = useState<number[]>(
     [],
   );
-  // For Group2, use members() accessor to get agents (AddActor[])
   const groupMembers = members(group);
 
   const handleParticipantChange = (agentId: number, checked: boolean) => {
@@ -42,7 +42,6 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = (props) => {
     const amountNum = parseFloat(amount) * 100;
     const payerIdNum = parseInt(payerId, 10);
 
-    // Validation
     if (!amountNum || amountNum <= 0) {
       return;
     }
@@ -66,6 +65,12 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = (props) => {
       selectedParticipants,
     });
   };
+
+  const splitStrategy = new EqualSplitStrategy();
+  const shares = splitStrategy.calculateShares(
+    parseFloat(amount) * 100,
+    selectedParticipants,
+  );
 
   return (
     <div className="add-expense">
@@ -127,7 +132,6 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = (props) => {
               >
                 <option value="">Select who paid</option>
                 {groupMembers.map((actor) => {
-                  // groupMembers: [id, name]
                   const [agentId, name] = actor;
                   return (
                     <option key={agentId} value={agentId}>
@@ -145,19 +149,35 @@ export const AddExpense: FunctionComponent<AddExpenseProps> = (props) => {
           <div className="control">
             {groupMembers.map((actor) => {
               const [agentId, name] = actor;
+              const isChecked = selectedParticipants.includes(Number(agentId));
+              const share = isChecked ? shares.get(Number(agentId)) : 0;
+
               return (
-                <label key={agentId} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={selectedParticipants.includes(Number(agentId))}
-                    onChange={(e) =>
-                      handleParticipantChange(
-                        Number(agentId),
-                        (e.target as HTMLInputElement).checked,
-                      )}
-                  />
-                  &nbsp;{name}
-                </label>
+                <div className="field participant-row" key={agentId}>
+                  <div className="columns is-mobile is-vcentered">
+                    <div className="column is-narrow">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) =>
+                          handleParticipantChange(
+                            Number(agentId),
+                            (e.target as HTMLInputElement).checked,
+                          )}
+                      />
+                    </div>
+                    <div className="column">
+                      <label className="checkbox">{name}</label>
+                    </div>
+                    <div className="column is-narrow">
+                      <span className="share">
+                        {isChecked && share !== undefined
+                          ? `€${(share / 100).toFixed(2)}`
+                          : "-"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               );
             })}
           </div>
