@@ -7,6 +7,28 @@
         "-A",
         "npm:@playwright/mcp@latest"
       ]
+    },
+    "git": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--mount",
+        "type=bind,src=/Users/carlo/projects/cashsplitter,dst=/Users/carlo/projects/cashsplitter",
+        "mcp/git"
+      ]
+    },
+    "github-local": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN=<YOUR_TOKEN>",
+        "ghcr.io/github/github-mcp-server"
+      ]
     }
   }
 }
