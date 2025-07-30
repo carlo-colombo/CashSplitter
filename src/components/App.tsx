@@ -21,7 +21,10 @@ export const App: FunctionComponent = () => {
                 <Route path="/" component={Home} />
                 <Route path="/create" component={CreateGroup} />
                 <Route path="/group/:timestamp" component={GroupDetail} />
-                <Route path="/group-share" component={GroupShare} />
+                <Route
+                  path="/group-share/:serializedGroup"
+                  component={GroupShare}
+                />
                 <Route
                   path="/group/:timestamp/addExpense"
                   component={AddExpenseRoute}

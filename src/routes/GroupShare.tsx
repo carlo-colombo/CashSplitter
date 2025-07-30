@@ -2,7 +2,7 @@
 // Handles shared group links, automatically adding the group to the user's list
 import { FunctionComponent } from "preact";
 import { useContext, useEffect } from "preact/hooks";
-import { useLocation, useSearch } from "wouter-preact";
+import { useLocation, useParams } from "wouter-preact";
 import { decode } from "../model/GroupSerialization.ts";
 import { saveGroup } from "../storage/GroupStorage.ts";
 import { groupId } from "../model/Accessors.ts";
@@ -10,13 +10,14 @@ import { NotificationContext } from "../components/Notification.tsx";
 
 export const GroupShare: FunctionComponent = () => {
   const [, navigate] = useLocation();
-  const search = useSearch();
+  const params = useParams();
+  const serializedGroup = params.serializedGroup;
   const { showNotification } = useContext(NotificationContext);
 
   useEffect(() => {
-    if (search) {
+    if (serializedGroup) {
       try {
-        const decodedGroup = decode(search);
+        const decodedGroup = decode(serializedGroup);
         const [, timestamp] = groupId(decodedGroup);
 
         saveGroup(decodedGroup);
@@ -28,7 +29,7 @@ export const GroupShare: FunctionComponent = () => {
         navigate("/");
       }
     }
-  }, [search]);
+  }, [serializedGroup]);
 
   return (
     <div className="notification is-info">

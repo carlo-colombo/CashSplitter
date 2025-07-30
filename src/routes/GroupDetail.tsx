@@ -63,7 +63,7 @@ export const GroupDetail: FunctionComponent = () => {
 
     if (serializedGroup) {
       const shareLink =
-        `${globalThis.location.origin}/group-share?${serializedGroup}`;
+        `${globalThis.location.origin}/#/group-share/${serializedGroup}`;
       navigator.clipboard.writeText(shareLink)
         .then(() => {
           showNotification("success", "Link copied to clipboard!");
