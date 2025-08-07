@@ -2,6 +2,7 @@
   "tasks": {
     "dev": "deno run --watch main.ts",
     "build": "deno run --allow-read --allow-write --allow-run --allow-env --allow-net scripts/build.ts",
+    "build-pr-preview": "deno run --allow-read --allow-write --allow-run --allow-env --allow-net scripts/build-pr-preview.ts",
     "bundle": "deno bundle --platform=browser --config=./deno.json --import-map=./import_map.json ./src/index.tsx ./build/index.js",
     "build:esbuild": "deno run --allow-read --allow-write --allow-run --allow-env --allow-net scripts/build_esbuild.ts",
     "serve": "deno run --allow-read --allow-net scripts/serve.ts",
